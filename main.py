@@ -1,13 +1,13 @@
-import time
 from BITalino import BITalino
+import time
 import matplotlib.pyplot as plt
-import numpy
-import pyqtgraph as pg
 import numpy as np
+from saveData import saveEMG
+import pyqtgraph as pg
+
 
 # set parameters
-
-minutes = 0.1  # how long you want to measure
+minutes = 0.1  #how long you want to measure
 num_frames_plot = 10  # every e.g.. tenth sample will be draw in real time graph
 
 # connect Bitalino
@@ -18,8 +18,8 @@ float_count_samples = int(device.nframes / num_frames_plot)
 # initialize values
 running_time = 60 * minutes  # in seconds
 iteration = 0
-x_vec = numpy.linspace(0, minutes * 60, int(running_time * device.fvz / num_frames_plot))
-y_vec = numpy.zeros(len(x_vec))  # only for nicer plot
+x_vec = np.linspace(0, minutes * 60, int(running_time * device.fvz / num_frames_plot))
+y_vec = np.zeros(len(x_vec))
 
 # main loop
 try:
@@ -35,9 +35,7 @@ try:
     while True:
         EMG = device.read_data()  # read nFrames from Bitalino
         EMG_record = device.get_recording()
-
         # plot real time graph
-
         float_window = 100
         if (np.shape(y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)])[0]) < 10:
             break
@@ -62,4 +60,7 @@ try:
 
 finally:
     device.stop_recording()
+    device.plot_graph()
     device.save_data()
+    time_line = np.linspace(0, int(running_time), len(device.emg_full_record))
+    saveEMG(time_line, device.emg_full_record)

@@ -2,7 +2,7 @@ import bitalino
 import numpy
 import time
 from PyQt5 import QtGui
-from saveDataFix import saveEMG
+from saveData import saveEMG
 from matplotlib import pyplot as plt
 import pyqtgraph as pg
 
