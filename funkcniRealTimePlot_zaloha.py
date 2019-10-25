@@ -1,10 +1,10 @@
-import bitalino
-import numpy
 import time
-from PyQt5 import QtGui
-from saveData import saveEMG
-from matplotlib import pyplot as plt
+import bitalino
+import numpy as np
 import pyqtgraph as pg
+from matplotlib import pyplot as plt
+
+from saveData import saveEMG
 
 # set parameters
 fvz = 1000
@@ -24,8 +24,8 @@ print("START")
 EMG_record = []
 running_time = 60 * minutes  # in seconds
 iteration = 0
-x_vec = numpy.linspace(0, minutes * 60, int(running_time * fvz / num_frames_plot))
-y_vec = numpy.zeros(len(x_vec))  # only for nicer plot
+x_vec = np.linspace(0, minutes * 60, int(running_time * fvz / num_frames_plot))
+y_vec = np.zeros(len(x_vec))  # only for nicer plot
 
 # main loop
 try:
@@ -41,13 +41,13 @@ try:
     while True:
         data = device.read(nframes)  # read nFrames from Bitalino
         EMG = data[:, -1]
-        EMG_record = numpy.concatenate([EMG_record, EMG])
+        EMG_record = np.concatenate([EMG_record, EMG])
 
         # plot real time graph
         float_count_samples = int(nframes / num_frames_plot)
         float_window = 100
         pom = y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)]
-        if (numpy.shape(y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)])[0]) < 10:
+        if (np.shape(y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)])[0]) < 10:
             break
         else:
             y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)] = EMG[0::num_frames_plot]
@@ -75,12 +75,12 @@ finally:
     device.close()
 
     # subtract mean value
-    meanValue = numpy.mean(EMG_record)
+    meanValue = np.mean(EMG_record)
     for i in range(len(EMG_record)):
         EMG_record[i] = EMG_record[i] - meanValue
 
     # save current data
-    time = numpy.linspace(0, int(running_time), len(EMG_record))
+    time = np.linspace(0, int(running_time), len(EMG_record))
     saveEMG(time, EMG_record)
 
     # plot EMG record

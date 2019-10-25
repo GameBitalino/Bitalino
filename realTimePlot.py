@@ -1,10 +1,11 @@
+import time
+
 import bitalino
 import numpy
-import time
-from PyQt5 import QtGui
-from saveData import saveEMG
-from matplotlib import pyplot as plt
 import pyqtgraph as pg
+from matplotlib import pyplot as plt
+
+from saveData import saveEMG
 
 # set parameters
 fvz = 1000
