@@ -6,7 +6,7 @@ class Bebida(pygame.sprite.Sprite):
         self.screen = screen
         self.posicoes = [[480, 350], [505, 350]]
         self.posicao = random.choice(self.posicoes)
-        self.comb = pygame.image.load('imagens/bebida.png')
+        self.comb = pygame.image.load('./need_py_speed_game/Game/imagens/bebida.png')
         self.tam_comb_x = 10
         self.tam_comb_y = 10
         self.pos_comb_x = 490
