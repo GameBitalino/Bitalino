@@ -7,7 +7,7 @@ class Faixa(pygame.sprite.Sprite):
     def __init__(self,screen):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
-        self.img_faixa = pygame.image.load('imagens' + os.sep + 'faixa.png')
+        self.img_faixa = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'faixa.png')
         self.largura = 11
         self.altura = 15
         self.pos_x = 505

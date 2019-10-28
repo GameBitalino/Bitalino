@@ -6,7 +6,7 @@ class Combustivel(pygame.sprite.Sprite):
         self.screen = screen
         self.posicoes = [[480, 350], [505, 350]]
         self.posicao = random.choice(self.posicoes)
-        self.comb = pygame.image.load('imagens/fuel.png')
+        self.comb = pygame.image.load('./need_py_speed_game/Game/imagens/fuel.png')
         self.tam_comb_x = 10
         self.tam_comb_y = 10
         self.pos_comb_x = 490

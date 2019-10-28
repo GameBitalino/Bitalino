@@ -7,7 +7,7 @@ class Carro_inimigo(pygame.sprite.Sprite):
         self.posicoes = [[480, 350], [505, 350]]
         self.posicao = random.choice(self.posicoes)
         self.objetos = ['adv_car.png', 'adv_car2.png', 'adv_car3.png', 'adv_car4.png']
-        self.objeto =  pygame.image.load('imagens' + os.sep + random.choice(self.objetos))
+        self.objeto =  pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + random.choice(self.objetos))
         self.tam_objeto_x = 80 
         self.tam_objeto_y = 80
         self.pos_objeto_x = self.posicao[0]
@@ -31,7 +31,7 @@ class Carro_inimigo(pygame.sprite.Sprite):
         self.rect_objeto = self.objeto_print.get_rect()
         self.rect_objeto.x, self.rect_objeto.y = (self.pos_objeto_x, self.pos_objeto_y)
         if self.pos_objeto_y > 1200 or self.pos_objeto_x > 2000 or self.pos_objeto_x < -300:
-            self.objeto =  pygame.image.load('imagens' + os.sep + random.choice(self.objetos))
+            self.objeto =  pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + random.choice(self.objetos))
             self.posicao = random.choice(self.posicoes)
             self.pos_objeto_y = self.posicao[1]
             self.pos_objeto_x = self.posicao[0] 
