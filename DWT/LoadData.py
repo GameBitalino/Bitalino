@@ -10,7 +10,7 @@ class LoadData:
         self.fvz = fvz
 
     def load_some_record(self, fvz=1000):
-        data = pd.read_csv(r"D:\5. ročník\DP\DP_signals\EMG_date_10_15_2019_time_18_01_51.csv", delimiter=',',
+        data = pd.read_csv(r"D:\5. ročník\DP\Bitalino\EMG_date_10_15_2019_time_18_01_51.csv", delimiter=',',
                            decimal=".")  # načtení naměřených dat
 
         self.time = data.iloc[:, 0]  # výběr sloupce obsahující hodnoty času
