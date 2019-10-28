@@ -14,7 +14,7 @@ class Arvores(pygame.sprite.Sprite):
             
         self.screen = screen
         self.arvores = ['tree.png', 'tree2.png', 'tree2.png', 'tree3.png', 'tree4.png', 'tree5.png']
-        self.arvore_img = pygame.image.load('imagens' + os.sep + random.choice(self.arvores))
+        self.arvore_img = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + random.choice(self.arvores))
         self.tam_arvore_x = 20 
         self.tam_arvore_y = 20
 

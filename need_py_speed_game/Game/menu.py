@@ -2,7 +2,7 @@
 
 import pygame, os, sys, time, random, pickle
 from pygame import *
-from efeitos_sonoros import *
+from .efeitos_sonoros import *
 pygame.init()
 
 # Intrudução do jogo
@@ -16,16 +16,16 @@ def introducao_jogo():
     
     # Carregando sons
     pygame.mixer.pre_init(44100, -16, 2, 2048)
-    pygame.mixer.music.load('musicas' + os.sep + 'Tema_PS2.mp3')
+    pygame.mixer.music.load('./need_py_speed_game/Game/musicas' + os.sep + 'Tema_PS2.mp3')
     pygame.mixer.music.play(1)
     
     # Carregando imagens
-    ufcg = pygame.image.load('imagens' + os.sep + 'logo_ufcg.png').convert()
-    cc = pygame.image.load('imagens' + os.sep + 'logo_computacao.jpg').convert()
-    logo_jogo = pygame.image.load('imagens' + os.sep + 'logo_jogo.jpg').convert()
+    ufcg = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_ufcg.png').convert()
+    cc = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_computacao.jpg').convert()
+    logo_jogo = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_jogo.jpg').convert()
     
     # Carregando Fonte Inicio
-    fonte = pygame.font.Font('fontes' + os.sep + 'btseps2.TTF',200)
+    fonte = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'btseps2.TTF',200)
     texto_apresentacao = fonte.render("Car game",True,CINZA)
     # Sequencias de imagens
     tela.fill(BRANCO)
@@ -61,12 +61,12 @@ def posicao_fonte(imagem, pos_inicial):
 # Menu Apagar Recorde
 def menu_reset():   
     while True:
-        menu = pygame.image.load('imagens' + os.sep + 'menu_configuracoes.jpg').convert()
+        menu = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_configuracoes.jpg').convert()
         tela.blit(menu, [0,0])
         pygame.draw.rect(tela,BRANCO,[100,600,10,50],0)
         
-        fonte_menu1 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',45)
-        fonte_menu2 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',55)
+        fonte_menu1 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',45)
+        fonte_menu2 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',55)
 
         texto1 = fonte_menu1.render('SEU RECORDE SERA APAGADO.',True,AZUL_2)
         texto2 = fonte_menu1.render('Opravdu chcete pokracovat?',True,AZUL_2)
@@ -85,7 +85,7 @@ def menu_reset():
           
         for event in pygame.event.get():
             if (pygame.mouse.get_pressed()[0] and posicao_fonte(texto3, [400, 384])):
-                with open('salve_recordes' + os.sep + 'save_record.dat', 'wb') as f:
+                with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'wb') as f:
                     pickle.dump(0, f, 2)
                 return True
             elif (pygame.mouse.get_pressed()[0] and posicao_fonte(texto4, [550, 384])) or pygame.key.get_pressed()[K_ESCAPE]:
@@ -99,14 +99,14 @@ def menu_reset():
 # Menu recorde
 def menu_recorde():
     # Carregando Recorde
-    with open('salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
+    with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
         record = pickle.load(f)
         
     while True:
-        menu = pygame.image.load('imagens' + os.sep + 'menu_recorde.jpg')
+        menu = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
         tela.blit(menu, [0,0])
-        fonte_menu1 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',70)
-        fonte_menu2 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',50)
+        fonte_menu1 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',70)
+        fonte_menu2 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',50)
 
         texto1 = fonte_menu1.render('REKORD',True,AZUL_2)
         texto2 = fonte_menu2.render('Nejlepsi skore  =  %d' % record,True,AZUL_2)
@@ -131,10 +131,10 @@ def menu_recorde():
 # Menu Creditos   
 def menu_creditos():
     while True:
-        menu = pygame.image.load('imagens' + os.sep + 'fundo_menu4.jpg')
+        menu = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu4.jpg')
         tela.blit(menu, [0,0])
-        fonte_menu3 = pygame.font.Font('fontes' + os.sep + 'WeareDepraved.ttf',70)
-        fonte_menu4 = pygame.font.Font('fontes' + os.sep + 'WeareDepraved.ttf',55)
+        fonte_menu3 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf',70)
+        fonte_menu4 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf',55)
         
         texto1 = fonte_menu3.render('Kredity',True,AZUL_2)
         texto2 = fonte_menu4.render('Vyvoj',True,AZUL)
@@ -171,10 +171,10 @@ def menu_creditos():
 # Menu Ajuda
 def menu_ajuda():
     while True:
-        menu = pygame.image.load('imagens' + os.sep + 'menu_ajuda.jpg')
-        tecla1 = pygame.image.load('imagens' + os.sep + 'computer_key_Arrow_Left.png')
-        tecla2 = pygame.image.load('imagens' + os.sep + 'computer_key_Arrow_Right.png')
-        tecla3 = pygame.image.load('imagens' + os.sep + 'computer_key_Esc.png')
+        menu = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
+        tecla1 = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Left.png')
+        tecla2 = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Right.png')
+        tecla3 = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Esc.png')
         
         
         tela.blit(menu, [0,0])
@@ -182,8 +182,8 @@ def menu_ajuda():
         tela.blit(pygame.transform.scale(tecla2, [50,50]), [80,480])
         tela.blit(pygame.transform.scale(tecla3, [50,50]), [20,550])
         
-        fonte_menu3 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',65)
-        fonte_menu4 = pygame.font.Font('fontes' + os.sep + 'Staubach.ttf',50)
+        fonte_menu3 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',65)
+        fonte_menu4 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf',50)
         
         texto1 = fonte_menu3.render('Napoveda',True,AMARELO)
         
@@ -229,7 +229,7 @@ def menu_ajuda():
 def menu_sair():
     escape = 0
     while True:
-        fonte_sair = pygame.font.Font('fontes' + os.sep + 'NOZSTUDIO.ttf',45)
+        fonte_sair = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'NOZSTUDIO.ttf',45)
         
         texto_sair = fonte_sair.render("Chcete pokracovat?",True,AZUL_2)
         
@@ -263,22 +263,22 @@ def fim_de_jogo(score):
     imprima_record = False
     
     # Carregando recorde
-    with open('salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
+    with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
         record = pickle.load(f)
     
     if score > record:
         record = score
         # Salvando record e criptografando - protocolo numero 2
-        with open('salve_recordes' + os.sep + 'save_record.dat', 'wb') as f:
+        with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'wb') as f:
             pickle.dump(score, f, 2)
             imprima_record = True
     
-            fonte_record = pygame.font.Font('fontes' + os.sep + 'nextwaveboldital.ttf',90)
+            fonte_record = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf',90)
             texto_record = fonte_record.render("NEW RECORD",True,LARANJA_2)
             texto_score = fonte_record.render("%d" % record,True,LARANJA_2)
     
     while True:
-        fonte_fim = pygame.font.Font('fontes' + os.sep + 'JUSTFIST2.ttf',70)
+        fonte_fim = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'JUSTFIST2.ttf',70)
         texto_fim = fonte_fim.render("GAME OVER",True,VERMELHO)
         
         tela.blit(texto_fim, [(1024 / 2) - (texto_fim.get_size()[0] / 2), 150])
@@ -293,8 +293,8 @@ def fim_de_jogo(score):
 # Menu Principal
 def menu_raiz():
     # Carregando fontes
-    fonte_menu = pygame.font.Font('fontes' + os.sep + 'VirtualBliss.ttf',70)
-    fonte_menu2 = pygame.font.Font('fontes' + os.sep + 'VirtualBliss.ttf',65)
+    fonte_menu = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'VirtualBliss.ttf',70)
+    fonte_menu2 = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'VirtualBliss.ttf',65)
     
     texto_menu = fonte_menu.render("Need Py Speed",True,AMARELO)
     
@@ -307,13 +307,13 @@ def menu_raiz():
     
     # Som do menu
     pygame.mixer.pre_init(44100, -16, 2, 2048)
-    pygame.mixer.music.load('musicas' + os.sep + random.choice(listas_musicas_menu))
+    pygame.mixer.music.load('./need_py_speed_game/Game/musicas' + os.sep + random.choice(listas_musicas_menu))
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(1)
 
     
     while True:
-        menu = pygame.image.load('imagens' + os.sep + 'fundo_menu.jpg')
+        menu = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu.jpg')
         # Imagem do menu
         tela.blit(menu, [0,0])
         

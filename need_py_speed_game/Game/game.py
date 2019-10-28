@@ -2,14 +2,14 @@
 
 import pygame, os, sys, time, pickle
 from pygame import *
-from faixa import *
-from carro import *
-from arvores import *
-from bebida import *
-from objetos_pista import *
-from combustivel import *
-from efeitos_sonoros import *
-from menu import *
+from .faixa import *
+from .carro import *
+from .arvores import *
+from .bebida import *
+from .objetos_pista import *
+from .combustivel import *
+from .efeitos_sonoros import *
+from .menu import *
 
 pygame.init()
 
@@ -21,10 +21,10 @@ introducao_jogo()
 def game():
     record = 0
     if menu_raiz():  # main menu
-        pygame.mixer.music.load('musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
+        pygame.mixer.music.load('./need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
         tela = pygame.display.set_mode((1024, 768))
         screen = pygame.display.get_surface()
-        fundo = pygame.image.load('imagens' + os.sep + 'road.png')
+        fundo = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
         pygame.display.set_caption('Need for speed')
         clock = pygame.time.Clock()
         fuel = Combustivel(screen)  # fuel
@@ -98,7 +98,7 @@ def game():
             car.print_carro(screen)
 
             # Score
-            font = pygame.font.Font('fontes' + os.sep + 'nextwaveboldital.ttf', 55)
+            font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 55)
             texto_score = font.render("Score", True, PRETO)
 
             score = cont_score * 10
@@ -116,7 +116,7 @@ def game():
                 bonus_extra = True
 
             if cont_view < 20 and bonus_extra:
-                font = pygame.font.Font('fontes' + os.sep + 'WeareDepraved.ttf', 80)
+                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 80)
                 texto_bonus = font.render("YOU ARE FAST", True, VERDE)
 
                 cor_font = VERDE
@@ -145,7 +145,7 @@ def game():
             ##
 
             if cont_view < 20:
-                font = pygame.font.Font('fontes' + os.sep + 'nextwaveboldital.ttf', 75)
+                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
                 texto_good = font.render("+ %d0 BONUS" % bonus, True, cor_font)
 
                 screen.blit(texto_good, [320, 80])
@@ -153,7 +153,7 @@ def game():
 
             # Gas
             if cont_fuel < 96:
-                font = pygame.font.Font('fontes' + os.sep + 'nextwaveboldital.ttf', 50)
+                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 50)
                 texto_gasolina = font.render("FUEL", True, PRETO)
                 screen.blit(texto_gasolina, [910, 10])
 
@@ -228,4 +228,3 @@ def game():
 
 
 # Iniciar Jogo
-game()

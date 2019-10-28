@@ -4,7 +4,7 @@ class Carro(pygame.sprite.Sprite):
     def __init__ (self, screen):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
-        self.img_carro = pygame.image.load('imagens' + os.sep + 'car.png')
+        self.img_carro = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'car.png')
     	#self.img_carro = pygame.transform.scale(self.img_carro, (80, 80))
         self.rect_carro = self.img_carro.get_rect()
         self.pos_carro_x = (1024 / 2) - (384 / 2)
