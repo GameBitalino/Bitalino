@@ -1,6 +1,6 @@
 import pygame, sys, os, random
 
-class Carro_inimigo(pygame.sprite.Sprite):
+class Enemy_car(pygame.sprite.Sprite):
     def __init__(self, screen):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -17,7 +17,7 @@ class Carro_inimigo(pygame.sprite.Sprite):
         self.rect_objeto.x, self.rect_objeto.y = self.posicao
 
     
-    def mover_objeto(self):
+    def move_object(self):
         if self.posicao == [505, 350]:
             self.pos_objeto_x += 0.12 * (self.tam_objeto_x / 10) 
         elif self.posicao == [480, 350]:
@@ -41,7 +41,7 @@ class Carro_inimigo(pygame.sprite.Sprite):
             self.rect_objeto = self.objeto_print.get_rect()
             self.rect_objeto.x, self.rect_objeto.y = (self.pos_objeto_x, self.pos_objeto_y)
             print_comb = False
-    def print_objeto(self, screen):
+    def print_object(self, screen):
         self.objeto_print = pygame.transform.scale(self.objeto, (self.tam_objeto_x, self.tam_objeto_y))
         self.screen.blit(self.objeto_print, (self.pos_objeto_x, self.pos_objeto_y)) 
         #self.rect_objeto.normalize()
