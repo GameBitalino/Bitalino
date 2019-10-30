@@ -1,6 +1,6 @@
 import pygame, random
 
-class Bebida(pygame.sprite.Sprite):
+class Drink(pygame.sprite.Sprite):
     def __init__(self, screen):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -16,7 +16,7 @@ class Bebida(pygame.sprite.Sprite):
         self.rect_comb.x, self.rect_comb.y = self.posicao
 
 
-    def mover_bebida(self, print_bebida):
+    def move_drink(self, print_bebida):
         if self.posicao == [480, 350]:
             self.pos_comb_x -= 0.1 * (self.tam_comb_x / 10)
         elif self.posicao == [505, 350]:
@@ -46,7 +46,7 @@ class Bebida(pygame.sprite.Sprite):
             return False
         return print_bebida 
 
-    def print_bebida(self, screen):
+    def print_drink(self, screen):
         self.comb_print = pygame.transform.scale(self.comb, (self.tam_comb_x, self.tam_comb_y))
         self.screen.blit(self.comb_print, (self.pos_comb_x, self.pos_comb_y))
         self.rect_comb.normalize()

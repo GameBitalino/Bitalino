@@ -1,8 +1,8 @@
 # coding : utf-8
 
 
-from .objetos_pista import *
-from .combustivel import *
+from .track_objects import *
+from .fuel import *
 
 pygame.init()
 

@@ -3,7 +3,7 @@ from pygame.locals import *
 pygame.init()
 import os
 
-class Faixa(pygame.sprite.Sprite):
+class Stripes(pygame.sprite.Sprite):
     def __init__(self,screen):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
@@ -13,7 +13,7 @@ class Faixa(pygame.sprite.Sprite):
         self.pos_x = 505
         self.pos_y = 360 
     
-    def mover_faixa(self):
+    def mover_stripes(self):
         self.pos_x -= 0.9
         self.pos_y += 0.8 * (self.altura / 10)
         if self.pos_y > 1000:
@@ -25,7 +25,7 @@ class Faixa(pygame.sprite.Sprite):
         self.altura += 5 
         self.largura += 1
 
-    def print_faixa(self, screen):
+    def print_stripes(self, screen):
         self.arvore_print = pygame.transform.scale(self.img_faixa,(self.largura, self.altura))
         self.screen.blit(self.arvore_print, (self.pos_x, self.pos_y))
         

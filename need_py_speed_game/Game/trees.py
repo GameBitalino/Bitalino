@@ -2,7 +2,7 @@ import pygame
 import random, os
 
 
-class Arvores(pygame.sprite.Sprite):
+class Trees(pygame.sprite.Sprite):
     def __init__(self, screen,lado):
         pygame.sprite.Sprite.__init__(self)
         if lado == 'direita':
@@ -18,7 +18,7 @@ class Arvores(pygame.sprite.Sprite):
         self.tam_arvore_x = 20 
         self.tam_arvore_y = 20
 
-    def mover_arvores(self, lado):
+    def move_tree(self, lado):
         if lado == 'direita':
             self.pos_arvore_x += 1  * (self.tam_arvore_x / 6) 
         elif lado == 'esquerda':
@@ -40,7 +40,7 @@ class Arvores(pygame.sprite.Sprite):
         self.tam_arvore_x += 10 
         self.tam_arvore_y += 10 
 
-    def print_arvore(self, screen):
+    def print_tree(self, screen):
         self.arvore_print = pygame.transform.scale(self.arvore_img, (self.tam_arvore_x, self.tam_arvore_y))
         self.screen.blit(self.arvore_print, (self.pos_arvore_x, self.pos_arvore_y))
 
