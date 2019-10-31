@@ -84,7 +84,7 @@ def game():
                 elif pygame.key.get_pressed()[K_ESCAPE]:
                     pygame.mixer.music.pause()
                     song_pause.play(0)
-                    if menu_sair():
+                    if menu_leave_game():
                         game()
                     pygame.mixer.music.unpause()
             ##

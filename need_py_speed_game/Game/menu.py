@@ -232,16 +232,16 @@ def menu_help():
         pg.display.update()
 
 
-# Menu Sair
-def menu_sair():
+# after pause game
+def menu_leave_game():
     escape = 0
     while True:
         fonte_sair = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'NOZSTUDIO.ttf', 45)
 
-        texto_sair = fonte_sair.render("Chcete pokracovat?", True, BLUE_2)
+        texto_sair = fonte_sair.render("Chcete pokracovat ve hre?", True, BLUE_2)
 
-        sub_texto_sair1 = fonte_sair.render("ANO", True, BLUE_2)
-        sub_texto_sair2 = fonte_sair.render("NE", True, BLUE_2)
+        sub_texto_sair1 = fonte_sair.render("NE", True, BLUE_2)
+        sub_texto_sair2 = fonte_sair.render("ANO", True, BLUE_2)
 
         screen.blit(texto_sair, [(512 - texto_sair.get_size()[0] / 2), 200])
         screen.blit(sub_texto_sair1, [550, 270])
