@@ -1,7 +1,6 @@
 # coding: utf-8
 
-import pygame, os, sys, time, pickle
-from pygame import *
+
 import time as timer
 from .stripes import *
 from .car import *
@@ -36,11 +35,10 @@ def game():
         enemy_car = EnemyCar(screen)
         # traffic_lights = TrafficLights(screen)
         traffic_lights_static = TrafficLightStatic(screen)
-        time_change = random_time()  # after some seconds change the lights
+        time_change = random_time() + 3 # after some seconds change the lights (for first more)
         right_trees = [Trees(screen, 'direita')]  # right trees
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
-
         i = 0
         score = 0
         # couter_show_lights_time = 100
@@ -65,6 +63,9 @@ def game():
 
         start_time = timer.time()
 
+        # lights for start game
+        menu_leave_game(first=True)
+
         while True:
             clock.tick(20)
             if i % 200 == 0 and i != 0:
@@ -76,7 +77,7 @@ def game():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif pygame.key.get_pressed()[K_SPACE] and traffic_lights_static.color == "red":
-                    pygame.mixer.music.pause()
+                    #pygame.mixer.music.pause()
                     song_pause.play(0)
                     result = menu_leave_game()
                     if result:
@@ -85,22 +86,8 @@ def game():
                         traffic_lights_static.change_to_green()
                         start_time = time.time()
                         time_change = random_time()
-                    pygame.mixer.music.unpause()
-            # for start the game
-            """
-            if first:
-                screen.blit(bottom, (0, 0))
-                traffic_lights_static.print_object()
-                pygame.mixer.music.pause()
-                song_pause.play(0)
-                print("here")
-                timer.sleep(5)
-                print("after sleep")
-                if start():
-                    print("after first")
-                    game()
-                pygame.mixer.music.unpause()
-            """
+                    #pygame.mixer.music.unpause()
+
             key = pygame.key.get_pressed()
             car.move_car(key, car_speed)
 
@@ -165,7 +152,7 @@ def game():
 
                 cor_font = GREEN
                 score = cont_score * 15
-                screen.blit(texto_bonus, [512 - texto_bonus.get_size()[0] / 2, 150])
+                screen.blit(texto_bonus, [512 - texto_bonus.get_size()[0] / 2, 350])
             else:
                 bonus_extra = False
 
@@ -190,7 +177,7 @@ def game():
                 font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
                 texto_good = font.render("+ %d0 BONUS" % bonus, True, cor_font)
 
-                screen.blit(texto_good, [320, 80])
+                screen.blit(texto_good, [320, 280])
                 cont_view += 1
 
             if cont_fuel < 96:

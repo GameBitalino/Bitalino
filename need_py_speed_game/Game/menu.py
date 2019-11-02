@@ -94,16 +94,16 @@ def menu_record():
     with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
         record = pickle.load(f)
 
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
+    fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 70)
+    fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 50)
+
+    texto1 = fonte_menu1.render('REKORD', True, BLUE_2)
+    texto2 = fonte_menu2.render('Nejlepsi skore  =  %d' % record, True, BLUE_2)
+    texto3 = fonte_menu1.render('Zpet', True, BLUE_2)
+
     while True:
-        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
         screen.blit(menu, [0, 0])
-        fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 70)
-        fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 50)
-
-        texto1 = fonte_menu1.render('REKORD', True, BLUE_2)
-        texto2 = fonte_menu2.render('Nejlepsi skore  =  %d' % record, True, BLUE_2)
-        texto3 = fonte_menu1.render('Zpet', True, BLUE_2)
-
         screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 20])
         screen.blit(texto2, [20, 200])
         screen.blit(texto3, [750, 650])
@@ -124,22 +124,23 @@ def menu_record():
 
 # Menu Credits
 def menu_credits():
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu4.jpg')
+    fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 70)
+    fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 55)
+
+    texto1 = fonte_menu3.render('Kredity', True, BLUE_2)
+    texto2 = fonte_menu4.render('Vyvoj', True, BLUE)
+    texto3 = fonte_menu4.render('NATAN MACENA RIBEIRO', True, BLUE)
+    texto4 = fonte_menu4.render('RONAN DE ARAUJO SOUZA', True, BLUE)
+    texto5 = fonte_menu4.render('AGRADECIMENTOS', True, BLUE)
+    texto6 = fonte_menu4.render('LUIZ AUGUSTO MORAIS', True, BLUE)
+    texto7 = fonte_menu4.render('DALTON DARIO SEREY GUERRERO', True, BLUE)
+    texto8 = fonte_menu4.render('Opravneni', True, BLUE)
+    texto9 = fonte_menu3.render('Zpet', True, BLUE_2)
+
     while True:
-        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu4.jpg')
+
         screen.blit(menu, [0, 0])
-        fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 70)
-        fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 55)
-
-        texto1 = fonte_menu3.render('Kredity', True, BLUE_2)
-        texto2 = fonte_menu4.render('Vyvoj', True, BLUE)
-        texto3 = fonte_menu4.render('NATAN MACENA RIBEIRO', True, BLUE)
-        texto4 = fonte_menu4.render('RONAN DE ARAUJO SOUZA', True, BLUE)
-        texto5 = fonte_menu4.render('AGRADECIMENTOS', True, BLUE)
-        texto6 = fonte_menu4.render('LUIZ AUGUSTO MORAIS', True, BLUE)
-        texto7 = fonte_menu4.render('DALTON DARIO SEREY GUERRERO', True, BLUE)
-        texto8 = fonte_menu4.render('Opravneni', True, BLUE)
-        texto9 = fonte_menu3.render('Zpet', True, BLUE_2)
-
         screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 30])
         screen.blit(texto2, [40, 150])
         screen.blit(texto3, [90, 250])
@@ -166,34 +167,31 @@ def menu_credits():
 
 # Menu help
 def menu_help():
-    while True:
-        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
-        tecla1 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Left.png')
-        tecla2 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Right.png')
-        tecla3 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Esc.png')
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
+    tecla1 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Left.png')
+    tecla2 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Right.png')
+    tecla3 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Esc.png')
+    fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 65)
+    fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 50)
 
+    texto1 = fonte_menu3.render('Napoveda', True, YELLOW)
+
+    texto2 = fonte_menu4.render('Ovladani hry', True, ORANGE)
+    texto3 = fonte_menu4.render('Vyhybejte se autum', True, ORANGE)
+    texto4 = fonte_menu4.render('Zastavte co nejrchleji na cervenou', True, ORANGE)
+    texto5 = fonte_menu4.render('Je potřeba udrzet plnou nádrz.', True, ORANGE)
+    texto6 = fonte_menu4.render('Palivo doplníte, pokud seberete benzín', True, ORANGE)
+
+    texto7 = fonte_menu4.render('Jak se hra ovládá?', True, ORANGE)
+    texto8 = fonte_menu4.render('Rízení auta: vlevo/vpravo', True, ORANGE)
+    texto9 = fonte_menu4.render('Pauza / Hra', True, ORANGE)
+
+    texto10 = fonte_menu3.render('Zpet', True, YELLOW)
+    while True:
         screen.blit(menu, [0, 0])
         screen.blit(pg.transform.scale(tecla1, [50, 50]), [20, 480])
         screen.blit(pg.transform.scale(tecla2, [50, 50]), [80, 480])
         screen.blit(pg.transform.scale(tecla3, [50, 50]), [20, 550])
-
-        fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 65)
-        fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Staubach.ttf', 50)
-
-        texto1 = fonte_menu3.render('Napoveda', True, YELLOW)
-
-        texto2 = fonte_menu4.render('Ovladani hry', True, ORANGE)
-        texto3 = fonte_menu4.render('Vyhybejte se autum', True, ORANGE)
-        texto4 = fonte_menu4.render(', které jedou proti Vám', True, ORANGE)
-        texto5 = fonte_menu4.render('Je potřeba udržet plnou nádrž.', True, ORANGE)
-        texto6 = fonte_menu4.render('Palivo doplníte, pokud seberete benzín', True, ORANGE)
-
-        texto7 = fonte_menu4.render('Jak se hra ovládá?', True, ORANGE)
-        texto8 = fonte_menu4.render('Rízení auta: vlevo/vpravo', True, ORANGE)
-        texto9 = fonte_menu4.render('Pauza / Hra', True, ORANGE)
-
-        texto10 = fonte_menu3.render('Zpet', True, YELLOW)
-
         screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 10])
         screen.blit(texto2, [20, 100])
         screen.blit(texto3, [40, 170])
@@ -222,14 +220,22 @@ def menu_help():
 
 
 # after pause game
-def menu_leave_game(red_for_sec=5):
+def menu_leave_game(red_for_sec=5, first=False):
+    if first:
+        bottom = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
+        screen.blit(bottom, (0, 0))
     escape = 0
     traffic_lights = TrafficLightStatic(screen, "red")
     start_time = time.time()
-    while True:
+    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 100)
+    text_waiting = font_text.render("Pockej na zelenou", True, BLACK)
+    # semi transparent
+    s = pygame.Surface((1024, 150))  # size
+    s.set_alpha(150)
+    s.fill((255, 255, 255))  # this fills the entire surface
+    screen.blit(s, (0, 350))  # draw
 
-        fonte_sair = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 100)
-        text_waiting = fonte_sair.render("Pockej na zelenou", True, WHITE)
+    while True:
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         if time.time() - start_time > red_for_sec and traffic_lights.color == "red":
             traffic_lights.change_to_green()
@@ -273,8 +279,7 @@ def game_over(score):
     while True:
         fonte_fim = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'JUSTFIST2.ttf', 70)
         texto_fim = fonte_fim.render("GAME OVER", True, RED)
-
-        screen.blit(texto_fim, [(1024 / 2) - (texto_fim.get_size()[0] / 2), 150])
+        screen.blit(texto_fim, [(1024 / 2) - (texto_fim.get_size()[0] / 2), 300])
         if print_record:
             screen.blit(texto_record, [(1024 / 2) - (texto_record.get_size()[0] / 2), 300])
             screen.blit(texto_score, [(1024 / 2) - (texto_score.get_size()[0] / 2), 350])
@@ -290,7 +295,7 @@ def root_menu():
     fonte_menu = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'VirtualBliss.ttf', 70)
     fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'VirtualBliss.ttf', 65)
 
-    text_menu = fonte_menu.render("Need for speed", True, YELLOW)
+    text_menu = fonte_menu.render("CAR GAME", True, YELLOW)
 
     sub_texto_menu1 = fonte_menu2.render("Hrat", True, YELLOW)
     sub_texto_menu2 = fonte_menu2.render("Napoveda", True, YELLOW)
@@ -305,11 +310,10 @@ def root_menu():
     pg.mixer.music.play(-1)
     pg.mixer.music.set_volume(1)
 
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu.jpg')
     while True:
-        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu.jpg')
         # Imagem do menu
         screen.blit(menu, [0, 0])
-
         screen.blit(text_menu, [(largura_tela / 2) - (text_menu.get_size()[0] / 2), 30])
         screen.blit(sub_texto_menu1, [40, 150])
         screen.blit(sub_texto_menu2, [40, 250])
@@ -376,3 +380,4 @@ BLUE = (51, 181, 205)
 BLUE_2 = (0, 0, 255)
 GRAY = (128, 128, 128)
 WHITE = (255, 255, 255)
+GRAY2 = (190, 190, 190)
