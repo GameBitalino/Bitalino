@@ -4,6 +4,7 @@ import os, sys, time, random, pickle
 import pygame as pg
 from pygame import *
 from .sounds_effects import *
+from .traffic_lights_static import *
 
 pg.init()
 
@@ -22,7 +23,7 @@ def game_introduction():
 
     # Load image
     vut = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'vut.png').convert()
-    #cc = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_computacao.jpg').convert()
+    # cc = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_computacao.jpg').convert()
     logo_jogo = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_jogo.jpg').convert()
 
     # Load Fonts
@@ -32,19 +33,6 @@ def game_introduction():
     screen.blit(vut, position_image_start(vut, size))
     pg.display.update()
     time.sleep(2)
-
-    """
-    screen.fill(WHITE)
-    screen.blit(cc, position_image_start(cc, size))
-    pg.display.update()
-    time.sleep(6)
-    
-
-    screen.fill(BLACK)
-    screen.blit(logo_jogo, position_image_start(logo_jogo, size))
-    pg.display.update()
-    time.sleep(5)
-    """
 
     screen.fill(BLACK)
     screen.blit(texto_apresentacao, position_image_start(texto_apresentacao, size))
@@ -99,6 +87,7 @@ def menu_reset():
                 sys.exit()
 
         pg.display.update()
+
 
 def menu_record():
     # load Record
@@ -233,33 +222,29 @@ def menu_help():
 
 
 # after pause game
-def menu_leave_game():
+def menu_leave_game(red_for_sec=5):
     escape = 0
+    traffic_lights = TrafficLightStatic(screen, "red")
+    start_time = time.time()
     while True:
-        fonte_sair = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'NOZSTUDIO.ttf', 45)
 
-        texto_sair = fonte_sair.render("Chcete pokracovat ve hre?", True, BLUE_2)
-
-        sub_texto_sair1 = fonte_sair.render("NE", True, BLUE_2)
-        sub_texto_sair2 = fonte_sair.render("ANO", True, BLUE_2)
-
-        screen.blit(texto_sair, [(512 - texto_sair.get_size()[0] / 2), 200])
-        screen.blit(sub_texto_sair1, [550, 270])
-        screen.blit(sub_texto_sair2, [350, 270])
-
-        if source_position(sub_texto_sair1, [550, 270]):
-            screen.blit(fonte_sair.render("NE", True, ORANGE_2), [550, 270])
-        elif source_position(sub_texto_sair2, [350, 270]):
-            screen.blit(fonte_sair.render("ANO", True, ORANGE_2), [350, 270])
+        fonte_sair = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 100)
+        text_waiting = fonte_sair.render("Pockej na zelenou", True, WHITE)
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+        if time.time() - start_time > red_for_sec and traffic_lights.color == "red":
+            traffic_lights.change_to_green()
+        traffic_lights.print_object()
 
         for event in pg.event.get():
-            if pg.mouse.get_pressed()[0] and source_position(sub_texto_sair1, [550, 270]):
-                return True
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_sair2, [350, 270]):
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif pygame.key.get_pressed()[K_SPACE] and traffic_lights.color == "green":
                 return False
-            if pg.key.get_pressed()[K_ESCAPE] and escape > 10:
+            elif pygame.key.get_pressed()[K_ESCAPE]:
                 song_come_back.play(0)
-                return False
+                return True
+            elif escape > 1000000:
+                return True
 
         pg.display.update()
         escape += 1
@@ -378,7 +363,7 @@ def root_menu():
 # Configuration screen
 size = largura_tela, altura_leta = (1024, 768)
 screen = pg.display.set_mode(size)
-pg.display.set_caption('Need for speed')
+pg.display.set_caption('EMG game')
 
 # Load cores
 BLACK = (0, 0, 0)
