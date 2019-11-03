@@ -1,5 +1,6 @@
 import pygame, random
 
+
 class Fuel(pygame.sprite.Sprite):
     def __init__(self, screen):
         pygame.sprite.Sprite.__init__(self)
@@ -14,16 +15,15 @@ class Fuel(pygame.sprite.Sprite):
         self.comb_print = pygame.transform.scale(self.comb, (self.tam_comb_x, self.tam_comb_y))
         self.rect_fuel = self.comb_print.get_rect()
         self.rect_fuel.x, self.rect_fuel.y = self.posicao
-        
 
-    def move_fuel(self, print_comb):
+    def move_fuel(self, print_comb, speed=0.1):
         if self.posicao == [480, 350]:
             self.pos_comb_x -= 0.24 * (self.tam_comb_x / 10)
         elif self.posicao == [505, 350]:
-            self.pos_comb_x += 0.12 * (self.tam_comb_x / 10) 
+            self.pos_comb_x += 0.12 * (self.tam_comb_x / 10)
 
-        self.pos_comb_y += 0.1 * (self.tam_comb_y / 10)
-        self.tam_comb_x += 1 
+        self.pos_comb_y += speed * (self.tam_comb_y / 10)
+        self.tam_comb_x += 1
         self.tam_comb_y += 1
         self.comb_print = pygame.transform.scale(self.comb, (self.tam_comb_x, self.tam_comb_y))
         self.rect_fuel = self.comb_print.get_rect()
@@ -35,7 +35,7 @@ class Fuel(pygame.sprite.Sprite):
 
             self.tam_comb_x = 10
             self.tam_comb_y = 10
-            self.pos_comb_x = self.posicao[0] 
+            self.pos_comb_x = self.posicao[0]
             self.pos_comb_y = self.posicao[1]
             self.comb_print = pygame.transform.scale(self.comb, (self.tam_comb_x, self.tam_comb_y))
 
@@ -50,9 +50,3 @@ class Fuel(pygame.sprite.Sprite):
         self.comb_print = pygame.transform.scale(self.comb, (self.tam_comb_x, self.tam_comb_y))
         self.screen.blit(self.comb_print, (self.pos_comb_x, self.pos_comb_y))
         self.rect_fuel.normalize()
-
-
-        
-        
-    
-        

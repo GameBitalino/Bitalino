@@ -5,7 +5,7 @@ import time as timer
 from .stripes import *
 from .car import *
 from .trees import *
-from .drink import *
+from .star import *
 from random import gauss
 from .menu import *
 from .traffic_lights_static import *
@@ -35,7 +35,7 @@ def game():
         enemy_car = EnemyCar(screen)
         # traffic_lights = TrafficLights(screen)
         traffic_lights_static = TrafficLightStatic(screen)
-        time_change = random_time() + 3 # after some seconds change the lights (for first more)
+        time_change = random_time() + 3  # after some seconds change the lights (for first more)
         right_trees = [Trees(screen, 'direita')]  # right trees
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
@@ -45,17 +45,19 @@ def game():
         print_fuel = False
         show_fuel = False
 
-        print_drink = False
-        show_drink = False
+        print_star = False
+        show_star = False
 
-        drink = Drink(screen)  # drink
-        cont_drink = 0
+        stars = Star(screen)
+        count_stars = 0
 
         cont_fuel = 1
         car_speed = 20
+        game_speed = car_speed / 200
         cont_score = 0
         cont_view = 20
         car_crash = False  # car crash
+        pst_speed = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 
         # Music
         pygame.mixer.music.play(-1)
@@ -77,7 +79,7 @@ def game():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif pygame.key.get_pressed()[K_SPACE] and traffic_lights_static.color == "red":
-                    #pygame.mixer.music.pause()
+                    # pygame.mixer.music.pause()
                     song_pause.play(0)
                     result = menu_leave_game()
                     if result:
@@ -86,14 +88,14 @@ def game():
                         traffic_lights_static.change_to_green()
                         start_time = time.time()
                         time_change = random_time()
-                    #pygame.mixer.music.unpause()
+                    # pygame.mixer.music.unpause()
 
             key = pygame.key.get_pressed()
             car.move_car(key, car_speed)
 
             if i % 250 == 0:
-                show_drink = True
-                print_drink = True
+                show_star = True
+                print_star = True
 
             if i % 10 == 0 and len(right_trees) < 6:
                 right_trees.append(Trees(screen, 'direita'))  # direita = right
@@ -108,8 +110,8 @@ def game():
                 enemy_car.print_object(screen)
             if show_fuel:
                 fuel.print_fuel(screen)
-            if show_drink:
-                drink.print_drink(screen)
+            if show_star:
+                stars.print_star(screen)
 
             car.print_car(screen)
             # change the color
@@ -126,6 +128,8 @@ def game():
                     pygame.mixer.music.unpause()
                 elif pom_time > time_change + 10:
                     game_over(score)
+                    if game_over(score):
+                        game()
 
             traffic_lights_static.print_object()
 
@@ -198,8 +202,9 @@ def game():
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)
+          #  pygame.draw.rect(screen, (50, 55, 55), enemy_car_rect)
             fuel_rect = fuel.rect_fuel.inflate(-20, -20)
-            drink_rect = drink.rect_comb.inflate(-10, -10)
+            star_rect = stars.rect_comb.inflate(-10, -10)
 
             # Collision with car
             if car_rect.colliderect(enemy_car_rect):
@@ -218,32 +223,29 @@ def game():
                 cont_view = 0
                 car_crash = True
 
-            # crash with drink
-            if car_rect.colliderect(drink_rect):
+            # crash with star
+            if car_rect.colliderect(star_rect):
                 song_drink.play(0)
-                car_speed = 10
-                cont_drink = 0
-                show_drink = False
+                car_speed += random.choice(pst_speed)
+                print(car_speed)
+                count_stars += 0.15
+                show_star = False
 
             if cont_view < 15 and car_crash:
-                cont_score += 1.0
+                cont_score += 1
                 bonus = 1
                 cor_font = YELLOW
 
             for j in range(len(right_trees)):
-                right_trees[j].move_tree('direita')
-                left_trees[j].move_tree('esquerda')
-                stripes[j].mover_stripes()
-                enemy_car.move_object()
+                game_speed = car_speed / 200
+                right_trees[j].move_tree('direita', game_speed)
+                left_trees[j].move_tree('esquerda', game_speed)
+                stripes[j].move_stripes(car_speed / 25)
+                enemy_car.move_object(game_speed)
                 if print_fuel:
-                    print_fuel = fuel.move_fuel(print_fuel)
-                if print_drink:
-                    print_drink = drink.move_drink(print_drink)
+                    print_fuel = fuel.move_fuel(print_fuel, game_speed)
+                if print_star:
+                    print_star = stars.move_star(print_star, game_speed)
 
             i += 1
             cont_score += 0.1
-
-            # drink effect
-            if cont_drink == 75:
-                car_speed = 20  # speed car
-            cont_drink += 1

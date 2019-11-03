@@ -18,13 +18,13 @@ class EnemyCar(pygame.sprite.Sprite):
         self.rect_objeto.x, self.rect_objeto.y = self.position
         # self.mask = pygame.mask.from_surface(self.object)
 
-    def move_object(self):
+    def move_object(self, speed=0.1):
         if self.position == [505, 350]:
             self.pos_objeto_x += 0.12 * (self.tam_objeto_x / 10)
         elif self.position == [480, 350]:
             self.pos_objeto_x -= 0.24 * (self.tam_objeto_x / 10)
 
-        self.pos_objeto_y += 0.1 * (self.tam_objeto_y / 8)
+        self.pos_objeto_y += speed * (self.tam_objeto_y / 8)
         self.tam_objeto_x += 1
         self.tam_objeto_y += 1
 

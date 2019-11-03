@@ -18,20 +18,20 @@ class Trees(pygame.sprite.Sprite):
         self.tam_arvore_x = 20 
         self.tam_arvore_y = 20
 
-    def move_tree(self, lado):
-        if lado == 'direita':
+    def move_tree(self, direction, speed=0.01):
+        if direction == 'direita':
             self.pos_arvore_x += 1  * (self.tam_arvore_x / 6) 
-        elif lado == 'esquerda':
+        elif direction == 'esquerda':
             self.pos_arvore_x -= 2 * (self.tam_arvore_x / 6)
-        self.pos_arvore_y += 0.01
+        self.pos_arvore_y += speed
 
-        if self.pos_arvore_x > 1600 and lado == 'direita':
+        if self.pos_arvore_x > 1600 and direction == 'direita':
             self.pos_arvore_x= 588
             self.pos_arvore_y = 349
             self.tam_arvore_x = 20
             self.tam_arvore_y = 20
 
-        elif self.pos_arvore_x < -250 and lado == 'esquerda':
+        elif self.pos_arvore_x < -250 and direction == 'esquerda':
             self.pos_arvore_x = 416
             self.pos_arvore_y = 349
             self.tam_arvore_x = 20
