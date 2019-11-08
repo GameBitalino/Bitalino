@@ -5,6 +5,7 @@ import pygame as pg
 from pygame import *
 from .sounds_effects import *
 from .traffic_lights_static import *
+from .checkbox import *
 
 pg.init()
 
@@ -54,7 +55,7 @@ def menu_reset():
     while True:
         menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg').convert()
         screen.blit(menu, [0, 0])
-       # pg.draw.rect(screen, WHITE, [100, 600, 10, 50], 0)
+        # pg.draw.rect(screen, WHITE, [100, 600, 10, 50], 0)
 
         fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 45)
         fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 55)
@@ -121,57 +122,6 @@ def menu_record():
 
         pg.display.update()
 
-
-# Menu Credits
-def menu_settings():
-    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
-    fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 70)
-    fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 55)
-
-    texto1 = fonte_menu3.render('Nastavení', True, WHITE)
-    texto2 = fonte_menu4.render('Mód', True, WHITE)
-    texto3 = fonte_menu4.render('Den', True, WHITE)
-    texto4 = fonte_menu4.render('Noc', True, WHITE)
-    """
-    texto4 = fonte_menu4.render('Mód', True, WHITE)
-    
-    texto5 = fonte_menu4.render('AGRADECIMENTOS', True, WHITE)
-    texto6 = fonte_menu4.render('LUIZ AUGUSTO MORAIS', True, WHITE)
-    texto7 = fonte_menu4.render('DALTON DARIO SEREY GUERRERO', True, WHITE)
-    texto8 = fonte_menu4.render('Opravneni', True, WHITE)
-    """
-    texto9 = fonte_menu3.render('Zpět', True, WHITE)
-
-
-    while True:
-
-        screen.blit(menu, [0, 0])
-        screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 30])
-        screen.blit(texto2, [40, 150])
-        screen.blit(texto3, [40, 350])
-        screen.blit(texto4, [40, 550])
-        """
-        screen.blit(texto5, [40, 410])
-        screen.blit(texto6, [90, 510])
-        screen.blit(texto7, [90, 570])
-        screen.blit(texto8, [90, 630])
-        """
-        screen.blit(texto9, [800, 650])
-
-        if source_position(texto9, [800, 650]) or pg.key.get_pressed()[K_ESCAPE]:
-            screen.blit(fonte_menu3.render('Zpět', True, RED), [800, 650])
-
-        for event in pg.event.get():
-            if (pg.mouse.get_pressed()[0] and source_position(texto9, [800, 650])) or pg.key.get_pressed()[
-                K_ESCAPE]:
-                song_come_back.play(0)
-                return True
-            elif event.type == pg.QUIT:
-                sys.exit()
-
-        pg.display.update()
-
-
 # Menu help
 def menu_help():
     menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
@@ -235,17 +185,22 @@ def menu_leave_game(red_for_sec=5, first=False):
     traffic_lights = TrafficLightStatic(screen, "red")
     start_time = time.time()
     font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_LtIt.ttf', 100)
-    text_waiting = font_text.render("Počkej na zelenou", True, BLACK)
     # semi transparent
     s = pygame.Surface((1024, 150))  # size
     s.set_alpha(150)
     s.fill((255, 255, 255))  # this fills the entire surface
     screen.blit(s, (0, 380))  # draw
+    text_waiting = font_text.render("Počkej na zelenou", True, BLACK)
 
     while True:
-        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         if time.time() - start_time > red_for_sec and traffic_lights.color == "red":
             traffic_lights.change_to_green()
+            s = pygame.Surface((1024, 150))  # size
+            s.set_alpha(250)
+            s.fill((255, 255, 255))  # this fills the entire surface
+            screen.blit(s, (0, 380))  # draw
+            text_waiting = font_text.render("Pokračuj v jízdě", True, BLACK)
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         traffic_lights.print_object()
 
         for event in pg.event.get():
@@ -312,7 +267,7 @@ def root_menu():
     sub_texto_menu1 = fonte_menu2.render("Hrát", True, YELLOW)
     sub_texto_menu2 = fonte_menu2.render("Nápověda", True, YELLOW)
     sub_texto_menu3 = fonte_menu2.render("Rekord", True, YELLOW)
-    sub_texto_menu4 = fonte_menu2.render("Kredity", True, YELLOW)
+    #sub_texto_menu4 = fonte_menu2.render("Kredity", True, YELLOW)
     sub_texto_menu5 = fonte_menu2.render("Smazat záznamy", True, YELLOW)
     sub_texto_menu6 = fonte_menu2.render("Konec", True, YELLOW)
 
@@ -330,9 +285,8 @@ def root_menu():
         screen.blit(sub_texto_menu1, [40, 150])
         screen.blit(sub_texto_menu2, [40, 250])
         screen.blit(sub_texto_menu3, [40, 350])
-        screen.blit(sub_texto_menu4, [40, 450])
-        screen.blit(sub_texto_menu5, [40, 550])
-        screen.blit(sub_texto_menu6, [40, 650])
+        screen.blit(sub_texto_menu5, [40, 450])
+        screen.blit(sub_texto_menu6, [40, 550])
 
         if source_position(sub_texto_menu1, [40, 150]):
             screen.blit(fonte_menu2.render("Hrát", True, RED), [40, 150])
@@ -340,12 +294,10 @@ def root_menu():
             screen.blit(fonte_menu2.render("Nápověda", True, RED), [40, 250])
         elif source_position(sub_texto_menu3, [40, 350]):
             screen.blit(fonte_menu2.render("Rekord", True, RED), [40, 350])
-        elif source_position(sub_texto_menu4, [40, 450]):
-            screen.blit(fonte_menu2.render("Kredity", True, RED), [40, 450])
-        elif source_position(sub_texto_menu5, [40, 550]):
-            screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 550])
-        elif source_position(sub_texto_menu6, [40, 650]):
-            screen.blit(fonte_menu2.render("Konec", True, RED), [40, 650])
+        elif source_position(sub_texto_menu5, [40, 450]):
+            screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 450])
+        elif source_position(sub_texto_menu6, [40, 550]):
+            screen.blit(fonte_menu2.render("Konec", True, RED), [40, 550])
 
         for event in pg.event.get():
             if pg.mouse.get_pressed()[0] and source_position(sub_texto_menu1, [40, 150]):
@@ -360,21 +312,17 @@ def root_menu():
                 song_menu1.play(0)
                 if menu_record():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu4, [40, 450]):
-                song_menu1.play(0)
-                if menu_settings():
-                    continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 550]):
+
+            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 450]):
                 song_menu1.play(0)
                 if menu_reset():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu6, [40, 650]):
+            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu6, [40, 550]):
                 sys.exit()
             elif event.type == pg.QUIT:
                 sys.exit()
 
         pg.display.update()
-
 
 # Configuration screen
 size = largura_tela, altura_leta = (1024, 768)
