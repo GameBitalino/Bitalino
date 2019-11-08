@@ -139,8 +139,8 @@ def game():
 
             score = cont_score * 10
             texto_valor_score = font.render("%d" % score, True, BLACK)
-            screen.blit(texto_score, [730, 15])
-            screen.blit(texto_valor_score, [900, 15])
+            screen.blit(texto_score, [750, 15])
+            screen.blit(texto_valor_score, [920, 15])
 
             # Bonus extra
             if int(score) % 5000 == 0 and score > 0:
