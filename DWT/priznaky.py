@@ -7,7 +7,7 @@ import time as timer
 import pandas as pd
 
 data = LoadData()
-time, emg = data.load_some_record()
+time, emg = data.load_record(r"D:\5. ročník\DP\Bitalino\recordings\EMG_klid.csv")
 data.plot_data()
 
 wavelets = pywt.wavedec(emg, 'coif6', level=6)[-1]  # last

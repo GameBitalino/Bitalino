@@ -3,14 +3,14 @@ import bitalino
 import numpy as np
 import pyqtgraph as pg
 from matplotlib import pyplot as plt
-
+import sys
 from saveData import saveEMG
 
 # set parameters
 fvz = 1000
 nframes = 100
 threshold = 5
-minutes = 0.1  # how long you want to measure
+minutes = 3  # how long you want to measure
 num_frames_plot = 10  # every e.g.. tenth sample will be draw in real time graph
 
 # connect Bitalino
@@ -67,6 +67,8 @@ try:
         end = time.time()
         if (end - start) > running_time:
             pg.QtGui.QGuiApplication.exec()
+            #pg.QtGui.QGuiApplication.quit()
+            #sys.exit()
             break
 
 finally:

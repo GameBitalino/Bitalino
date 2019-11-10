@@ -126,9 +126,9 @@ def game():
                     if menu_leave_game():
                         game()
                     pygame.mixer.music.unpause()
-                elif pom_time > time_change + 10:
-                    game_over(score)
-                    if game_over(score):
+                elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+                    game_over(score, police=True)
+                    if game_over(score, police=True):
                         game()
 
             traffic_lights_static.print_object()
@@ -202,7 +202,7 @@ def game():
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)
-          #  pygame.draw.rect(screen, (50, 55, 55), enemy_car_rect)
+            #  pygame.draw.rect(screen, (50, 55, 55), enemy_car_rect)
             fuel_rect = fuel.rect_fuel.inflate(-20, -20)
             star_rect = stars.rect_comb.inflate(-10, -10)
 
@@ -227,7 +227,6 @@ def game():
             if car_rect.colliderect(star_rect):
                 song_drink.play(0)
                 car_speed += random.choice(pst_speed)
-                print(car_speed)
                 count_stars += 0.15
                 show_star = False
 

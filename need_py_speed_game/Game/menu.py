@@ -1,11 +1,9 @@
 # coding: utf-8
 
 import os, sys, time, random, pickle
-import pygame as pg
 from pygame import *
 from .sounds_effects import *
 from .traffic_lights_static import *
-from .checkbox import *
 
 pg.init()
 
@@ -122,6 +120,7 @@ def menu_record():
 
         pg.display.update()
 
+
 # Menu help
 def menu_help():
     menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
@@ -219,10 +218,11 @@ def menu_leave_game(red_for_sec=5, first=False):
 
 
 # Game Over
-def game_over(score):
+def game_over(score, police=False):
     score = int(score)
     print_record = False
 
+    policeMan = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'police.png')
     # load records
     with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
         record = pickle.load(f)
@@ -246,10 +246,12 @@ def game_over(score):
         s.fill((255, 255, 255))  # this fills the entire surface
         screen.blit(s, (0, 380))  # draw
         screen.blit(texto_fim, [(1024 / 2) - (texto_fim.get_size()[0] / 2), 420])
+        if police:
+            screen.blit(policeMan, (700, 250))
 
         if print_record:
-            screen.blit(texto_record, [(1024 / 2) - (texto_record.get_size()[0] / 2), 300])
-            screen.blit(texto_score, [(1024 / 2) - (texto_score.get_size()[0] / 2), 350])
+            screen.blit(texto_record, [(1024 / 2) - (texto_record.get_size()[0] / 2), 100])
+            screen.blit(texto_score, [(1024 / 2) - (texto_score.get_size()[0] / 2), 150])
 
         pg.display.update()
         pg.time.delay(6000)
@@ -267,7 +269,7 @@ def root_menu():
     sub_texto_menu1 = fonte_menu2.render("Hrát", True, YELLOW)
     sub_texto_menu2 = fonte_menu2.render("Nápověda", True, YELLOW)
     sub_texto_menu3 = fonte_menu2.render("Rekord", True, YELLOW)
-    #sub_texto_menu4 = fonte_menu2.render("Kredity", True, YELLOW)
+    # sub_texto_menu4 = fonte_menu2.render("Kredity", True, YELLOW)
     sub_texto_menu5 = fonte_menu2.render("Smazat záznamy", True, YELLOW)
     sub_texto_menu6 = fonte_menu2.render("Konec", True, YELLOW)
 
@@ -323,6 +325,7 @@ def root_menu():
                 sys.exit()
 
         pg.display.update()
+
 
 # Configuration screen
 size = largura_tela, altura_leta = (1024, 768)

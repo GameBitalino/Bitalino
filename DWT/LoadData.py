@@ -25,6 +25,12 @@ class LoadData:
         self.emg = data.iloc[:, 1]  # výběr sloupce obsahující naměřené hodnoty
         return self.time, self.emg
 
+    def load_parsed_record(self, path, fvz=1000):
+        data = pd.read_csv(path, delimiter=',',
+                           decimal=".")  # načtení  dat
+        self.emg = data.values
+        return self.emg
+
     def plot_data(self):
         plt.style.use("ggplot")
         plt.plot(self.time, self.emg)
