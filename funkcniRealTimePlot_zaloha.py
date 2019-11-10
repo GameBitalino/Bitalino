@@ -3,14 +3,13 @@ import bitalino
 import numpy as np
 import pyqtgraph as pg
 from matplotlib import pyplot as plt
-import sys
 from saveData import saveEMG
 
 # set parameters
 fvz = 1000
 nframes = 100
 threshold = 5
-minutes = 3  # how long you want to measure
+minutes = 0.5 #how long you want to measure
 num_frames_plot = 10  # every e.g.. tenth sample will be draw in real time graph
 
 # connect Bitalino
