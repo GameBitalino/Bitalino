@@ -1,3 +1,5 @@
+pywt
+scipy
 pygame
 numpy
 bitalino
