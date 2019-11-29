@@ -61,11 +61,14 @@ def SSC(signal):
     """
     return np.sum(ssc)
 
+def STD(signal):
+    return np.std(signal)
+
 def features(signal):
     signal = abs(signal)
     start = timer.time()
     # feature = [RMS(signal), SSC(signal), MNF(signal),  MAV(signal),ZC(signal), WL(signal)]
-    feature = [MAV(signal), MNF(signal), MAV(signal), WL(signal)]
+    feature = [MAV(signal), MNF(signal), RMS(signal), WL(signal), STD(signal)]
     #print(timer.time() - start)
     #print(feature)
     return feature

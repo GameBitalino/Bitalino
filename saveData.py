@@ -20,12 +20,11 @@ def saveEMG(time, EMG, title=name):
 
 
 name_parse = "./recordings/EMG_date_" + now.strftime("%d_%m_%Y") + "_time_" + str(
-    now.strftime("%H_%M_%S") + "_parse_.csv")
+    now.strftime("%H_%M_%S") + "_parsed_.csv")
 
 
-def savePartsOfEMG(emg, title=name_parse):
-    nFrames = 100
-    rows = int(len(emg) / nFrames)-1
+def savePartsOfEMG(emg, nFrames=100, title=name_parse):
+    rows = int(len(emg) / nFrames) - 1
     matrix = np.zeros((rows, nFrames))
     for i in range(rows):
         if i == 0:
