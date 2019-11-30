@@ -81,10 +81,10 @@ def game():
                 elif pygame.key.get_pressed()[K_SPACE] and traffic_lights_static.color == "red":
                     # pygame.mixer.music.pause()
                     song_pause.play(0)
-                    result = menu_leave_game()
+                    result = menu_leave_game() #pause game
                     if result:
                         game()  # go to menu
-                    elif result == False:
+                    elif not result:
                         traffic_lights_static.change_to_green()
                         start_time = time.time()
                         time_change = random_time()
