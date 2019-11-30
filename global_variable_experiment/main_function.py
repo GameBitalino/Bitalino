@@ -9,4 +9,4 @@ if __name__ == "__main__":
     usage.add(10)
     print(globals.var)
     usage.add(20)
-    print(globals.var)
+    print(globals.counter())

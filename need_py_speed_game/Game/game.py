@@ -2,6 +2,7 @@
 
 
 import time as timer
+from datetime import datetime
 from .stripes import *
 from .car import *
 from .trees import *
@@ -9,6 +10,7 @@ from .star import *
 from random import gauss
 from .menu import *
 from .traffic_lights_static import *
+import need_py_speed_game.Game.variables_for_reaction_time as react_time_variables
 
 pygame.init()
 game_introduction()
@@ -21,10 +23,11 @@ def random_time():
 # Menu
 def game():
     record = 0
+    counter_cycles = 0
     if root_menu():  # main menu
         pygame.mixer.music.load(
             './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
-        screen = pygame.display.set_mode((1024, 768))
+        # screen = pygame.display.set_mode((1024, 768))
         screen = pygame.display.get_surface()
         bottom = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
         pygame.display.set_caption('CAR EMG GAME')
@@ -35,7 +38,7 @@ def game():
         enemy_car = EnemyCar(screen)
         # traffic_lights = TrafficLights(screen)
         traffic_lights_static = TrafficLightStatic(screen)
-        time_change = random_time() + 3  # after some seconds change the lights (for first more)
+        time_change = random_time() + 3  # after some seconds change the lights (for first time more)
         right_trees = [Trees(screen, 'direita')]  # right trees
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
@@ -63,9 +66,11 @@ def game():
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
 
-        start_time = timer.time()
-
+        start_time_for_change_lights = timer.time()
         # lights for start game
+        # set initialize start_time - reaction time
+        react_time_variables.initialize()
+        # start bitalino
         menu_leave_game(first=True)
 
         while True:
@@ -74,21 +79,29 @@ def game():
                 print_fuel = True
                 show_fuel = True
 
+            pom_time = timer.time() - start_time_for_change_lights
             # close or pause game
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif pygame.key.get_pressed()[K_SPACE] and traffic_lights_static.color == "red":
+                    react_time_variables.react_time_red.append(datetime.now())
                     # pygame.mixer.music.pause()
                     song_pause.play(0)
-                    result = menu_leave_game() #pause game
+                    result = menu_leave_game()  # pause game
                     if result:
                         game()  # go to menu
                     elif not result:
+                        counter_cycles = 0
                         traffic_lights_static.change_to_green()
-                        start_time = time.time()
+                        start_time_for_change_lights = time.time()
                         time_change = random_time()
+                        pom_time = timer.time() - start_time_for_change_lights
                     # pygame.mixer.music.unpause()
+                elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+                    game_over(score, police=True)
+                    if game_over(score, police=True):
+                        game()
 
             key = pygame.key.get_pressed()
             car.move_car(key, car_speed)
@@ -115,10 +128,12 @@ def game():
 
             car.print_car(screen)
             # change the color
-            pom_time = timer.time() - start_time
+
             if pom_time > time_change and traffic_lights_static.color == "green":
                 traffic_lights_static.change_to_red()
-
+            if traffic_lights_static.color == "red":
+                counter_cycles += 1
+            """
             if traffic_lights_static.color == "red":
                 if pygame.key.get_pressed()[K_SPACE]:
                     pygame.mixer.music.pause()
@@ -130,9 +145,11 @@ def game():
                     game_over(score, police=True)
                     if game_over(score, police=True):
                         game()
-
+        """
             traffic_lights_static.print_object()
-
+            if counter_cycles == 1:
+                print('added to red set up')
+                react_time_variables.set_up_times_red_color.append(datetime.now())
             # Score
             font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 55)
             texto_score = font.render("Score", True, BLACK)
@@ -248,3 +265,9 @@ def game():
 
             i += 1
             cont_score += 0.1
+            """
+            print('set_up_green: ', react_time_variables.set_up_times_green_color)
+            print('set_up_red: ', react_time_variables.set_up_times_red_color)
+            print('react_time_green: ', react_time_variables.react_time_green)
+            print('react_time_red: ', react_time_variables.react_time_red)
+            """
