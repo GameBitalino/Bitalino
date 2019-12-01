@@ -5,6 +5,7 @@ from pygame import *
 from .sounds_effects import *
 from .traffic_lights_static import *
 import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
+from .display_results import *
 
 pg.init()
 
@@ -224,6 +225,18 @@ def menu_leave_game(red_for_sec=5, first=False):
         pg.display.update()
         escape += 1
 
+def OK_button_results(screen):
+    text = 'OK'
+    button_text = font_text.render(text, True, BLACK)
+    position = [900, 700]
+    screen.blit(button_text, position)
+    if source_position(button_text, position):
+        screen.blit(font_text.render(text, True, RED), position)
+    for event in pg.event.get():
+        if (pg.mouse.get_pressed()[0] and source_position(button_text, position)) or pg.key.get_pressed()[pg.K_ESCAPE]:
+            return True
+        elif event.type == pg.QUIT:
+            sys.exit()
 
 # Game Over
 def game_over(score, police=False):
@@ -265,7 +278,14 @@ def game_over(score, police=False):
             screen.blit(texto_score, [(1024 / 2) - (texto_score.get_size()[0] / 2), 150])
 
         pg.display.update()
-        pg.time.delay(6000)
+        pg.time.delay(3000)
+        # reaction time results - display it
+        results = False
+        while not results:
+            print_results(screen)
+            results = OK_button_results(screen)
+            pg.display.update()
+        pg.time.delay(1000)
         return True
 
 

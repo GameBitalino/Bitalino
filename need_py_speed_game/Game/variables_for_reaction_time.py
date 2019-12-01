@@ -53,3 +53,19 @@ def count_reaction_time():
         print('length set ups: ', len(set_up_times_red_color), 'length detected: ', len(react_time_red))
     red_reaction_times = [thing.total_seconds() for thing in red_reaction_times]
     return green_reaction_times, red_reaction_times
+
+
+def mean_reaction_time(green_reaction_times, red_reaction_times):
+    green = np.mean(green_reaction_times)
+    red = np.mean(red_reaction_times)
+    print('Mean reaction time on green traffic lights was: ', green)
+    print('Mean reaction time on red traffic lights was: ', red)
+    return green, red
+
+
+def best_reaction_time(green_reaction_times, red_reaction_times):
+    green = np.min(green_reaction_times)
+    red = np.min(red_reaction_times)
+    print('Best reaction time on green traffic lights was: ', green)
+    print('Best reaction time on red traffic lights was: ', red)
+    return green, red
