@@ -1,26 +1,5 @@
 import numpy as np
 
-"""
-def initialize_green_color_set_up():
-    global set_up_times_green_color
-    set_up_times_green_color = []
-
-
-def initialize_red_color_set_up():
-    global set_up_times_red_color
-    set_up_times_red_color = []
-
-
-def initialize_react_time_red():
-    global react_time_red
-    react_time_red = []
-
-
-def initialize_react_time_green():
-    global react_time_green
-    react_time_green = []
-"""
-
 
 def initialize():
     global set_up_times_green_color
@@ -56,16 +35,28 @@ def count_reaction_time():
 
 
 def mean_reaction_time(green_reaction_times, red_reaction_times):
-    green = np.mean(green_reaction_times)
-    red = np.mean(red_reaction_times)
+    if not len(green_reaction_times) == 0:
+        green = np.mean(green_reaction_times)
+    else:
+        green = ' - '
+    if not len(red_reaction_times) == 0:
+        red = np.mean(red_reaction_times)
+    else:
+        red = ' - '
     print('Mean reaction time on green traffic lights was: ', green)
     print('Mean reaction time on red traffic lights was: ', red)
     return green, red
 
 
 def best_reaction_time(green_reaction_times, red_reaction_times):
-    green = np.min(green_reaction_times)
-    red = np.min(red_reaction_times)
+    if not len(green_reaction_times) == 0:
+        green = np.min(green_reaction_times)
+    else:
+        green = ' - '
+    if not len(red_reaction_times) == 0:
+        red = np.min(red_reaction_times)
+    else:
+        red = ' - '
     print('Best reaction time on green traffic lights was: ', green)
     print('Best reaction time on red traffic lights was: ', red)
     return green, red
