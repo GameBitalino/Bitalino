@@ -66,6 +66,16 @@ def game():
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
 
+        # fonts
+        font_score = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 55)
+        texto_score = font_score.render("Score", True, BLACK)
+        font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 80)
+        texto_bonus = font_bonus.render("YOU ARE FAST", True, GREEN)
+        cor_font = GREEN
+        font_fuel = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 50)
+        texto_gasolina = font_fuel.render("FUEL", True, BLACK)
+        font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
+
         start_time_for_change_lights = timer.time()
         # lights for start game
         # set initialize start_time - reaction time
@@ -133,29 +143,13 @@ def game():
                 traffic_lights_static.change_to_red()
             if traffic_lights_static.color == "red":
                 counter_cycles += 1
-            """
-            if traffic_lights_static.color == "red":
-                if pygame.key.get_pressed()[K_SPACE]:
-                    pygame.mixer.music.pause()
-                    song_pause.play(0)
-                    if menu_leave_game():
-                        game()
-                    pygame.mixer.music.unpause()
-                elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
-                    game_over(score, police=True)
-                    if game_over(score, police=True):
-                        game()
-        """
+
             traffic_lights_static.print_object()
             if counter_cycles == 1:
-                print('added to red set up')
                 react_time_variables.set_up_times_red_color.append(datetime.now())
             # Score
-            font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 55)
-            texto_score = font.render("Score", True, BLACK)
-
             score = cont_score * 10
-            texto_valor_score = font.render("%d" % score, True, BLACK)
+            texto_valor_score = font_score.render("%d" % score, True, BLACK)
             screen.blit(texto_score, [750, 15])
             screen.blit(texto_valor_score, [920, 15])
 
@@ -168,12 +162,8 @@ def game():
                 bonus_extra = True
 
             if cont_view < 20 and bonus_extra:
-                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'WeareDepraved.ttf', 80)
-                texto_bonus = font.render("YOU ARE FAST", True, GREEN)
-
-                cor_font = GREEN
                 score = cont_score * 15
-                screen.blit(texto_bonus, [512 - texto_bonus.get_size()[0] / 2, 350])
+                screen.blit(font_bonus, [512 - texto_bonus.get_size()[0] / 2, 350])
             else:
                 bonus_extra = False
 
@@ -195,15 +185,11 @@ def game():
                 car_crash = False
 
             if cont_view < 20:
-                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
-                texto_good = font.render("+ %d0 BONUS" % bonus, True, cor_font)
-
+                texto_good = font_bonus.render("+ %d0 BONUS" % bonus, True, cor_font)
                 screen.blit(texto_good, [320, 280])
                 cont_view += 1
 
             if cont_fuel < 96:
-                font = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 50)
-                texto_gasolina = font.render("FUEL", True, BLACK)
                 screen.blit(texto_gasolina, [10, 10])
                 pygame.draw.rect(screen, BLACK, [50, 55, 20, 100], 3)
                 pygame.draw.rect(screen, RED, [52, 57, 16, 96], 0)

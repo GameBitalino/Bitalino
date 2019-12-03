@@ -24,11 +24,9 @@ def game_introduction():
 
     # Load image
     vut = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'vut.png').convert()
-    # cc = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'logo_computacao.jpg').convert()
-    logo_jogo = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'vut.png').convert()
 
     # Load Fonts
-    fonte = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_LtIt.TTF', 150)
+    fonte = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Bd.TTF', 150)
     texto_apresentacao = fonte.render("Racing game", True, WHITE)
     screen.fill(WHITE)
     screen.blit(vut, position_image_start(vut, size))
@@ -228,7 +226,7 @@ def menu_leave_game(red_for_sec=5, first=False):
 def OK_button_results(screen):
     text = 'OK'
     button_text = font_text.render(text, True, BLACK)
-    position = [900, 700]
+    position = [870, 680]
     screen.blit(button_text, position)
     if source_position(button_text, position):
         screen.blit(font_text.render(text, True, RED), position)
@@ -280,9 +278,9 @@ def game_over(score, police=False):
         pg.display.update()
         pg.time.delay(3000)
         # reaction time results - display it
+        print_results(screen)
         results = False
         while not results:
-            print_results(screen)
             results = OK_button_results(screen)
             pg.display.update()
         pg.time.delay(1000)

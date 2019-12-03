@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def initialize():
@@ -38,11 +39,11 @@ def mean_reaction_time(green_reaction_times, red_reaction_times):
     if not len(green_reaction_times) == 0:
         green = np.mean(green_reaction_times)
     else:
-        green = ' - '
+        green = math.inf
     if not len(red_reaction_times) == 0:
         red = np.mean(red_reaction_times)
     else:
-        red = ' - '
+        red = math.inf
     print('Mean reaction time on green traffic lights was: ', green)
     print('Mean reaction time on red traffic lights was: ', red)
     return green, red
@@ -52,11 +53,11 @@ def best_reaction_time(green_reaction_times, red_reaction_times):
     if not len(green_reaction_times) == 0:
         green = np.min(green_reaction_times)
     else:
-        green = ' - '
+        green = math.inf
     if not len(red_reaction_times) == 0:
         red = np.min(red_reaction_times)
     else:
-        red = ' - '
+        red = math.inf
     print('Best reaction time on green traffic lights was: ', green)
     print('Best reaction time on red traffic lights was: ', red)
     return green, red
