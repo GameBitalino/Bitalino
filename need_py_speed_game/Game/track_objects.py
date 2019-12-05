@@ -8,12 +8,15 @@ class EnemyCar(pygame.sprite.Sprite):
         self.positions = [[480, 350], [505, 350]]
         self.position_ambulance = [510, 350]
         self.position = random.choice(self.positions)
-        #self.objects = ['adv_car.png', 'adv_car2.png', 'adv_car3.png', 'adv_car4.png', 'ambulance.png']
-        self.objects = ['adv_car4.png', 'ambulance.png']
-        #self.objects = [pygame.image.load('./need_py_speed_game/Game/imagens/adv_car4.png'), pygame.image.load('./need_py_speed_game/Game/imagens/ambulance.png')]
-        self.witch_object = random.choice(self.objects)
+        path = './need_py_speed_game/Game/imagens/'
+        self.objects = [pygame.image.load(path + 'adv_car.png'),
+                        pygame.image.load(path + 'adv_car2.png'),
+                        pygame.image.load(path + 'adv_car3.png'),
+                        pygame.image.load(path + 'adv_car4.png'),
+                        pygame.image.load(path + 'ambulance.png')]
+        self.witch_object = random.choice(range(5))
+        self.object = self.objects[self.witch_object]
         self.is_ambulance = False
-        self.object = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + self.witch_object)
         self.size_object_x = 80
         self.size_object_y = 80
         self.position_object_x = self.position[0]
@@ -39,9 +42,11 @@ class EnemyCar(pygame.sprite.Sprite):
         self.rect_objeto = self.object_print.get_rect()
         self.rect_objeto.x, self.rect_objeto.y = (self.position_object_x, self.position_object_y)
         if self.position_object_y > 1200 or self.position_object_x > 2000 or self.position_object_x < -500:
-            self.witch_object = random.choice(self.objects)
-            self.object = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + self.witch_object)
-            self.is_ambulance = self.witch_object == 'ambulance.png'
+            # self.witch_object = random.choice(self.objects)
+            self.witch_object = random.choice(range(5))
+            # self.object = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + self.witch_object)
+            self.is_ambulance = self.witch_object == 4
+            self.object = self.objects[self.witch_object]
             self.position = random.choice(self.positions)
             self.size_object_x = 20
             self.size_object_y = 20
@@ -61,7 +66,6 @@ class EnemyCar(pygame.sprite.Sprite):
             self.rect_objeto.x, self.rect_objeto.y = (self.position_object_x, self.position_object_y)
         else:
             self.first = False
-
 
     def print_object(self):
         self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
