@@ -11,6 +11,8 @@ def initialize():
     react_time_red = []
     global react_time_green
     react_time_green = []
+    global set_up_ambulance
+    react_time_ambulance = []
 
 
 def count_reaction_time():

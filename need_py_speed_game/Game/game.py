@@ -130,7 +130,11 @@ def game():
                 stripes[j].print_stripes(screen)
                 right_trees[j].print_tree(screen)
                 left_trees[j].print_tree(screen)
-                enemy_car.print_object(screen)
+            #ambulance or enemy car
+            is_ambulance, is_first = enemy_car.print_object()
+            if is_ambulance and is_first:
+                react_time_variables.set_up_ambulance.append(datetime.now())
+
             if show_fuel:
                 fuel.print_fuel(screen)
             if show_star:
