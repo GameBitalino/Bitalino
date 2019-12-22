@@ -8,14 +8,14 @@ from torch.utils import data
 
 
 class DataLoader(data.Dataset):
-    def __init__(self, path_to_data=r"D:\5. ročník\DP\Bitalino\recordings\train_data"):
-        self.path = path_to_data
+    def __init__(self, dataFolder, path_to_data=r"D:\5. ročník\DP\Bitalino\recordings"):
+        self.path = path_to_data + "/" + dataFolder
         # vime ze slozky od 0 do 9
         self.files = []
         self.labels = []
-        cvs_files = glob.glob(self.path + '/*.csv')  # vrati list souboru, ktere jsou uvnitr slozky
+        cvs_files = glob.glob(self.path + '/signal/*.csv')  # vrati list souboru, ktere jsou uvnitr slozky
         self.files = self.files + cvs_files
-        cvs_labels = glob.glob(self.path + '/labels' + '/*.csv')
+        cvs_labels = glob.glob(self.path + '/labels/*.csv')
         self.labels = cvs_labels
         self.num_of_signals = len(self.files)
 
@@ -44,29 +44,14 @@ class DataLoader(data.Dataset):
         return sig, lbl
 
 
-loader = DataLoader()
+loader = DataLoader("train_data")
 trainLoader = data.DataLoader(loader, batch_size=2, num_workers=0, shuffle=True, drop_last=True)
 loader.files
 
-"""
-trainloader = data.DataLoader(loader, batch_size=2, num_workers=0, shuffle=True, drop_last=True)
-
-for it, (batch, lbls) in enumerate(trainloader):  ### you can iterate over dataset (one epoch)
-    print(batch)
-    print(batch.size())
-    print(np.argmax(lbls.detach().cpu().numpy(), axis=1))
-    plt.imshow(batch[0, 0, :, :].detach().cpu().numpy())
-    plt.show()
-    break
-
-loader = DataLoader(split='testing')
-testloader = data.DataLoader(loader, batch_size=2, num_workers=0, shuffle=True, drop_last=True)
-
-for it, (batch, lbls) in enumerate(testloader):  ### you can iterate over dataset (one epoch)
-    print(batch)
-    print(batch.size())
-    print(np.argmax(lbls.detach().cpu().numpy(), axis=1))
-    plt.imshow(batch[0, 0, :, :].detach().cpu().numpy())
-    plt.show()
-    break
-"""
+for it,(batch,lbls) in enumerate(trainLoader): ### you can iterate over dataset (one epoch)
+  print("batch ", batch)
+  print("batch size: ", batch.size())
+  print("max - the position of label", np.argmax(lbls.detach().cpu().numpy(),axis=1))
+  plt.plot(batch[0,0,:,:].detach().cpu().numpy())
+  plt.show()
+  break
