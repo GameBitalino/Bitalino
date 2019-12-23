@@ -10,7 +10,7 @@ class UNetModel(torch.nn.Module):
         self._input_channels = input_channels
 
         self.network_channels = (
-            (self._input_channels, 64),
+            (self._input_channels, 64),  # 64 filtru
             (64, 128),
             (128, 256),
             (256, 512),
@@ -21,14 +21,11 @@ class UNetModel(torch.nn.Module):
             (128, 64, 64),
             (64, self._num_classes)
         )
-
         self.enc1 = _EncoderBlock(*self.network_channels[0])
         self.enc2 = _EncoderBlock(*self.network_channels[1])
         self.enc3 = _EncoderBlock(*self.network_channels[2])
         self.enc4 = _EncoderBlock(*self.network_channels[3])
-
         self.center = self._central_part(*self.network_channels[4])
-
         self.dec4 = _DecoderBlock(*self.network_channels[5])
         self.dec3 = _DecoderBlock(*self.network_channels[6])
         self.dec2 = _DecoderBlock(*self.network_channels[7])
@@ -46,7 +43,7 @@ class UNetModel(torch.nn.Module):
         self.pool1 = MaxPool1d(kernel_size=2, stride=2)
         self.pool2 = MaxPool1d(kernel_size=2, stride=2)
         self.pool3 = MaxPool1d(kernel_size=2, stride=2)
-        self.pool4 = MaxPool1d(kernel_size=2, stride=2)
+        self.pool4 = MaxPool1d(kernel_size=2, stride=2, ceil_mode=True)
 
         self._initialize_weights()
 
@@ -59,10 +56,15 @@ class UNetModel(torch.nn.Module):
         pooled_enc3 = self.pool3(enc3)
         enc4 = self.enc4(pooled_enc3)
         pooled_enc4 = self.pool4(enc4)
-
+        print("after enc block")
         center = self.center(pooled_enc4)
-
+        print("after central block")
+        print(enc4)
+        print(center)
+        print(torch.cat([enc4, center], 1).shape)
         dec4 = self.dec4(torch.cat([enc4, center], 1))
+        print("dec4",dec4.shape)
+        print("dec3:", self.dec3)
         dec3 = self.dec3(torch.cat([enc3, dec4], 1))
         dec2 = self.dec2(torch.cat([enc2, dec3], 1))
         return self.out(torch.cat([enc1, dec2], 1))
@@ -109,6 +111,7 @@ class _EncoderBlock(torch.nn.Module):
         self.encode = Sequential(*layers)
 
     def forward(self, x):
+        print(x.shape)
         return self.encode(x)
 
 
@@ -132,6 +135,7 @@ class _DecoderBlock(torch.nn.Module):
 
     def forward(self, x):
         return self.decode(x)
+
 
 """
 if __name__ == "__main__":

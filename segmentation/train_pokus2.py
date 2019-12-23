@@ -15,18 +15,15 @@ class TrainUNetModel:
         self.model = UNetModel()
         self.model.cuda()
         self.loss = CrossEntropyLoss()
-        self.optimizer = SGD(self.MODEL.parameters(), lr=self.LEARNING_RATE, momentum=self.MOMENTUM)
-
-        self.loader_val = None
-        self.loader_train = None
 
         self.NUM_CLASSES = 2
         self.BATCH_SIZE = 2
-        self.NUMBER_OF_EPOCHS = 100
+        self.NUMBER_OF_EPOCHS = 500
         self.LEARNING_RATE = 1e-3
         self.MOMENTUM = 0.9
-        self.loader_train = None
         self.iter = 0
+        self.optimizer = SGD(self.model.parameters(), lr=self.LEARNING_RATE, momentum=self.MOMENTUM)
+
         # load data
         self.dataset = DataLoader("train_data")
         self.trainLoader = torch.utils.data.DataLoader(self.dataset, batch_size=self.BATCH_SIZE, num_workers=0,
@@ -51,13 +48,15 @@ class TrainUNetModel:
 
         it = -1
         for epoch in range(self.NUMBER_OF_EPOCHS):
-            tqdm_loader = tqdm(self.loader_train)
-            for data in tqdm_loader:
+            #tqdm_loader = tqdm(self.loader_train)
+            for iter,(signal, labels) in enumerate(self.trainLoader):
                 it += 1
-                signal, labels, indices, img_path, mask_path = data
+                #signal, labels, indices, img_path, mask_path = data
                 self.optimizer.zero_grad()
-                signal = Variable(signal, requires_grad=True)
-                labels = Variable(labels, requires_grad=True)
+                #signal = Variable(signal, requires_grad=True)
+                #labels = Variable(labels, requires_grad=True)
+                signal.requires_grad = True
+                labels.requires_grad = True
                 signal = signal.cuda()
                 labels = labels.cuda()
 
@@ -86,13 +85,17 @@ class TrainUNetModel:
                         acc = torch.mean((clas == lbl).float())
                         test_acc_tmp.append(acc.detach().cpu().numpy())
                         test_loss_tmp.append(loss.detach().cpu().numpy())
-
+                        print("before plot")
                         d = data[0, 0, :, :].detach().cpu().numpy()
                         r = output[0, 0, :, :].detach().cpu().numpy()
                         g = lbl[0, 0, :, :].detach().cpu().numpy()
-                        plt.plot(np.concatenate((d, r, g), axis=1), cmap='gray', vmin=0, vmax=1)
-                        plt.show()
+                        plt.plot(d, color='b')
+                        plt.plot(r, color='r')
+                        plt.show(g, color='g')
+            self.model.train()
 
 
 if __name__ == "__main__":
-    TrainUNetModel()
+    model = TrainUNetModel()
+    model.train()
+

@@ -25,25 +25,23 @@ class DataLoader(data.Dataset):
     # pocet vzorku do batche X konvolucni vrstvy X velikost obrazku (mxn) - bacth vytvori samo
     def __getitem__(self, index):
         sig = self.files[index]
-        print(sig)
         sig = pd.read_csv(sig, delimiter=',',
                           decimal=".")
-        sig = np.array(sig)
-        print(sig)
+        sig = np.array(sig)[:512]
+
         m = sig.shape[0]
         n = sig.shape[1]
-        print(m,n)
-        sig = sig.reshape((1, m, n))
-        sig = sig.astype(np.float32)
+        #sig = sig.reshape((1, m, n))
         # prevod na tensor
-        sig = torch.from_numpy(sig)
+        sig = torch.from_numpy(sig.astype(np.float32))
         label = self.labels[index]
         label = pd.read_csv(label, delimiter=',', decimal=".")
-        label = np.array(label)
+        label = np.array(label)[:512]
+        #label = label.reshape((1,m,n))
         lbl = torch.from_numpy(label.astype(np.float32))
         return sig, lbl
 
-
+"""
 loader = DataLoader("train_data")
 trainLoader = data.DataLoader(loader, batch_size=2, num_workers=0, shuffle=True, drop_last=True)
 loader.files
@@ -55,3 +53,4 @@ for it,(batch,lbls) in enumerate(trainLoader): ### you can iterate over dataset 
   plt.plot(batch[0,0,:,:].detach().cpu().numpy())
   plt.show()
   break
+"""
