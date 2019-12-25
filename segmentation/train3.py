@@ -13,6 +13,10 @@ BATCH_SIZE = 1
 LEARNING_RATE = 0.001
 NUMBER_OF_EPOCH = 20
 LOSS_FUNCTION = CrossEntropyLoss()
+
+#def LOSS_FUNCTION(out, labels):
+#    return -torch.mean(labels * torch.log(out))
+
 loaderTrain = DataLoader('train_data')
 trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=BATCH_SIZE, num_workers=0, shuffle=True,
                                           drop_last=True)
@@ -45,18 +49,18 @@ for epoch in range(NUMBER_OF_EPOCH):
 
         data.requires_grad = True
         lbl.requires_grad = True
-        #data = Variable(data, requires_grad=True)
-        #lbl = Variable(lbl, requires_grad=True)
+        data = Variable(data, requires_grad=True)
+        lbl = Variable(lbl, requires_grad=True)
         OPTIMIZER.zero_grad()  # zero the gradient buffers
         net.train()
         print("after train")
         data = data.reshape((1, 1, 512))
-        lbl = lbl.reshape((1,1,512))
+        lbl = lbl.reshape((1, 1, 512))
         output = net(data)
         print("after output")
         prediction = torch.argmax(output, dim=1)
-        #output = torch.sigmoid(output)
-        #print("after sigmoid")
+        # output = torch.sigmoid(output)
+        # print("after sigmoid")
         loss = LOSS_FUNCTION(output, lbl)
         loss.backward()
         OPTIMIZER.step()
