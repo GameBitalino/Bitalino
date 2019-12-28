@@ -34,7 +34,7 @@ try:
     curve.setTitle('<font size="5">EMG záznam</font>')
     curve.setLabel(axis='bottom', text='<font size="5">Čas [s]')
     curve.setLabel(axis='left', text='<font size="5">Napětí [μV]')
-    curve.setYRange(0, 1000)
+    curve.setYRange(200, 800)
     # start
     start = time.time()
     while True:

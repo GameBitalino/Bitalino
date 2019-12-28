@@ -126,7 +126,7 @@ def DWT(emg, wave='coif6', level=6):
     ax1.set(xlabel="Vzorky[-]", ylabel="Napětí")
     ax2.set(xlabel="Vzorky[-]", ylabel="Napětí")
     plt.show()
-    """
+    # vykresleni
     fig4 = plt.figure()
     figures = 200  # 2
     ax1 = fig4.add_subplot(figures + 11)
@@ -138,14 +138,17 @@ def DWT(emg, wave='coif6', level=6):
     ax1.set(xlabel="Vzorky[-]", ylabel="Napětí")
     ax2.set(xlabel="Vzorky[-]", ylabel="Napětí")
     plt.show()
+    """
     return emg_filter
 
-
+"""
 filtered_DWT = DWT(emg)
 deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
 
 filtered_TKEO = TKEO(emg)
 deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 2)
+"""
+
 
 """
 # slope
@@ -215,7 +218,7 @@ def low_pass(row_signal, fvz):
     b = signal.firwin(15, (fmez / fvz / 2), pass_zero=True)  # coefficient b of low pass filter
     return signal.filtfilt(b, 1, row_signal)
 
-
+"""
 # verification of detected signal - the detected signal has length minimal 25 ms (fvz = 1000 => 25 samples)
 positions = positions2
 difference = np.diff(positions)
@@ -237,3 +240,4 @@ plt.plot(emg)
 plt.plot(emg_detected2)
 plt.stem(start_positions, emg_detected2[start_positions])
 plt.show()
+"""

@@ -35,3 +35,19 @@ def savePartsOfEMG(emg, nFrames=100, title=name_parse):
     df.to_csv(title, index=None,
               header=True)  # Don't forget to add '.csv' at the end of the path
     print("Saving is done " + title)
+
+
+def saveLabeledData(emg, labels, path, nFrames=512):
+    files = int(len(emg) / nFrames) - 1
+    matrix = np.zeros((2, nFrames))
+    for i in range(files):
+        if i == 0:
+            matrix[0, :] = emg[0:nFrames]
+            matrix[1, :] = labels[0:nFrames]
+        else:
+            matrix[0, :] = emg[nFrames * i:nFrames * (i + 1)]
+            matrix[1, :] = labels[nFrames * i:nFrames * (i + 1)]
+        df = DataFrame(matrix)
+        df.to_csv(path + "_labels_parsed_" + str(i) + ".csv", index=None,
+                  header=True)  # Don't forget to add '.csv' at the end of the path
+    print("Saving is done " + path)
