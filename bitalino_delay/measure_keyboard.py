@@ -9,22 +9,16 @@ press_time = []
 
 
 def on_press(key):
-    try:
-        press_time.append(datetime.datetime.now())
-        print("Detected key press: ", key)
-    except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+    press_time.append(datetime.datetime.now())
+    print("Detected key press: ", key)
+    if key == keyboard.Key.esc:
+        # Stop listener
+        return False
 
 
-# Collect events until released
-with keyboard.Listener(
-        on_press=on_press) as listener:
-    listener.join()
+# Collect events until rele  ased
 
-# ...or, in a non-blocking fashion:
-listener = keyboard.Listener(
-    on_press=on_press)
+lis = keyboard.Listener(on_press=on_press)
 
 fvz = 1000
 nframes = 100
@@ -38,15 +32,19 @@ device = bitalino.BITalino(macAddress)
 time.sleep(1)
 print("START")
 
-listener.start()
+# listener.start()
 
 start = time.time()
 device.start(fvz, [0])
+
+lis.start()
+lis.join()
 # after_start = time.time()
 start_time = device.startTime
 try:
     while True:
         data = device.read(nframes)  # read nFrames from Bitalino
+        print("read")
         EMG = data[:, -1]
         EMG_record = np.concatenate([EMG_record, EMG])
         end = time.time()

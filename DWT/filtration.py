@@ -8,9 +8,12 @@ from scipy import signal
 from classification.LoadData import LoadData
 
 data = LoadData()
-time, emg = data.load_some_record()
+time, emg = data.load_record(r"D:\5. ročník\DP\Bitalino\recordings\EMG_date_25_12_2019_time_21_04_45.csv")
 data.plot_data()
 
+emg = emg[:10000]
+time = time[:10000]
+emg[8400:8600] = emg[9100:9300]
 
 def standard_deviation(emg_filter, std_tresh=2, window_half_length=2):
     deviation = []
@@ -27,7 +30,7 @@ def standard_deviation(emg_filter, std_tresh=2, window_half_length=2):
     plt.title('Detekovaná aktivita EMG')
     plt.legend(['klid', 'aktivita'])
     plt.xlabel(xlabel="Vzorky[-]")
-    plt.ylabel(ylabel='Napětí []')
+    plt.ylabel(ylabel='TKEO')
     plt.show()
 
     """
@@ -141,13 +144,13 @@ def DWT(emg, wave='coif6', level=6):
     """
     return emg_filter
 
-"""
+
 filtered_DWT = DWT(emg)
 deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
 
 filtered_TKEO = TKEO(emg)
-deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 2)
-"""
+deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 5)
+
 
 
 """
@@ -218,7 +221,7 @@ def low_pass(row_signal, fvz):
     b = signal.firwin(15, (fmez / fvz / 2), pass_zero=True)  # coefficient b of low pass filter
     return signal.filtfilt(b, 1, row_signal)
 
-"""
+
 # verification of detected signal - the detected signal has length minimal 25 ms (fvz = 1000 => 25 samples)
 positions = positions2
 difference = np.diff(positions)
@@ -240,4 +243,3 @@ plt.plot(emg)
 plt.plot(emg_detected2)
 plt.stem(start_positions, emg_detected2[start_positions])
 plt.show()
-"""
