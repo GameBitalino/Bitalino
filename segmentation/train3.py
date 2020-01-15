@@ -1,7 +1,6 @@
 from segmentation.UNet import UNetModel
 from matplotlib import pyplot as plt
 import numpy as np
-from scipy.io import savemat
 import torch
 from torch.nn import CrossEntropyLoss
 from torch.optim import SGD
@@ -11,14 +10,8 @@ from torch.autograd import Variable
 
 BATCH_SIZE = 1
 LEARNING_RATE = 0.001
-NUMBER_OF_EPOCH = 20
-
-
+NUMBER_OF_EPOCH = 200
 LOSS_FUNCTION = CrossEntropyLoss()
-
-#def LOSS_FUNCTION(out, labels):
-#    return -torch.mean(labels * torch.log(out))
-
 
 loaderTrain = DataLoader('train_data')
 trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=BATCH_SIZE, num_workers=0, shuffle=True,
@@ -50,21 +43,15 @@ for epoch in range(NUMBER_OF_EPOCH):
         data = data.cuda()
         lbl = lbl.cuda()
 
-        data.requires_grad = True
-        lbl.requires_grad = True
         # data = Variable(data, requires_grad=True)
         # lbl = Variable(lbl, requires_grad=True)
         OPTIMIZER.zero_grad()  # zero the gradient buffers
         net.train()
-        print("after train")
-        data = data.reshape((1, 1, 512))
-        lbl = lbl.reshape((1, 512))
         output = net(data)
-        print("after output")
         prediction = torch.argmax(output, dim=1)
-        # output = torch.sigmoid(output)
+        # prediction = torch.sigmoid(output)
         # print("after sigmoid")
-        loss = LOSS_FUNCTION(prediction, lbl)
+        loss = LOSS_FUNCTION(output, lbl)
         loss.backward()
         OPTIMIZER.step()
         clas = (output > 0.5).float()
@@ -72,44 +59,28 @@ for epoch in range(NUMBER_OF_EPOCH):
         train_acc_tmp.append(acc.detach().cpu().numpy())
         train_loss_tmp.append(loss.detach().cpu().numpy())
 
-        if it % 5 == 0:
-            d = data[0, :, :].detach().cpu().numpy()
-            r = output[0, :, :].detach().cpu().numpy()
-            g = lbl[0, :, :].detach().cpu().numpy()
-            plt.plot(d, 'b')
-            plt.plot(r, 'r')
-            plt.plot(g, 'g')
-            plt.show()
-
+        if it % 50 == 0:
             for kk, (data, lbl) in enumerate(testLoader):
                 data = data.cuda()
                 lbl = lbl.cuda()
-
-                data.requires_grad = True
-                lbl.requires_grad = True
-
                 OPTIMIZER.zero_grad()  # zero the gradient buffers
-
                 net.eval()
-
                 output = net(data)
-                output = F.sigmoid(output)
-
-                loss = CrossEntropyLoss(output, lbl)
-
+                #output = F.sigmoid(output)
+                loss = LOSS_FUNCTION(output, lbl)
+                prediction = torch.argmax(output, dim=1)
                 clas = (output > 0.5).float()
-
                 acc = torch.mean((clas == lbl).float())
-
                 test_acc_tmp.append(acc.detach().cpu().numpy())
                 test_loss_tmp.append(loss.detach().cpu().numpy())
 
-                d = data[0, 0, :, :].detach().cpu().numpy()
-                r = output[0, 0, :, :].detach().cpu().numpy()
-                g = lbl[0, 0, :, :].detach().cpu().numpy()
-                plt.plot(d, 'b')
-                plt.plot(r, 'r')
-                plt.plot(g, 'g')
+                d = prediction[0,:].detach().cpu().numpy()
+                r = output[0, 1, :].detach().cpu().numpy()
+                g = lbl[0, :].detach().cpu().numpy()
+                plt.plot(d.squeeze(), 'b', label="prediction")
+                plt.plot(r, 'r', label="output")
+                plt.plot(g, 'g', label="labels")
+                plt.legend(loc="upper left")
                 plt.show()
 
             train_loss.append(np.mean(train_loss_tmp))
@@ -125,8 +96,11 @@ for epoch in range(NUMBER_OF_EPOCH):
 
             plt.plot(position, train_loss)
             plt.plot(position, test_loss)
+            plt.title('loss')
             plt.show()
 
             plt.plot(position, train_acc)
             plt.plot(position, test_acc)
+            plt.title('accuracy')
+            plt.legend(['train', 'test'])
             plt.show()

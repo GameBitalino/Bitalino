@@ -1,9 +1,7 @@
 import numpy as np
 import torch
 import pandas as pd
-import matplotlib.pyplot as plt
 import glob
-from skimage.io import imread
 from torch.utils import data
 
 
@@ -13,7 +11,7 @@ class DataLoader(data.Dataset):
         # vime ze slozky od 0 do 9
         self.files = []
         self.labels = []
-        cvs_files = glob.glob(self.path + '/signal/*.csv')  # vrati list souboru, ktere jsou uvnitr slozky
+        cvs_files = glob.glob(self.path + '/signal/*.csv')  # list of csv in folder
         self.files = self.files + cvs_files
         cvs_labels = glob.glob(self.path + '/labels/*.csv')
         self.labels = cvs_labels
@@ -28,29 +26,9 @@ class DataLoader(data.Dataset):
         sig = pd.read_csv(sig, delimiter=',',
                           decimal=".")
         sig = np.array(sig)[:512]
-
-        m = sig.shape[0]
-        n = sig.shape[1]
-        #sig = sig.reshape((1, m, n))
-        # prevod na tensor
-        sig = torch.from_numpy(sig.astype(np.float32))
+        sig = torch.from_numpy(np.squeeze(sig))
         label = self.labels[index]
         label = pd.read_csv(label, delimiter=',', decimal=".")
         label = np.array(label)[:512]
-        #label = label.reshape((1,m,n))
         lbl = torch.from_numpy(label.astype(np.float32))
-        return sig, lbl
-
-"""
-loader = DataLoader("train_data")
-trainLoader = data.DataLoader(loader, batch_size=2, num_workers=0, shuffle=True, drop_last=True)
-loader.files
-
-for it,(batch,lbls) in enumerate(trainLoader): ### you can iterate over dataset (one epoch)
-  print("batch ", batch)
-  print("batch size: ", batch.size())
-  print("max - the position of label", np.argmax(lbls.detach().cpu().numpy(),axis=1))
-  plt.plot(batch[0,0,:,:].detach().cpu().numpy())
-  plt.show()
-  break
-"""
+        return sig.unsqueeze(dim=0).float(), lbl.squeeze().long()
