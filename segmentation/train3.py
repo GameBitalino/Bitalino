@@ -3,27 +3,25 @@ from matplotlib import pyplot as plt
 import numpy as np
 import torch
 from torch.nn import CrossEntropyLoss
-from torch.optim import SGD
-import torch.nn.functional as F
-from segmentation.loader import DataLoader
-from torch.autograd import Variable
+from torch.optim import Adam, SGD
+from segmentation.loaderEMG import DataLoader
+from torch.utils.tensorboard import SummaryWriter
 
-BATCH_SIZE = 1
+writer = SummaryWriter()
 LEARNING_RATE = 0.001
-NUMBER_OF_EPOCH = 200
+NUMBER_OF_EPOCH = 30
 LOSS_FUNCTION = CrossEntropyLoss()
 
-loaderTrain = DataLoader('train_data')
-trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=BATCH_SIZE, num_workers=0, shuffle=True,
+loaderTrain = DataLoader('EMG_train_data_1024', 1024)
+trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=1, num_workers=0, shuffle=True,
                                           drop_last=True)
 
-loaderTest = DataLoader('test_data')
-testLoader = torch.utils.data.DataLoader(loaderTest, batch_size=BATCH_SIZE, num_workers=0, shuffle=True, drop_last=True)
+loaderTest = DataLoader('EMG_test_data_1024', 1024)
+testLoader = torch.utils.data.DataLoader(loaderTest, batch_size=1, num_workers=0, shuffle=True, drop_last=True)
 
 net = UNetModel().cuda()
-OPTIMIZER = SGD(net.parameters(), lr=LEARNING_RATE, weight_decay=1e-8)
+OPTIMIZER = Adam(net.parameters(), lr=LEARNING_RATE, weight_decay=1e-6)
 
-print("after load data")
 train_loss = []
 test_loss = []
 train_acc = []
@@ -36,71 +34,77 @@ test_loss_tmp = []
 
 it = -1
 for epoch in range(NUMBER_OF_EPOCH):
-    for k, (data, lbl) in enumerate(trainLoader):
+    print(epoch)
+    for k, (test_data, test_lbl) in enumerate(trainLoader):
         it += 1
-        print(it)
-
-        data = data.cuda()
-        lbl = lbl.cuda()
-
-        # data = Variable(data, requires_grad=True)
-        # lbl = Variable(lbl, requires_grad=True)
+        test_data = test_data.cuda()
+        test_lbl = test_lbl.cuda()
         OPTIMIZER.zero_grad()  # zero the gradient buffers
         net.train()
-        output = net(data)
-        prediction = torch.argmax(output, dim=1)
-        # prediction = torch.sigmoid(output)
-        # print("after sigmoid")
-        loss = LOSS_FUNCTION(output, lbl)
+        output = net(test_data)
+        loss = LOSS_FUNCTION(output, test_lbl)
         loss.backward()
         OPTIMIZER.step()
-        clas = (output > 0.5).float()
-        acc = torch.mean((clas == lbl).float())
+        prediction = torch.argmax(output, dim=1)
+        acc = torch.mean((prediction == test_lbl).float())
         train_acc_tmp.append(acc.detach().cpu().numpy())
         train_loss_tmp.append(loss.detach().cpu().numpy())
 
-        if it % 50 == 0:
-            for kk, (data, lbl) in enumerate(testLoader):
-                data = data.cuda()
-                lbl = lbl.cuda()
-                OPTIMIZER.zero_grad()  # zero the gradient buffers
-                net.eval()
-                output = net(data)
-                #output = F.sigmoid(output)
-                loss = LOSS_FUNCTION(output, lbl)
-                prediction = torch.argmax(output, dim=1)
-                clas = (output > 0.5).float()
-                acc = torch.mean((clas == lbl).float())
-                test_acc_tmp.append(acc.detach().cpu().numpy())
-                test_loss_tmp.append(loss.detach().cpu().numpy())
 
-                d = prediction[0,:].detach().cpu().numpy()
-                r = output[0, 1, :].detach().cpu().numpy()
-                g = lbl[0, :].detach().cpu().numpy()
-                plt.plot(d.squeeze(), 'b', label="prediction")
-                plt.plot(r, 'r', label="output")
-                plt.plot(g, 'g', label="labels")
-                plt.legend(loc="upper left")
-                plt.show()
+        """
+        writer.add_scalar('loss', loss, epoch)
+        writer.add_scalar('accuracy', acc, epoch)
+        writer.add_figure('predictions vs. actuals',
+                          plt.plot(net, data, lbl),
+        """
+    if epoch % 20 == 0:
+        for kk, (test_data, test_lbl) in enumerate(testLoader):
+            test_data = test_data.cuda()
+            test_lbl = test_lbl.cuda()
+            OPTIMIZER.zero_grad()  # zero the gradient buffers
+            net.eval()
+            output = net(test_data)
+            #output = F.sigmoid(output)
+            loss = LOSS_FUNCTION(output, test_lbl)
+            prediction = torch.argmax(output, dim=1)
+            clas = torch.argmax(output, dim=1)
+            acc = torch.mean((clas == test_lbl).float())
+            test_acc_tmp.append(acc.detach().cpu().numpy())
+            test_loss_tmp.append(loss.detach().cpu().numpy())
 
-            train_loss.append(np.mean(train_loss_tmp))
-            test_loss.append(np.mean(test_loss_tmp))
-            train_acc.append(np.mean(train_acc_tmp))
-            test_acc.append(np.mean(test_acc_tmp))
-            position.append(it)
-
-            train_acc_tmp = []
-            train_loss_tmp = []
-            test_acc_tmp = []
-            test_loss_tmp = []
-
-            plt.plot(position, train_loss)
-            plt.plot(position, test_loss)
-            plt.title('loss')
+            d = prediction[0,:].detach().cpu().numpy()
+            o = test_data[0, :, :].detach().cpu().numpy()
+            r = output[0, 1, :].detach().cpu().numpy()
+            g = test_lbl[0, :].detach().cpu().numpy()
+            plt.plot(g*50, 'g', label="labels")
+            plt.plot(o.squeeze(), 'y', label='origin signal')
+            plt.plot(d.squeeze()*50, 'b', label="prediction")
+            plt.legend(loc="upper left")
             plt.show()
 
-            plt.plot(position, train_acc)
-            plt.plot(position, test_acc)
-            plt.title('accuracy')
-            plt.legend(['train', 'test'])
-            plt.show()
+        train_loss.append(np.mean(train_loss_tmp))
+        test_loss.append(np.mean(test_loss_tmp))
+        train_acc.append(np.mean(train_acc_tmp))
+        test_acc.append(np.mean(test_acc_tmp))
+        position.append(it)
+
+        train_acc_tmp = []
+        train_loss_tmp = []
+        test_acc_tmp = []
+        test_loss_tmp = []
+
+        current_epoch = str(epoch)
+        torch.save(net, r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "_crossEntropyLoss_Adam_optimizer_1024.pth")
+        """
+        plt.plot(position, train_loss)
+        plt.plot(position, test_loss)
+        plt.title('loss')
+        plt.show()
+
+        plt.plot(position, train_acc)
+        plt.plot(position, test_acc)
+        plt.title('accuracy')
+        plt.legend(['train', 'test'])
+        plt.show()
+        """
+#writer.close()

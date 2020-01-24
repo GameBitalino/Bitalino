@@ -4,9 +4,10 @@ from DWT.filtration import *
 import numpy as np
 import saveData
 
-path = r"D:\5. ročník\DP\Bitalino\recordings\EMG_train_data\EMG_date_25_12_2019_time_21_16_16"
+path = r"D:\5. ročník\DP\Bitalino\recordings\EMG_recordings_not_parsed\EMG_date_25_12_2019_time_20_57_23"
 loader = LoadData()
 time, emg = loader.load_record(path + ".csv")
+
 
 plt.plot(time, emg)
 plt.title("Záznam EMG")
@@ -20,7 +21,7 @@ deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
 filtered_TKEO = TKEO(emg)
 deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 2)
 
-"""
+
 plt.figure()
 plt.plot(emg, 'b')
 plt.plot(emg_detected2[positions2], color='red')
@@ -30,6 +31,7 @@ plt.xlabel(xlabel="Vzorky[-]")
 plt.ylabel(ylabel='Napětí []')
 plt.show()
 
+"""
 plt.figure()
 plt.plot(emg, 'b')
 plt.plot(emg_detected[positions], color='red')
@@ -39,22 +41,30 @@ plt.xlabel(xlabel="Vzorky[-]")
 plt.ylabel(ylabel='Napětí []')
 plt.show()
 """
+
 labels = np.zeros((len(emg)))
 # activity => 1
 
-# EMG_date_10_15_2019_time_18_01_51: 1.: 658-1478, 2: 2723-3476, 3: 4684 - 5481
-# labels[658:14780] = 1
-# labels[2723:3476] = 1
-# labels[4684:5481] = 1
+# EMG_date_10_15_2019_time_18_01_51: 1.:
+# 658-1478, 2: 2723-3476, 3: 4684 - 5481
+"""
+labels[658:1478] = 1
+labels[2723:3476] = 1
+labels[4684:5481] = 1
+"""
+
 
 # EMG_date_25_12_2019_time_20_57_23:
-# labels[4894:5820] = 1
-# labels[8954:9724] = 1
-# labels[13146:13924] = 1
-# labels[16906:17877] = 1
-# labels[20590:21488] = 1
-# labels[23976:24992] = 1
-# labels[27934:29155] = 1
+
+labels[4894:5450] = 1
+labels[8954:9465] = 1
+labels[9650:9710] = 1
+labels[13146:13924] = 1
+labels[16906:17877] = 1
+labels[20590:21488] = 1
+labels[23976:24992] = 1
+labels[27934:29155] = 1
+
 
 # EMG_date_25_12_2019_time_21_00_07
 """
@@ -69,6 +79,7 @@ labels[20347:20833] = 1
 labels[23190:23907] = 1
 labels[27380:28154] = 1
 """
+
 
 # EMG_date_25_12_2019_time_21_00_55
 """
@@ -145,13 +156,15 @@ labels[29871:30000] = 1
 # EMG_date_25_12_2019_time_21_11_38
 """
 labels = np.zeros((len(emg)))
-labels[1096:1475] = 1
-labels[3548:3849] = 1
-labels[6348:6700] = 1
+labels[1096:1745] = 1
+labels[3548:4120] = 1
+labels[6348:7050] = 1
 labels[8920:9476] = 1
 labels[12100:12500] = 1
 labels[16944:17245] = 1
+labels[17350:17420] = 1
 labels[21855:22430] = 1
+labels[27180:27750] = 1
 labels[29545:30000] = 1
 """
 
@@ -185,6 +198,8 @@ labels[27760:28200] = 1
 labels[29620:30000] = 1
 """
 
+plt.plot(emg)
+plt.plot(labels*100)
+plt.show()
 
-# saveData.savePartsOfEMG(labels, 512, path + ".csv")
-saveData.saveLabeledData(emg, labels, path)
+#saveData.saveLabeledData(emg, labels, path, 1024)

@@ -9,7 +9,7 @@ from saveData import saveEMG
 fvz = 1000
 nframes = 100
 threshold = 5
-minutes = 0.5 #how long you want to measure
+minutes = 0.5 # how long you want to measure
 num_frames_plot = 10  # every e.g.. tenth sample will be draw in real time graph
 
 # connect Bitalino
@@ -45,7 +45,7 @@ try:
         # plot real time graph
         float_count_samples = int(nframes / num_frames_plot)
         float_window = 100
-        pom = y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)]
+        # pom = y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)]
         if (np.shape(y_vec[(iteration * float_count_samples):((iteration + 1) * float_count_samples)])[0]) < 10:
             break
         else:

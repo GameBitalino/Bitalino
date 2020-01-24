@@ -2,6 +2,19 @@ import torch
 from torch.nn import Conv1d, ConvTranspose1d, MaxPool1d, ReLU, Sequential, BatchNorm1d, Dropout
 
 
+def _central_part(in_channels, middle_channels, out_channels):
+    central_part = [
+        Conv1d(in_channels, middle_channels, kernel_size=3, padding=1),
+        BatchNorm1d(middle_channels),
+        ReLU(inplace=True),
+        Conv1d(middle_channels, middle_channels, kernel_size=3, padding=1),
+        BatchNorm1d(middle_channels),
+        ReLU(inplace=True),
+        ConvTranspose1d(middle_channels, out_channels, kernel_size=2, stride=2)
+    ]
+    return Sequential(*central_part)
+
+
 class UNetModel(torch.nn.Module):
     def __init__(self, num_classes=2, input_channels=1):
         super(UNetModel, self).__init__()
@@ -25,17 +38,17 @@ class UNetModel(torch.nn.Module):
         self.enc2 = _EncoderBlock(*self.network_channels[1])
         self.enc3 = _EncoderBlock(*self.network_channels[2])
         self.enc4 = _EncoderBlock(*self.network_channels[3])
-        self.center = self._central_part(*self.network_channels[4])
+        self.center = _central_part(*self.network_channels[4])
         self.dec4 = _DecoderBlock(*self.network_channels[5])
         self.dec3 = _DecoderBlock(*self.network_channels[6])
         self.dec2 = _DecoderBlock(*self.network_channels[7])
         layers = [
-            Conv1d(self.network_channels[8][0], self.network_channels[8][1], kernel_size=3, padding=1),
+            Conv1d(self.network_channels[8][0], self.network_channels[8][1], kernel_size=1, padding=0),
             BatchNorm1d(self.network_channels[8][1]),
             ReLU(inplace=True),
-            Conv1d(self.network_channels[8][1], self.network_channels[8][1], kernel_size=3, padding=1),
+            Conv1d(self.network_channels[8][1], self.network_channels[8][1], kernel_size=1, padding=0),
             Dropout(0.2),
-            Conv1d(self.network_channels[8][2], self._num_classes, kernel_size=3, padding=1)
+            Conv1d(self.network_channels[8][2], self._num_classes, kernel_size=1, padding=0)
         ]
 
         self.out = Sequential(*layers)
@@ -56,15 +69,8 @@ class UNetModel(torch.nn.Module):
         pooled_enc3 = self.pool3(enc3)
         enc4 = self.enc4(pooled_enc3)
         pooled_enc4 = self.pool4(enc4)
-        print("after enc block")
         center = self.center(pooled_enc4)
-        print("after central block")
-        print(enc4)
-        print(center)
-        print(torch.cat([enc4, center], 1).shape)
         dec4 = self.dec4(torch.cat([enc4, center], 1))
-        print("dec4",dec4.shape)
-        print("dec3:", self.dec3)
         dec3 = self.dec3(torch.cat([enc3, dec4], 1))
         dec2 = self.dec2(torch.cat([enc2, dec3], 1))
         return self.out(torch.cat([enc1, dec2], 1))
@@ -78,18 +84,6 @@ class UNetModel(torch.nn.Module):
             elif isinstance(module, torch.nn.BatchNorm2d):
                 module.weight.data.fill_(1)
                 module.bias.data.zero_()
-
-    def _central_part(self, in_channels, middle_channels, out_channels):
-        central_part = [
-            Conv1d(in_channels, middle_channels, kernel_size=3, padding=1),
-            BatchNorm1d(middle_channels),
-            ReLU(inplace=True),
-            Conv1d(middle_channels, middle_channels, kernel_size=3, padding=1),
-            BatchNorm1d(middle_channels),
-            ReLU(inplace=True),
-            ConvTranspose1d(middle_channels, out_channels, kernel_size=2, stride=2)
-        ]
-        return Sequential(*central_part)
 
     def __str__(self):
         return "UNet"
@@ -111,7 +105,6 @@ class _EncoderBlock(torch.nn.Module):
         self.encode = Sequential(*layers)
 
     def forward(self, x):
-        print(x.shape)
         return self.encode(x)
 
 
@@ -136,9 +129,3 @@ class _DecoderBlock(torch.nn.Module):
     def forward(self, x):
         return self.decode(x)
 
-
-"""
-if __name__ == "__main__":
-    model = UNetModel(2, 1)
-    print(model)
-"""
