@@ -20,12 +20,12 @@ class DataLoader(data.Dataset):
 
     # pocet vzorku do batche X konvolucni vrstvy X velikost signalu - bacth vytvori samo
     def __getitem__(self, index):
-        file = self.files[index]
-        file = pd.read_csv(file, delimiter=',',
+        file_name = self.files[index]
+        file = pd.read_csv(file_name, delimiter=',',
                            decimal=".")
         file = np.array(file)[:self.signal_length]
         sig = file[0, :]
         sig = torch.from_numpy(np.squeeze(sig))
         label = file[1, :]
         lbl = torch.from_numpy(label.astype(np.float32))
-        return sig.unsqueeze(dim=0).float(), lbl.squeeze().long()
+        return sig.unsqueeze(dim=0).float(), lbl.squeeze().long(), file_name

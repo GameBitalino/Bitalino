@@ -9,14 +9,14 @@ from torch.utils.tensorboard import SummaryWriter
 
 writer = SummaryWriter()
 LEARNING_RATE = 0.001
-NUMBER_OF_EPOCH = 30
+NUMBER_OF_EPOCH = 41
 LOSS_FUNCTION = CrossEntropyLoss()
 
-loaderTrain = DataLoader('EMG_train_data_1024', 1024)
+loaderTrain = DataLoader('EMG_train_data_1024_prelabelovano', 1024)
 trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=1, num_workers=0, shuffle=True,
                                           drop_last=True)
 
-loaderTest = DataLoader('EMG_test_data_1024', 1024)
+loaderTest = DataLoader('EMG_test_data_1024_prelabelovano', 1024)
 testLoader = torch.utils.data.DataLoader(loaderTest, batch_size=1, num_workers=0, shuffle=True, drop_last=True)
 
 net = UNetModel().cuda()
@@ -35,7 +35,7 @@ test_loss_tmp = []
 it = -1
 for epoch in range(NUMBER_OF_EPOCH):
     print(epoch)
-    for k, (test_data, test_lbl) in enumerate(trainLoader):
+    for k, (test_data, test_lbl, test_name) in enumerate(trainLoader):
         it += 1
         test_data = test_data.cuda()
         test_lbl = test_lbl.cuda()
@@ -57,8 +57,8 @@ for epoch in range(NUMBER_OF_EPOCH):
         writer.add_figure('predictions vs. actuals',
                           plt.plot(net, data, lbl),
         """
-    if epoch % 20 == 0:
-        for kk, (test_data, test_lbl) in enumerate(testLoader):
+    if epoch % 10 == 0:
+        for kk, (test_data, test_lbl, test_name) in enumerate(testLoader):
             test_data = test_data.cuda()
             test_lbl = test_lbl.cuda()
             OPTIMIZER.zero_grad()  # zero the gradient buffers
@@ -76,10 +76,11 @@ for epoch in range(NUMBER_OF_EPOCH):
             o = test_data[0, :, :].detach().cpu().numpy()
             r = output[0, 1, :].detach().cpu().numpy()
             g = test_lbl[0, :].detach().cpu().numpy()
-            plt.plot(g*50, 'g', label="labels")
             plt.plot(o.squeeze(), 'y', label='origin signal')
             plt.plot(d.squeeze()*50, 'b', label="prediction")
+            plt.plot(g * 50, 'g', label="labels")
             plt.legend(loc="upper left")
+            plt.title(test_name[0].split("\\")[-1])
             plt.show()
 
         train_loss.append(np.mean(train_loss_tmp))
@@ -94,7 +95,7 @@ for epoch in range(NUMBER_OF_EPOCH):
         test_loss_tmp = []
 
         current_epoch = str(epoch)
-        torch.save(net, r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "_crossEntropyLoss_Adam_optimizer_1024.pth")
+        torch.save(net, r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "CrossEntropyLoss_withouDropOut_Adam_optimizer_1024_07_02_2020.pth")
         """
         plt.plot(position, train_loss)
         plt.plot(position, test_loss)
