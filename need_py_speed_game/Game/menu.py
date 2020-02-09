@@ -26,8 +26,8 @@ def game_introduction():
     vut = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'vut.png').convert()
 
     # Load Fonts
-    fonte = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Bd.TTF', 150)
-    texto_apresentacao = fonte.render("Racing game", True, WHITE)
+    fonte = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Bd.TTF', 100)
+    texto_apresentacao = fonte.render("EMG car game", True, WHITE)
     screen.fill(WHITE)
     screen.blit(vut, position_image_start(vut, size))
     pg.display.update()
@@ -87,6 +87,36 @@ def menu_reset():
 
         pg.display.update()
 
+def menu_settings():
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
+    fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 70)
+    fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 50)
+
+    texto1 = fonte_menu1.render('METODA DETEKCE EMG', True, WHITE)
+    option1 = fonte_menu2.render('Nelineární metoda TKEO', True, WHITE)
+    option2 = fonte_menu2.render('Klasifikátor SVM', True, WHITE)
+    option3 = fonte_menu2.render('Neuronová síť UNet', True, WHITE)
+    texto3 = fonte_menu1.render('Zpět', True, WHITE)
+
+    while True:
+        screen.blit(menu, [0, 0])
+        screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 20])
+        screen.blit(option1, [140, 200])
+        screen.blit(option2, [140, 300])
+        screen.blit(option3, [140, 400])
+        screen.blit(texto3, [750, 650])
+
+        if source_position(texto3, [750, 650]) or pg.key.get_pressed()[K_ESCAPE]:
+            screen.blit(fonte_menu1.render('Zpět', True, RED), [750, 650])
+
+        for event in pg.event.get():
+            if (pg.mouse.get_pressed()[0] and source_position(texto3, [750, 650])) or pg.key.get_pressed()[
+                K_ESCAPE]:
+                song_come_back.play(0)
+                return True
+            elif event.type == pg.QUIT:
+                sys.exit()
+        pg.display.update()
 
 def menu_record():
     # load Record
@@ -298,7 +328,7 @@ def root_menu():
     sub_texto_menu1 = fonte_menu2.render("Hrát", True, YELLOW)
     sub_texto_menu2 = fonte_menu2.render("Nápověda", True, YELLOW)
     sub_texto_menu3 = fonte_menu2.render("Rekord", True, YELLOW)
-    # sub_texto_menu4 = fonte_menu2.render("Kredity", True, YELLOW)
+    sub_texto_menu4 = fonte_menu2.render("Nastavení", True, YELLOW)
     sub_texto_menu5 = fonte_menu2.render("Smazat záznamy", True, YELLOW)
     sub_texto_menu6 = fonte_menu2.render("Konec", True, YELLOW)
 
@@ -316,8 +346,9 @@ def root_menu():
         screen.blit(sub_texto_menu1, [40, 150])
         screen.blit(sub_texto_menu2, [40, 250])
         screen.blit(sub_texto_menu3, [40, 350])
-        screen.blit(sub_texto_menu5, [40, 450])
-        screen.blit(sub_texto_menu6, [40, 550])
+        screen.blit(sub_texto_menu4, [40, 450])
+        screen.blit(sub_texto_menu5, [40, 550])
+        screen.blit(sub_texto_menu6, [40, 650])
 
         if source_position(sub_texto_menu1, [40, 150]):
             screen.blit(fonte_menu2.render("Hrát", True, RED), [40, 150])
@@ -325,10 +356,12 @@ def root_menu():
             screen.blit(fonte_menu2.render("Nápověda", True, RED), [40, 250])
         elif source_position(sub_texto_menu3, [40, 350]):
             screen.blit(fonte_menu2.render("Rekord", True, RED), [40, 350])
+        elif source_position(sub_texto_menu4, [40, 450]):
+            screen.blit(fonte_menu2.render("Nastavení", True, RED), [40, 450])
         elif source_position(sub_texto_menu5, [40, 450]):
-            screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 450])
+            screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 550])
         elif source_position(sub_texto_menu6, [40, 550]):
-            screen.blit(fonte_menu2.render("Konec", True, RED), [40, 550])
+            screen.blit(fonte_menu2.render("Konec", True, RED), [40, 650])
 
         for event in pg.event.get():
             if pg.mouse.get_pressed()[0] and source_position(sub_texto_menu1, [40, 150]):
@@ -343,12 +376,15 @@ def root_menu():
                 song_menu1.play(0)
                 if menu_record():
                     continue
-
             elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 450]):
+                song_menu1.play(0)
+                if menu_settings():
+                    continue
+            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 550]):
                 song_menu1.play(0)
                 if menu_reset():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu6, [40, 550]):
+            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu6, [40, 650]):
                 sys.exit()
             elif event.type == pg.QUIT:
                 sys.exit()
