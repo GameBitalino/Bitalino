@@ -6,6 +6,8 @@ from .sounds_effects import *
 from .traffic_lights_static import *
 import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
 from .display_results import *
+from .checkbox import checkbox
+import need_py_speed_game.Game.method as chosen_method
 
 pg.init()
 
@@ -37,6 +39,7 @@ def game_introduction():
     screen.blit(texto_apresentacao, position_image_start(texto_apresentacao, size))
     pg.display.update()
     time.sleep(2)
+    chosen_method.initialize_method()  # initialize method
 
 
 def source_position(imagem, pos_inicial):
@@ -87,6 +90,7 @@ def menu_reset():
 
         pg.display.update()
 
+
 def menu_settings():
     menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
     fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 70)
@@ -96,12 +100,25 @@ def menu_settings():
     option1 = fonte_menu2.render('Nelineární metoda TKEO', True, WHITE)
     option2 = fonte_menu2.render('Klasifikátor SVM', True, WHITE)
     option3 = fonte_menu2.render('Neuronová síť UNet', True, WHITE)
+    tkeoCheckbox = checkbox(screen, 40, 205)
+    svmCheckoubox = checkbox(screen, 40, 305)
+    unetCheckbox = checkbox(screen, 40, 405)
+    if chosen_method.choose_method == "UNET":
+        unetCheckbox.checked = True
+    elif chosen_method.choose_method == "SVM":
+        svmCheckoubox.checked = True
+    elif chosen_method.choose_method == "TKEO":
+        tkeoCheckbox.checked = True
+
     texto3 = fonte_menu1.render('Zpět', True, WHITE)
 
     while True:
         screen.blit(menu, [0, 0])
         screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 20])
         screen.blit(option1, [140, 200])
+        tkeoCheckbox.render_checkbox()
+        svmCheckoubox.render_checkbox()
+        unetCheckbox.render_checkbox()
         screen.blit(option2, [140, 300])
         screen.blit(option3, [140, 400])
         screen.blit(texto3, [750, 650])
@@ -110,6 +127,25 @@ def menu_settings():
             screen.blit(fonte_menu1.render('Zpět', True, RED), [750, 650])
 
         for event in pg.event.get():
+            if tkeoCheckbox.update_checkbox(event) and tkeoCheckbox.is_checked():
+                svmCheckoubox.checked = False
+                svmCheckoubox.render_checkbox()
+                unetCheckbox.checked = False
+                unetCheckbox.render_checkbox()
+                chosen_method.change_method_to("TKEO")
+            elif svmCheckoubox.update_checkbox(event) and svmCheckoubox.is_checked():
+                unetCheckbox.checked = False
+                unetCheckbox.render_checkbox()
+                tkeoCheckbox.checked = False
+                tkeoCheckbox.render_checkbox()
+                chosen_method.change_method_to("SVM")
+            elif unetCheckbox.update_checkbox(event) and unetCheckbox.is_checked():
+                svmCheckoubox.checked = False
+                svmCheckoubox.render_checkbox()
+                tkeoCheckbox.checked = False
+                tkeoCheckbox.render_checkbox()
+                chosen_method.change_method_to("UNET")
+
             if (pg.mouse.get_pressed()[0] and source_position(texto3, [750, 650])) or pg.key.get_pressed()[
                 K_ESCAPE]:
                 song_come_back.play(0)
@@ -117,6 +153,7 @@ def menu_settings():
             elif event.type == pg.QUIT:
                 sys.exit()
         pg.display.update()
+
 
 def menu_record():
     # load Record
@@ -253,6 +290,7 @@ def menu_leave_game(red_for_sec=5, first=False):
         pg.display.update()
         escape += 1
 
+
 def OK_button_results(screen):
     text = 'OK'
     button_text = font_text.render(text, True, BLACK)
@@ -265,6 +303,7 @@ def OK_button_results(screen):
             return True
         elif event.type == pg.QUIT:
             sys.exit()
+
 
 # Game Over
 def game_over(score, police=False):
@@ -358,9 +397,9 @@ def root_menu():
             screen.blit(fonte_menu2.render("Rekord", True, RED), [40, 350])
         elif source_position(sub_texto_menu4, [40, 450]):
             screen.blit(fonte_menu2.render("Nastavení", True, RED), [40, 450])
-        elif source_position(sub_texto_menu5, [40, 450]):
+        elif source_position(sub_texto_menu5, [40, 550]):
             screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 550])
-        elif source_position(sub_texto_menu6, [40, 550]):
+        elif source_position(sub_texto_menu6, [40, 650]):
             screen.blit(fonte_menu2.render("Konec", True, RED), [40, 650])
 
         for event in pg.event.get():
