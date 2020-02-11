@@ -54,7 +54,7 @@ def source_position(imagem, pos_inicial):
 
 def menu_reset():
     while True:
-        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg').convert()
+        menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu2.jpg').convert()
         screen.blit(menu, [0, 0])
         # pg.draw.rect(screen, WHITE, [100, 600, 10, 50], 0)
 
@@ -92,7 +92,7 @@ def menu_reset():
 
 
 def menu_settings():
-    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_recorde.jpg')
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu2.jpg')
     fonte_menu1 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 70)
     fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 50)
 
@@ -114,7 +114,7 @@ def menu_settings():
 
     while True:
         screen.blit(menu, [0, 0])
-        screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 20])
+        screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 40])
         screen.blit(option1, [140, 200])
         tkeoCheckbox.render_checkbox()
         svmCheckoubox.render_checkbox()
@@ -190,7 +190,7 @@ def menu_record():
 
 # Menu help
 def menu_help():
-    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'menu_ajuda.jpg')
+    menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu2.jpg')
     tecla1 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Left.png')
     tecla2 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Right.png')
     tecla3 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Esc.png')
@@ -241,6 +241,18 @@ def menu_help():
 
         pg.display.update()
 
+def start_measure_calm_emg():
+    img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
+    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
+    screen.blit(img, (0, 0))
+    # semi transparent
+    s = pygame.Surface((1024, 150))  # size
+    s.set_alpha(150)
+    s.fill((255, 255, 255))  # this fills the entire surface
+    screen.blit(s, (0, 380))  # draw
+    text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
+    screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+    pg.display.update()
 
 # after pause game
 def menu_leave_game(red_for_sec=5, first=False):
@@ -250,7 +262,7 @@ def menu_leave_game(red_for_sec=5, first=False):
     escape = 0
     traffic_lights = TrafficLightStatic(screen, "red")
     start_time = time.time()
-    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_LtIt.ttf', 100)
+    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 100)
     # semi transparent
     s = pygame.Surface((1024, 150))  # size
     s.set_alpha(150)

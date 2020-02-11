@@ -29,7 +29,7 @@ def game():
             './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
         # screen = pygame.display.set_mode((1024, 768))
         screen = pygame.display.get_surface()
-        bottom = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
+        background = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
         pygame.display.set_caption('CAR EMG GAME')
         clock = pygame.time.Clock()
         fuel = Fuel(screen)
@@ -81,6 +81,10 @@ def game():
         # set initialize start_time - reaction time
         react_time_variables.initialize()
         # start bitalino
+        # calm EMG
+        start_measure_calm_emg()
+        timer.sleep(10)
+        # TODO add measure
         menu_leave_game(first=True)
 
         while True:
@@ -124,13 +128,13 @@ def game():
                 right_trees.append(Trees(screen, 'direita'))  # direita = right
                 left_trees.append(Trees(screen, 'esquerda'))  # esquerda = left
                 stripes.append(Stripes(screen))
-            screen.blit(bottom, (0, 0))
+            screen.blit(background, (0, 0))
 
             for j in range(len(right_trees)):  # right trees
                 stripes[j].print_stripes(screen)
                 right_trees[j].print_tree(screen)
                 left_trees[j].print_tree(screen)
-            #ambulance or enemy car
+            # ambulance or enemy car
             is_ambulance, is_first = enemy_car.print_object()
             if is_ambulance and is_first:
                 react_time_variables.set_up_ambulance.append(datetime.now())
