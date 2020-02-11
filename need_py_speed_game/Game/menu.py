@@ -360,16 +360,16 @@ def game_over(score, police=False):
 def root_menu():
     # Load fonts
     fonte_menu = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 60)
-    fonte_menu2 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 55)
+    font_menu_items = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 55)
 
     text_menu = fonte_menu.render("RACING GAME", True, YELLOW)
 
-    sub_texto_menu1 = fonte_menu2.render("Hrát", True, YELLOW)
-    sub_texto_menu2 = fonte_menu2.render("Nápověda", True, YELLOW)
-    sub_texto_menu3 = fonte_menu2.render("Rekord", True, YELLOW)
-    sub_texto_menu4 = fonte_menu2.render("Nastavení", True, YELLOW)
-    sub_texto_menu5 = fonte_menu2.render("Smazat záznamy", True, YELLOW)
-    sub_texto_menu6 = fonte_menu2.render("Konec", True, YELLOW)
+    play_text = font_menu_items.render("Hrát", True, YELLOW)
+    help_text = font_menu_items.render("Nápověda", True, YELLOW)
+    record_text = font_menu_items.render("Rekord", True, YELLOW)
+    settings_text = font_menu_items.render("Nastavení", True, YELLOW)
+    remove_record_text = font_menu_items.render("Smazat záznamy", True, YELLOW)
+    exit_text = font_menu_items.render("Konec", True, YELLOW)
 
     # Som do menu
     pg.mixer.pre_init(44100, -16, 2, 2048)
@@ -382,48 +382,49 @@ def root_menu():
         # Imagem do menu
         screen.blit(menu, [0, 0])
         screen.blit(text_menu, [(largura_tela / 2) - (text_menu.get_size()[0] / 2), 30])
-        screen.blit(sub_texto_menu1, [40, 150])
-        screen.blit(sub_texto_menu2, [40, 250])
-        screen.blit(sub_texto_menu3, [40, 350])
-        screen.blit(sub_texto_menu4, [40, 450])
-        screen.blit(sub_texto_menu5, [40, 550])
-        screen.blit(sub_texto_menu6, [40, 650])
+        screen.blit(play_text, [40, 150])
+        screen.blit(help_text, [40, 250])
+        screen.blit(record_text, [40, 350])
+        screen.blit(settings_text, [40, 450])
+        screen.blit(remove_record_text, [40, 550])
+        screen.blit(exit_text, [40, 650])
 
-        if source_position(sub_texto_menu1, [40, 150]):
-            screen.blit(fonte_menu2.render("Hrát", True, RED), [40, 150])
-        elif source_position(sub_texto_menu2, [40, 250]):
-            screen.blit(fonte_menu2.render("Nápověda", True, RED), [40, 250])
-        elif source_position(sub_texto_menu3, [40, 350]):
-            screen.blit(fonte_menu2.render("Rekord", True, RED), [40, 350])
-        elif source_position(sub_texto_menu4, [40, 450]):
-            screen.blit(fonte_menu2.render("Nastavení", True, RED), [40, 450])
-        elif source_position(sub_texto_menu5, [40, 550]):
-            screen.blit(fonte_menu2.render("Smazat záznamy", True, RED), [40, 550])
-        elif source_position(sub_texto_menu6, [40, 650]):
-            screen.blit(fonte_menu2.render("Konec", True, RED), [40, 650])
+        if source_position(play_text, [40, 150]):
+            screen.blit(font_menu_items.render("Hrát", True, RED), [40, 150])
+        elif source_position(help_text, [40, 250]):
+            screen.blit(font_menu_items.render("Nápověda", True, RED), [40, 250])
+        elif source_position(record_text, [40, 350]):
+            screen.blit(font_menu_items.render("Rekord", True, RED), [40, 350])
+        elif source_position(settings_text, [40, 450]):
+            screen.blit(font_menu_items.render("Nastavení", True, RED), [40, 450])
+        elif source_position(remove_record_text, [40, 550]):
+            screen.blit(font_menu_items.render("Smazat záznamy", True, RED), [40, 550])
+        elif source_position(exit_text, [40, 650]):
+            screen.blit(font_menu_items.render("Konec", True, RED), [40, 650])
 
         for event in pg.event.get():
-            if pg.mouse.get_pressed()[0] and source_position(sub_texto_menu1, [40, 150]):
+            if pg.mouse.get_pressed()[0] and source_position(play_text, [40, 150]):
                 song_menu2.play(0)
                 pg.mixer.music.stop()
+                # start game
                 return True
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu2, [40, 250]):
+            elif pg.mouse.get_pressed()[0] and source_position(help_text, [40, 250]):
                 song_menu1.play(0)
                 if menu_help():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu3, [40, 350]):
+            elif pg.mouse.get_pressed()[0] and source_position(record_text, [40, 350]):
                 song_menu1.play(0)
                 if menu_record():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 450]):
+            elif pg.mouse.get_pressed()[0] and source_position(remove_record_text, [40, 450]):
                 song_menu1.play(0)
                 if menu_settings():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu5, [40, 550]):
+            elif pg.mouse.get_pressed()[0] and source_position(remove_record_text, [40, 550]):
                 song_menu1.play(0)
                 if menu_reset():
                     continue
-            elif pg.mouse.get_pressed()[0] and source_position(sub_texto_menu6, [40, 650]):
+            elif pg.mouse.get_pressed()[0] and source_position(exit_text, [40, 650]):
                 sys.exit()
             elif event.type == pg.QUIT:
                 sys.exit()
