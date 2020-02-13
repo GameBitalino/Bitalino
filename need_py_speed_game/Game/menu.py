@@ -241,18 +241,27 @@ def menu_help():
 
         pg.display.update()
 
+
 def start_measure_calm_emg():
     img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
     font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
-    screen.blit(img, (0, 0))
     # semi transparent
     s = pygame.Surface((1024, 150))  # size
     s.set_alpha(150)
     s.fill((255, 255, 255))  # this fills the entire surface
-    screen.blit(s, (0, 380))  # draw
     text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
-    screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-    pg.display.update()
+    #TODO bitalino
+    while True:
+        screen.blit(img, (0, 0))
+        screen.blit(s, (0, 380))  # draw
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+        for event in pg.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif pygame.key.get_pressed()[K_SPACE]:
+                return False
+        pg.display.update()
+
 
 # after pause game
 def menu_leave_game(red_for_sec=5, first=False):
@@ -419,6 +428,7 @@ def root_menu():
                 song_menu2.play(0)
                 pg.mixer.music.stop()
                 # start game
+                start_measure_calm_emg()
                 return True
             elif pg.mouse.get_pressed()[0] and source_position(help_text, [40, 250]):
                 song_menu1.play(0)

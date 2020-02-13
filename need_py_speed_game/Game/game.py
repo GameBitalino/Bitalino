@@ -76,16 +76,15 @@ def game():
         texto_gasolina = font_fuel.render("FUEL", True, BLACK)
         font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
 
-        start_time_for_change_lights = timer.time()
+
         # lights for start game
         # set initialize start_time - reaction time
         react_time_variables.initialize()
         # start bitalino
         # calm EMG
-        start_measure_calm_emg()
-        timer.sleep(10)
         # TODO add measure
         menu_leave_game(first=True)
+        start_time_for_change_lights = timer.time()
 
         while True:
             clock.tick(20)

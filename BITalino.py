@@ -8,24 +8,26 @@ from datetime import datetime
 
 class BITalino:
 
-    def __init__(self, time, fvz=1000):
+    def __init__(self, time, nFrames=256, fvz=1000):
         self.macAddress = "20:18:06:13:21:59"
         self.fvz = fvz
-        self.nframes = 100
+        self.nframes = nFrames
         self.device = None
         self.emg_record_current_frame = []
         self.emg_full_record = []
         self.running_time = time
         self.time_line = []
+        self.device = bitalino.BITalino(self.macAddress)
+        self.startTime = 0
 
     def start_recording(self):
-        self.device = bitalino.BITalino(self.macAddress)
-        sleep(1)
         self.device.start(self.fvz, [0])
+        self.startTime = self.device.startTime
         print("START")
 
     def read_data(self):
-        self.emg_record_current_frame = self.device.read(self.nframes)[:, -1]
+        self.emg_record_current_frame = self.device.read(self.nframes)
+        self.emg_record_current_frame = self.emg_record_current_frame[:, -1]
         self.emg_full_record = np.concatenate([self.emg_full_record, self.emg_record_current_frame])
         return self.emg_record_current_frame
 
@@ -34,9 +36,10 @@ class BITalino:
         return self.emg_full_record
 
     def stop_recording(self):
+        print("STOP")
         self.device.stop()
         self.device.close()
-        print("STOP")
+
 
     def plot_graph(self):
         # subtract mean value

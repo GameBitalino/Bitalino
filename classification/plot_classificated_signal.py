@@ -12,11 +12,13 @@ emg_abs = rectification(emg)
 emg_abs = normalization(emg_abs)
 
 # detection using SVM model
+start = datetime.datetime.now()
 nFrames = 10
 detection = np.ones(np.shape(emg)) * 5
 for i in range(int(len(emg) / nFrames) - 1):
     vysl = countAll(muj_SVM, emg_abs[i * nFrames:(i + 1) * nFrames])[0]
     detection[i * nFrames:(i + 1) * nFrames] = np.ones(nFrames) * vysl
+duration = datetime.datetime.now() - start
 
 plt.figure(1)
 plt.plot(emg, color='blue')
@@ -24,7 +26,7 @@ plt.plot(emg[np.array(np.where(detection == 1)[0])], color='red')
 plt.show()
 
 # draw only part of signal
-emg_part = emg[:10000]
+emg_part = emg[4000:10000]
 
 plt.figure(1)
 plt.plot(emg_part, color='blue')
