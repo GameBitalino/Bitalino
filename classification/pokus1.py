@@ -8,7 +8,6 @@ from scipy import signal
 import time as timer
 
 
-
 def low_pass(row_signal, fvz):
     fmez = 1
     b = signal.firwin(15, (fmez / fvz / 2), pass_zero=True)  # koeficient b filtru DP
@@ -133,4 +132,3 @@ slope, intercept = np.polyfit(emg, time, 1)
 print(slope)
 plt.loglog(length, time, '--')
 plt.show()
-

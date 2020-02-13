@@ -15,15 +15,15 @@ def normalization(signal):
     return signal_normalization
 
 
-def create():
+def createDataset():
     # prepare dataset
-   # contractions = load_parsed_record("contractions_parts.csv")
+    # contractions = load_parsed_record("contractions_parts.csv")
     # 10 frames for detection
-    contractions = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\contr_parsed_10frames.csv")
+    contractions = load_parsed_record(r"D:\5. ročník\DP\recordings\contr_parsed_10frames.csv")
     contractions = rectification(contractions)
     contractions = normalization(contractions)
     # calm = load_parsed_record("calm.csv")
-    calm = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\klid_parsed_10frames.csv")
+    calm = load_parsed_record(r"D:\5. ročník\DP\recordings\klid_parsed_10frames.csv")
     calm = rectification(calm)
     calm = normalization(calm)
 

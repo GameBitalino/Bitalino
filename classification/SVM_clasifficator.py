@@ -1,12 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
-from classification.createDataSet import *
+from classification.prepareDate import *
 from classification.extracted_features import features
 
 
 def drawTwo(first, second):
-    data = create()
+    data = createDataset()
     #  feature = [RMS(signal), SSC(signal), MNF(signal),  MAV(signal),ZC(signal), WL(signal)]
     y = data[:, -1]  # last column
     X = data[:, first:second + 1]  # select just 2 features
@@ -36,7 +36,7 @@ def drawTwo(first, second):
 
 
 def SVMmodel(d = 3, pocetZlych = 5):
-    data = create()
+    data = createDataset()
     y = data[:, -1]  # last column
     X = data[:, :-1]
     y[y == 0] = -1  # klid

@@ -1,10 +1,11 @@
 from classification.SVM_clasifficator import *
-from classification.createDataSet import rectification, normalization
+from classification.prepareDate import rectification, normalization
 from classification.LoadData import LoadData, load_parsed_record
+from joblib import dump, load
+import datetime
 
 muj_SVM = SVMmodel(2, 5)
 data = LoadData()
-#time, emg = data.load_record(r"D:\5. ročník\DP\Bitalino\recordings\EMG_date_25_12_2019_time_21_04_45.csv")
 time, emg = data.load_some_record()
 # prepare data
 emg_abs = rectification(emg)
@@ -21,7 +22,7 @@ plt.figure(1)
 plt.plot(emg, color='blue')
 plt.plot(emg[np.array(np.where(detection == 1)[0])], color='red')
 plt.show()
-   
+
 # draw only part of signal
 emg_part = emg[:10000]
 
@@ -42,3 +43,7 @@ for d in range(len(verificated) - count_of_samples - 5):
     if verificated[d] == 1 and np.sum(verificated[d:(d + count_of_samples)]) != 1:
         verificated[d] = 0
 
+# same model:
+dump(muj_SVM, 'svm_model' + str(datetime.date.today()) + '.joblib')
+# load
+# model = load('svm_model.joblib')
