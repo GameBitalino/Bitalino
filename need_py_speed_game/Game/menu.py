@@ -250,8 +250,18 @@ def start_measure_calm_emg():
     s.set_alpha(150)
     s.fill((255, 255, 255))  # this fills the entire surface
     text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
-    #TODO bitalino
-    while True:
+    start_time = time.time()
+
+    while (time.time() - start_time) < 5:
+        screen.blit(img, (0, 0))
+        screen.blit(s, (0, 380))  # draw
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+        pg.display.update()
+
+    text_waiting = font_text.render("Zatni sval", True, BLACK)
+    start_time = time.time()
+    # TODO bitalino
+    while (time.time() - start_time) < 5:
         screen.blit(img, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
