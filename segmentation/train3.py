@@ -7,16 +7,16 @@ from torch.optim import Adam, SGD
 from segmentation.loaderEMG import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
-writer = SummaryWriter()
+
 LEARNING_RATE = 0.001
-NUMBER_OF_EPOCH = 41
+NUMBER_OF_EPOCH = 60
 LOSS_FUNCTION = CrossEntropyLoss()
 
-loaderTrain = DataLoader('EMG_train_data_1024_prelabelovano', 1024)
+loaderTrain = DataLoader('EMG_train_data', 1024)
 trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=1, num_workers=0, shuffle=True,
                                           drop_last=True)
 
-loaderTest = DataLoader('EMG_test_data_1024_prelabelovano', 1024)
+loaderTest = DataLoader('EMG_test_data', 1024)
 testLoader = torch.utils.data.DataLoader(loaderTest, batch_size=1, num_workers=0, shuffle=True, drop_last=True)
 
 net = UNetModel().cuda()
@@ -71,7 +71,6 @@ for epoch in range(NUMBER_OF_EPOCH):
             acc = torch.mean((clas == test_lbl).float())
             test_acc_tmp.append(acc.detach().cpu().numpy())
             test_loss_tmp.append(loss.detach().cpu().numpy())
-
             d = prediction[0,:].detach().cpu().numpy()
             o = test_data[0, :, :].detach().cpu().numpy()
             r = output[0, 1, :].detach().cpu().numpy()
@@ -95,7 +94,7 @@ for epoch in range(NUMBER_OF_EPOCH):
         test_loss_tmp = []
 
         current_epoch = str(epoch)
-        torch.save(net, r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "CrossEntropyLoss_withouDropOut_Adam_optimizer_1024_07_02_2020.pth")
+        torch.save(net, r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "CrossEntropyLoss_Adam_optimizer_1024_13_02_2020.pth")
         """
         plt.plot(position, train_loss)
         plt.plot(position, test_loss)
@@ -108,4 +107,3 @@ for epoch in range(NUMBER_OF_EPOCH):
         plt.legend(['train', 'test'])
         plt.show()
         """
-#writer.close()

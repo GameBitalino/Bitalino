@@ -95,10 +95,10 @@ class _EncoderBlock(torch.nn.Module):
         super(_EncoderBlock, self).__init__()
 
         layers = [
-            Conv1d(in_channels, out_channels, kernel_size=3, padding=1),
+            Conv1d(in_channels, out_channels, kernel_size=15, padding=7),
             BatchNorm1d(out_channels),
             ReLU(inplace=True),
-            Conv1d(out_channels, out_channels, kernel_size=3, padding=1),
+            Conv1d(out_channels, out_channels, kernel_size=15, padding=7),
             BatchNorm1d(out_channels),
             ReLU(inplace=True),
         ]
@@ -114,10 +114,10 @@ class _DecoderBlock(torch.nn.Module):
         super(_DecoderBlock, self).__init__()
 
         layers = [
-            Conv1d(in_channels, middle_channels, kernel_size=3, padding=1),
+            Conv1d(in_channels, middle_channels, kernel_size=15, padding=7),
             BatchNorm1d(middle_channels),
             ReLU(inplace=True),
-            Conv1d(middle_channels, middle_channels, kernel_size=3, padding=1),
+            Conv1d(middle_channels, middle_channels, kernel_size=15, padding=7),
             BatchNorm1d(middle_channels),
             ReLU(inplace=True),
             ConvTranspose1d(middle_channels, out_channels,
