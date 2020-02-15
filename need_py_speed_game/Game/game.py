@@ -1,8 +1,5 @@
 # coding: utf-8
-
-
 import time as timer
-from datetime import datetime
 from .stripes import *
 from .car import *
 from .trees import *
@@ -11,6 +8,8 @@ from random import gauss
 from .menu import *
 from .traffic_lights_static import *
 import need_py_speed_game.Game.variables_for_reaction_time as react_time_variables
+from measured_data_bitalino_global import OnlineProcessing
+from .method import chosen_method
 
 pygame.init()
 game_introduction()
@@ -75,7 +74,6 @@ def game():
         font_fuel = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 50)
         texto_gasolina = font_fuel.render("FUEL", True, BLACK)
         font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
-
 
         # lights for start game
         # set initialize start_time - reaction time
@@ -264,3 +262,39 @@ def game():
             print('react_time_green: ', react_time_variables.react_time_green)
             print('react_time_red: ', react_time_variables.react_time_red)
             """
+
+
+def start_measure_calm_emg():
+    img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
+    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
+    # semi transparent
+    s = pygame.Surface((1024, 150))  # size
+    s.set_alpha(150)
+    s.fill((255, 255, 255))  # this fills the entire surface
+    text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
+    start_time = time.time()
+
+    while (time.time() - start_time) < 5:
+        screen.blit(img, (0, 0))
+        screen.blit(s, (0, 380))  # draw
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+        pg.display.update()
+
+    text_waiting = font_text.render("Zatni sval", True, BLACK)
+    start_time = time.time()
+    global device, result
+    # connect and start bitalino, initialize method
+    device = OnlineProcessing(chosen_method)
+    while (time.time() - start_time) < 5:
+        screen.blit(img, (0, 0))
+        screen.blit(s, (0, 380))  # draw
+        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+        # TODO if time
+        result = device.process_data()
+        # TODO change according to EMG
+        for event in pg.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif pygame.key.get_pressed()[K_SPACE]:
+                return False
+        pg.display.update()

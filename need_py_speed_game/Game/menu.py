@@ -1,7 +1,9 @@
 # coding: utf-8
 from datetime import datetime
-import os, sys, time, random, pickle
+import pickle
 from pygame import *
+
+from need_py_speed_game.Game.game import start_measure_calm_emg
 from .sounds_effects import *
 from .traffic_lights_static import *
 import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
@@ -239,37 +241,6 @@ def menu_help():
             elif event.type == pg.QUIT:
                 sys.exit()
 
-        pg.display.update()
-
-
-def start_measure_calm_emg():
-    img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
-    font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
-    # semi transparent
-    s = pygame.Surface((1024, 150))  # size
-    s.set_alpha(150)
-    s.fill((255, 255, 255))  # this fills the entire surface
-    text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
-    start_time = time.time()
-
-    while (time.time() - start_time) < 5:
-        screen.blit(img, (0, 0))
-        screen.blit(s, (0, 380))  # draw
-        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-        pg.display.update()
-
-    text_waiting = font_text.render("Zatni sval", True, BLACK)
-    start_time = time.time()
-    # TODO bitalino
-    while (time.time() - start_time) < 5:
-        screen.blit(img, (0, 0))
-        screen.blit(s, (0, 380))  # draw
-        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-        for event in pg.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif pygame.key.get_pressed()[K_SPACE]:
-                return False
         pg.display.update()
 
 

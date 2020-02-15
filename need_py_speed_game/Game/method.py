@@ -6,3 +6,8 @@ def initialize_method():
 def change_method_to(method):
     global choose_method
     choose_method = method
+
+
+def chosen_method():
+    global choose_method
+    return choose_method
