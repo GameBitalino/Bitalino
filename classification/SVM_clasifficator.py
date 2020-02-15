@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
-from classification.prepareDate import *
+from classification.prepareData import *
 from classification.extracted_features import features
+from classification.prepareData import rectification, normalization
 
 
 def drawTwo(first, second):
@@ -35,7 +36,7 @@ def drawTwo(first, second):
     plt.show()
 
 
-def SVMmodel(d = 3, pocetZlych = 5):
+def SVMmodel(d=3, pocetZlych=5):
     data = createDataset()
     y = data[:, -1]  # last column
     X = data[:, :-1]
@@ -55,3 +56,30 @@ def countAll(model_SVM, x_test):
         return [0, "klid"]
     else:
         return [1, "kontrakce"]
+
+
+def predictData(model, emg, max=None, nFrames=10):
+    emg = rectification(emg)
+    emg = normalization(emg, max)
+    detection = np.ones(len(emg))
+    for i in range(int(len(emg) / nFrames) - 1):
+        vysl = countAll(model, emg[i * nFrames:(i + 1) * nFrames])[0]
+        detection[i * nFrames:(i + 1) * nFrames] = np.ones(nFrames) * vysl
+    return detection
+
+
+class ClassificationSVM:
+    def __init__(self, nFrames=10):
+        self.svm_model = None
+        self.nFrames = nFrames
+        from joblib import load
+        self.svm_model = load(r'D:\5. ročník\DP\Bitalino\classification\svm_model.joblib')
+
+    def predict_data(self, emg, max=None):
+        emg = rectification(emg)
+        emg = normalization(emg, max)
+        detection = np.ones(len(emg))
+        for i in range(int(len(emg) / self.nFrames) - 1):
+            vysl = countAll(self.svm_model, emg[i * self.nFrames:(i + 1) * self.nFrames])[0]
+            detection[i * self.nFrames:(i + 1) * self.nFrames] = np.ones(self.nFrames) * vysl
+        return detection

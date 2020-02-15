@@ -1,3 +1,4 @@
+joblib
 torch
 pywt
 scipy

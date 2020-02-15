@@ -1,5 +1,5 @@
 from classification.SVM_clasifficator import *
-from classification.prepareDate import rectification, normalization
+from classification.prepareData import rectification, normalization
 from classification.LoadData import LoadData, load_parsed_record
 from joblib import dump, load
 import datetime

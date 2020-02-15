@@ -8,9 +8,12 @@ def rectification(signal):
     return abs(signal)
 
 
-def normalization(signal):
+def normalization(signal, max=None):
     x_min = 0  # minimum after absolute value
-    x_max = np.max(signal)
+    if max is None:
+        x_max = np.max(signal)
+    else:
+        x_max = max
     signal_normalization = signal / x_max
     return signal_normalization
 

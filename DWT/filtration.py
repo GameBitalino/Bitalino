@@ -8,14 +8,15 @@ from scipy import signal
 from classification.LoadData import LoadData
 
 data = LoadData()
-time, emg = data.load_record(r"D:\5. ročník\DP\Bitalino\recordings\EMG_date_25_12_2019_time_21_04_45.csv")
-data.plot_data()
+time, emg = data.load_record(r"D:\5. ročník\DP\recordings\EMG_date_25_12_2019_time_21_04_45.csv")
+# data.plot_data()
 
 emg = emg[:10000]
 time = time[:10000]
 emg[8400:8600] = emg[9100:9300]
 
-def standard_deviation(emg_filter, std_tresh=2, window_half_length=2):
+
+def standard_deviation_offline_signal(emg_filter, std_tresh=2, window_half_length=2):
     deviation = []
     for i in range(window_half_length, len(emg_filter) - window_half_length):
         deviation.append(statistics.stdev(emg_filter[i - window_half_length:i + window_half_length]))
@@ -57,6 +58,7 @@ def TKEO(EMG_for_TKEO):
         tkeo.append(EMG_for_TKEO[i] ** 2 - EMG_for_TKEO[i - 1] * EMG_for_TKEO[i + 1])
 
     print('Time for TKEO: ', timer.time() - start)
+    """
     fig4 = plt.figure()
     figures = 200  # 2
     ax1 = fig4.add_subplot(figures + 11)
@@ -68,6 +70,7 @@ def TKEO(EMG_for_TKEO):
     ax1.set(xlabel="Vzorky[-]", ylabel="Napětí")
     ax2.set(xlabel="Vzorky[-]", ylabel="TKEO")
     plt.show()
+    """
     return tkeo
 
 
@@ -146,12 +149,10 @@ def DWT(emg, wave='coif6', level=6):
 
 
 filtered_DWT = DWT(emg)
-deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
+deviation, positions1, emg_detected = standard_deviation_offline_signal(filtered_DWT, 6)
 
 filtered_TKEO = TKEO(emg)
-deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 5)
-
-
+deviation2, positions2, emg_detected2 = standard_deviation_offline_signal(filtered_TKEO, 5)
 
 """
 # slope
