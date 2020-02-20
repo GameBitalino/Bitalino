@@ -3,13 +3,14 @@ from datetime import datetime
 import pickle
 from pygame import *
 
-from need_py_speed_game.Game.game import start_measure_calm_emg
+import need_py_speed_game.Game.game as game
 from .sounds_effects import *
 from .traffic_lights_static import *
 import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
 from .display_results import *
-from .checkbox import checkbox
+from .checkbox import Checkbox
 import need_py_speed_game.Game.method as chosen_method
+
 
 pg.init()
 
@@ -102,9 +103,9 @@ def menu_settings():
     option1 = fonte_menu2.render('Nelineární metoda TKEO', True, WHITE)
     option2 = fonte_menu2.render('Klasifikátor SVM', True, WHITE)
     option3 = fonte_menu2.render('Neuronová síť UNet', True, WHITE)
-    tkeoCheckbox = checkbox(screen, 40, 205)
-    svmCheckoubox = checkbox(screen, 40, 305)
-    unetCheckbox = checkbox(screen, 40, 405)
+    tkeoCheckbox = Checkbox(screen, 40, 205)
+    svmCheckoubox = Checkbox(screen, 40, 305)
+    unetCheckbox = Checkbox(screen, 40, 405)
     if chosen_method.choose_method == "UNET":
         unetCheckbox.checked = True
     elif chosen_method.choose_method == "SVM":
@@ -409,7 +410,7 @@ def root_menu():
                 song_menu2.play(0)
                 pg.mixer.music.stop()
                 # start game
-                start_measure_calm_emg()
+                game.start_measure_calm_emg()
                 return True
             elif pg.mouse.get_pressed()[0] and source_position(help_text, [40, 250]):
                 song_menu1.play(0)

@@ -21,11 +21,11 @@ class BITalino:
     def start_recording(self):
         self.device.start(self.fvz, [0])
         self.startTime = self.device.startTime
-        print("START")
+        print("Start recording EMG...")
 
     def read_data(self):
-        self.emg_record_current_frame = self.device.read(self.nframes)
-        self.emg_record_current_frame = self.emg_record_current_frame[:, -1]
+        self.emg_record_current_frame = self.device.read(self.nframes)[:, -1] - 507
+        # self.emg_record_current_frame = self.emg_record_current_frame
         self.emg_full_record = np.concatenate([self.emg_full_record, self.emg_record_current_frame])
         return self.emg_record_current_frame
 
@@ -34,10 +34,9 @@ class BITalino:
         return self.emg_full_record
 
     def stop_recording(self):
-        print("STOP")
+        print("Stop recording EMG...")
         self.device.stop()
         self.device.close()
-
 
     def plot_graph(self):
         # subtract mean value
@@ -60,8 +59,8 @@ class BITalino:
         name = path + "\EMG_record_" + now.strftime("%m_%d_%Y") + "_time_" + str(now.strftime("%H_%M_%S") + ".csv")
         self.emg_full_record.tolist()
         data = {
-                'EMG': self.emg_full_record
-                }
+            'EMG': self.emg_full_record
+        }
         df = DataFrame(data, columns=['EMG'])
         df.to_csv(name, index=None, header=True)  # Don't forget to add '.csv' at the end of the path
         print("Saving is done")

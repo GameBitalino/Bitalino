@@ -10,4 +10,5 @@ def change_method_to(method):
 
 def chosen_method():
     global choose_method
+    print(choose_method)
     return choose_method
