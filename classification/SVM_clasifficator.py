@@ -2,6 +2,7 @@ from sklearn.svm import SVC
 from classification.prepareData import *
 from classification.extracted_features import features
 from classification.prepareData import rectification, normalization
+from joblib import dump, load
 
 
 def drawTwo(first, second):
@@ -34,7 +35,7 @@ def drawTwo(first, second):
     plt.show()
 
 
-def SVMmodel(d=3, pocetZlych=5):
+def SVMmodel(d=3, pocetZlych=5, name="SVM_model"):
     data = createDataset()
     y = data[:, -1]  # last column
     X = data[:, :-1]
@@ -44,7 +45,9 @@ def SVMmodel(d=3, pocetZlych=5):
 
     muj_SVM = SVC(gamma='scale', kernel='poly', C=pocetZlych,
                   degree=d)  # C - kolik bodu muze byt spatne - jak vybrat: ve for cyklu hodnoti klasifikaci - cross validace
-    return muj_SVM.fit(X_train, y_train)
+    muj_SVM.fit(X_train, y_train)
+    dump(muj_SVM, name + ".joblib")
+    return muj_SVM
 
 
 def countAll(model_SVM, x_test):
@@ -64,5 +67,3 @@ def predictData(model, emg, max=None, nFrames=10):
         vysl = countAll(model, emg[i * nFrames:(i + 1) * nFrames])[0]
         detection[i * nFrames:(i + 1) * nFrames] = np.ones(nFrames) * vysl
     return detection
-
-

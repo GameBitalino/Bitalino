@@ -1,16 +1,17 @@
 from BITalino import BITalino
 from numpy import sum, max, concatenate
+from matplotlib import pyplot as plt
 
 
 class OnlineProcessing:
-    def __init__(self, method, read_frames=512):
+    def __init__(self, method, read_frames=100):
         self.emg_record = []
         self.emg_current_record = []
         self.mean_value_calm_emg = None
         self.method = method
         self.current_emg_result = []
         self.emg_record_result = []
-        self.max_value_emg = 250
+        self.max_value_emg = 650
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -44,7 +45,8 @@ class OnlineProcessing:
             self.current_emg_result = self.model_unet.predict_data(emg=self.emg_current_record)
 
         elif self.method == "SVM":
-            self.current_emg_result = self.model_svm.predict_data(emg=self.emg_current_record, max=self.max_value_emg)
+            self.current_emg_result = self.model_svm.predict_data(emg=self.emg_current_record,
+                                                                  maximum=self.max_value_emg)
             print(self.current_emg_result)
 
         elif self.method == "TKEO":

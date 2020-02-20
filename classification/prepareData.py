@@ -22,14 +22,20 @@ def createDataset():
     # prepare dataset
     # contractions = load_parsed_record("contractions_parts.csv")
     # 10 frames for detection
-    contractions = load_parsed_record(r"D:\5. ročník\DP\recordings\contr_parsed_10frames.csv")
+    contractions = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\activity_toe_12_32_08_parsed.csv")
     contractions = rectification(contractions)
+    max_contr = np.max(contractions)
     contractions = normalization(contractions)
-    # calm = load_parsed_record("calm.csv")
-    calm = load_parsed_record(r"D:\5. ročník\DP\recordings\klid_parsed_10frames.csv")
-    calm = rectification(calm)
-    calm = normalization(calm)
 
+    # calm = load_parsed_record("calm.csv")
+    calm = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\calm_EMG_12_15_38_parsed.csv")
+    calm = rectification(calm)
+    calm = normalization(calm, max=max_contr)
+    # calm = normalization(calm)
+    if len(calm) > len(contractions):
+        calm = calm[:len(contractions)]
+    else:
+        contractions = contractions[:len(calm)]
     # last column is label if it is calm or movement
     rows_contractions = np.shape(contractions)[0]
     count_features = len(features(contractions[0])) + 1

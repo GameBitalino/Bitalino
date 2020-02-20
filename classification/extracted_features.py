@@ -1,15 +1,12 @@
 import matplotlib.pyplot as plt
 import pywt
-from classification.LoadData import LoadData, load_parsed_record
+from classification.LoadData import LoadData
 import numpy as np
 import time as timer
-from scipy import signal
-import time as timer
-import pandas as pd
 
 data = LoadData()
 time, emg = data.load_record(r"D:\5. ročník\DP\recordings\EMG_date_10_15_2019_time_18_01_51.csv")
-data.plot_data()
+# data.plot_data()
 
 wavelets = pywt.wavedec(emg, 'coif6', level=6)[-1]  # last
 
@@ -61,14 +58,16 @@ def SSC(signal):
     """
     return np.sum(ssc)
 
+
 def STD(signal):
     return np.std(signal)
+
 
 def features(signal):
     signal = abs(signal)
     start = timer.time()
     # feature = [RMS(signal), SSC(signal), MNF(signal),  MAV(signal),ZC(signal), WL(signal)]
     feature = [MAV(signal), MNF(signal), RMS(signal), WL(signal), STD(signal)]
-    #print(timer.time() - start)
-    #print(feature)
+    # print(timer.time() - start)
+    # print(feature)
     return feature

@@ -24,7 +24,7 @@ class BITalino:
         print("Start recording EMG...")
 
     def read_data(self):
-        self.emg_record_current_frame = self.device.read(self.nframes)[:, -1] - 507
+        self.emg_record_current_frame = self.device.read(self.nframes)[:, -1]
         # self.emg_record_current_frame = self.emg_record_current_frame
         self.emg_full_record = np.concatenate([self.emg_full_record, self.emg_record_current_frame])
         return self.emg_record_current_frame

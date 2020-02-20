@@ -15,6 +15,10 @@ pygame.init()
 game_introduction()
 
 
+def random_time():
+    return int(gauss(8, 2))
+
+
 def start_measure_calm_emg():
     img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
     font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
@@ -29,16 +33,15 @@ def start_measure_calm_emg():
     screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
     pg.display.update()
 
-    start_time = time.time()
     global device, result
     # connect and start bitalino, initialize method
     device = OnlineProcessing(chosen_method.chosen_method())
-
+    start_time = time.time()
     while (time.time() - start_time) < 5:
         screen.blit(img, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-        device.read_data()
+        device.process_data()
         pg.display.update()
 
     text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
@@ -47,23 +50,31 @@ def start_measure_calm_emg():
         screen.blit(img, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-        # TODO if time
         result = device.process_data()
         if result:
             device.count_max_of_signal()  # edit maximum of signal
             return False
-        """
-        for event in pg.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif pygame.key.get_pressed()[K_SPACE]:
-                return False
-         """
         pg.display.update()
 
 
-def random_time():
-    return int(gauss(8, 2))
+def change_lights(traffic_lights_static):
+    global device, pom_time, score, time_change
+    result_emg = device.process_data()
+    if result_emg and traffic_lights_static.color == "red":
+        song_pause.play(0)
+        result = menu_leave_game()  # pause game
+        if result:
+            game()  # go to menu
+        else:
+            counter_cycles = 0
+            traffic_lights_static.change_to_green()
+            start_time_for_change_lights = time.time()
+            time_change = random_time()
+            pom_time = timer.time() - start_time_for_change_lights
+    elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+        game_over(score, police=True)
+        if game_over(score, police=True):
+            game()
 
 
 # Menu
@@ -89,6 +100,7 @@ def game():
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
         i = 0
+        global score
         score = 0
         # couter_show_lights_time = 100
         print_fuel = False
@@ -136,31 +148,31 @@ def game():
             if i % 200 == 0 and i != 0:
                 print_fuel = True
                 show_fuel = True
-
+            global pom_time, time_change
             pom_time = timer.time() - start_time_for_change_lights
-            # close or pause game
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                elif pygame.key.get_pressed()[K_SPACE] and traffic_lights_static.color == "red":
-                    react_time_variables.react_time_red.append(datetime.now())
-                    # pygame.mixer.music.pause()
-                    song_pause.play(0)
-                    result = menu_leave_game()  # pause game
-                    if result:
-                        game()  # go to menu
-                    elif not result:
-                        counter_cycles = 0
-                        traffic_lights_static.change_to_green()
-                        start_time_for_change_lights = time.time()
-                        time_change = random_time()
-                        pom_time = timer.time() - start_time_for_change_lights
-                    # pygame.mixer.music.unpause()
-                elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
-                    game_over(score, police=True)
-                    if game_over(score, police=True):
-                        game()
 
+            # according to EMG
+            global device
+            result_emg = device.process_data()
+            if result_emg and traffic_lights_static.color == "red":
+                song_pause.play(0)
+                result = menu_leave_game()  # pause game
+                if result:
+                    game()  # go to menu
+                else:
+                    counter_cycles = 0
+                    traffic_lights_static.change_to_green()
+                    start_time_for_change_lights = time.time()
+                    time_change = random_time()
+                    pom_time = timer.time() - start_time_for_change_lights
+            elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+                game_over(score, police=True)
+                if game_over(score, police=True):
+                    game()
+
+            # right left movement
+            for event in pygame.event.get():
+                print(event)
             key = pygame.key.get_pressed()
             car.move_car(key, car_speed)
 

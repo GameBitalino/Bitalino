@@ -16,7 +16,7 @@ class LoadData:
         self.fvz = fvz
         self.labels = []
 
-    def load_some_record(self, fvz=1000):
+    def load_some_record(self):
         data = pd.read_csv(r"D:\5. ročník\DP\recordings\EMG_date_24_01_2020_time_16_10_18.csv", delimiter=',',
                            decimal=".")  # načtení naměřených dat
 
@@ -24,7 +24,7 @@ class LoadData:
         self.emg = data.iloc[:, 1]  # výběr sloupce obsahující naměřené hodnoty
         return self.time, self.emg
 
-    def load_record(self, path, fvz=1000):
+    def load_record(self, path):
         data = pd.read_csv(path, delimiter=',',
                            decimal=".")  # načtení naměřených dat
 

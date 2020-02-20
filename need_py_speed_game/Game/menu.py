@@ -11,7 +11,6 @@ from .display_results import *
 from .checkbox import Checkbox
 import need_py_speed_game.Game.method as chosen_method
 
-
 pg.init()
 
 
@@ -106,11 +105,11 @@ def menu_settings():
     tkeoCheckbox = Checkbox(screen, 40, 205)
     svmCheckoubox = Checkbox(screen, 40, 305)
     unetCheckbox = Checkbox(screen, 40, 405)
-    if chosen_method.choose_method == "UNET":
+    if chosen_method.chosen_method() == "UNET":
         unetCheckbox.checked = True
-    elif chosen_method.choose_method == "SVM":
+    elif chosen_method.chosen_method() == "SVM":
         svmCheckoubox.checked = True
-    elif chosen_method.choose_method == "TKEO":
+    elif chosen_method.chosen_method() == "TKEO":
         tkeoCheckbox.checked = True
 
     texto3 = fonte_menu1.render('Zpět', True, WHITE)

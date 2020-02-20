@@ -1,6 +1,6 @@
 def initialize_method():
     global choose_method
-    choose_method = "UNET"
+    choose_method = "SVM"
 
 
 def change_method_to(method):

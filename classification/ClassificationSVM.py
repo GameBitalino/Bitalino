@@ -1,6 +1,7 @@
 import numpy as np
 from classification.SVM_clasifficator import countAll
 from classification.prepareData import rectification, normalization
+import os.path
 
 
 class ClassificationSVM:
@@ -8,11 +9,13 @@ class ClassificationSVM:
         self.svm_model = None
         self.nFrames = nFrames
         from joblib import load
-        self.svm_model = load(r'D:\5. ročník\DP\Bitalino\classification\svm_model.joblib')
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(my_path, "SVM_heel_model_2.joblib")
+        self.svm_model = load(path)  # SVM_heel_model_2 have best results
 
-    def predict_data(self, emg, max=None):
+    def predict_data(self, emg, maximum=None):
         emg = rectification(emg)
-        emg = normalization(emg, max)
+        emg = normalization(emg, maximum)
         detection = np.ones(len(emg))
         for i in range(int(len(emg) / self.nFrames) - 1):
             vysl = countAll(self.svm_model, emg[i * self.nFrames:(i + 1) * self.nFrames])[0]
