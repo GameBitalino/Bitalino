@@ -20,7 +20,8 @@ def random_time():
 
 
 def start_measure_calm_emg():
-    img = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
+    global background
+    background = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
     font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
     # semi transparent
     s = pygame.Surface((1024, 150))  # size
@@ -28,7 +29,7 @@ def start_measure_calm_emg():
     s.fill((255, 255, 255))  # this fills the entire surface
     text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
     # visible for user
-    screen.blit(img, (0, 0))
+    screen.blit(background, (0, 0))
     screen.blit(s, (0, 380))  # draw
     screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
     pg.display.update()
@@ -38,7 +39,7 @@ def start_measure_calm_emg():
     device = OnlineProcessing(chosen_method.chosen_method())
     start_time = time.time()
     while (time.time() - start_time) < 5:
-        screen.blit(img, (0, 0))
+        screen.blit(background, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         device.process_data()
@@ -47,7 +48,7 @@ def start_measure_calm_emg():
     text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
     start_time = time.time()
     while (time.time() - start_time) < 5:
-        screen.blit(img, (0, 0))
+        screen.blit(background, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         result = device.process_data()
@@ -57,24 +58,40 @@ def start_measure_calm_emg():
         pg.display.update()
 
 
-def change_lights(traffic_lights_static):
+def end_measure_emg():
+    global device
+    device.save_EMG()
+    reaction_time = device.count_reaction_time()
+    return reaction_time
+
+
+def change_lights(traffic_lights_static, from_pause=False):
     global device, pom_time, score, time_change
     result_emg = device.process_data()
-    if result_emg and traffic_lights_static.color == "red":
-        song_pause.play(0)
-        result = menu_leave_game()  # pause game
-        if result:
-            game()  # go to menu
+    if not from_pause:
+        if result_emg and traffic_lights_static.color == "red":
+            song_pause.play(0)
+            result = menu_leave_game()  # pause game
+            if result:
+                game()  # go to menu
+            else:
+                counter_cycles = 0
+                traffic_lights_static.change_to_green()
+                start_time_for_change_lights = time.time()
+                time_change = random_time()
+                pom_time = timer.time() - start_time_for_change_lights
+        elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+            game_over(score, police=True)
+            if game_over(score, police=True):
+                game()
+    else:
+        if result_emg and traffic_lights_static.color == "green":
+            print('after EMG activity on green lights')
+            # reaction_time_variables.react_time_green.append(datetime.now())  # change after add signal
+            return False
         else:
-            counter_cycles = 0
-            traffic_lights_static.change_to_green()
-            start_time_for_change_lights = time.time()
-            time_change = random_time()
-            pom_time = timer.time() - start_time_for_change_lights
-    elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
-        game_over(score, police=True)
-        if game_over(score, police=True):
-            game()
+            print("here")
+            return True
 
 
 # Menu
@@ -82,11 +99,11 @@ def game():
     record = 0
     counter_cycles = 0
     if root_menu():  # main menu
+        global pom_time, time_change, score, background
         pygame.mixer.music.load(
             './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
         # screen = pygame.display.set_mode((1024, 768))
         screen = pygame.display.get_surface()
-        background = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
         pygame.display.set_caption('CAR EMG GAME')
         clock = pygame.time.Clock()
         fuel = Fuel(screen)
@@ -100,7 +117,6 @@ def game():
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
         i = 0
-        global score
         score = 0
         # couter_show_lights_time = 100
         print_fuel = False
@@ -113,7 +129,7 @@ def game():
         count_stars = 0
 
         cont_fuel = 1
-        car_speed = 20
+        car_speed = 40
         game_speed = car_speed / 200
         cont_score = 0
         cont_view = 20
@@ -148,7 +164,6 @@ def game():
             if i % 200 == 0 and i != 0:
                 print_fuel = True
                 show_fuel = True
-            global pom_time, time_change
             pom_time = timer.time() - start_time_for_change_lights
 
             # according to EMG

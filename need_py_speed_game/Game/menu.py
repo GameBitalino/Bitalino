@@ -259,10 +259,14 @@ def menu_leave_game(red_for_sec=5, first=False):
     s.fill((255, 255, 255))  # this fills the entire surface
     screen.blit(s, (0, 380))  # draw
     text_waiting = font_text.render("Počkej na zelenou", True, BLACK)
+    condition_emg = True
+    condition_time = False
 
+    #while condition_emg or not condition_time:
     while True:
         counter_cycles = 0
-        if time.time() - start_time > red_for_sec and traffic_lights.color == "red":
+        condition_time = time.time() - start_time > red_for_sec
+        if condition_time and traffic_lights.color == "red":
             traffic_lights.change_to_green()
             counter_cycles += 1
             s = pygame.Surface((1024, 150))  # size
@@ -275,7 +279,7 @@ def menu_leave_game(red_for_sec=5, first=False):
         if counter_cycles == 1:
             reaction_time_variables.set_up_times_green_color.append(datetime.now())
         # add to vector of time when changed_to_green
-
+        """
         for event in pg.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -288,7 +292,11 @@ def menu_leave_game(red_for_sec=5, first=False):
                 return True
             elif escape > 1000000:
                 return True
-
+        """
+        condition_emg = game.change_lights(traffic_lights, from_pause=True)
+        if not condition_emg:
+            break
+        print(condition_emg)
         pg.display.update()
         escape += 1
 
@@ -309,12 +317,13 @@ def OK_button_results(screen):
 
 # Game Over
 def game_over(score, police=False):
+    # TODO 
     green_score, red_score = reaction_time_variables.count_reaction_time()
     print('reaction time on red traffic lights: ', red_score)
     print('reaction time on green traffic lights: ', green_score)
     score = int(score)
     print_record = False
-
+    green_score, red_score = game.end_measure_emg()
     policeMan = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'police.png')
     # load records
     with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
@@ -437,7 +446,7 @@ def root_menu():
 
 # Configuration screen
 size = largura_tela, altura_leta = (1024, 768)
-screen = pg.display.set_mode(size)
+screen = pg.display.set_mode(size, 0,0)
 pg.display.set_caption('EMG game')
 
 # Load cores

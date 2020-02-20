@@ -1,6 +1,10 @@
+from datetime import datetime
+
+from pandas import DataFrame
+
 from BITalino import BITalino
 from numpy import sum, max, concatenate
-from matplotlib import pyplot as plt
+import need_py_speed_game.Game.variables_for_reaction_time as reaction_times
 
 
 class OnlineProcessing:
@@ -47,7 +51,7 @@ class OnlineProcessing:
         elif self.method == "SVM":
             self.current_emg_result = self.model_svm.predict_data(emg=self.emg_current_record,
                                                                   maximum=self.max_value_emg)
-            print(self.current_emg_result)
+
 
         elif self.method == "TKEO":
             if self.mean_value_calm_emg is not None:
@@ -57,6 +61,26 @@ class OnlineProcessing:
                 self.current_emg_result = self.model_tkeo.predict_data(emg=self.emg_current_record)
         else:
             raise ValueError('Wrong method.')
-        print(self.emg_record_result)
         self.emg_record_result = concatenate([self.emg_record_result, self.current_emg_result])
-        return sum(self.current_emg_result[:-50]) > 40  # return true/false
+        activity_result = sum(self.current_emg_result[:-50]) > 40
+        print("activity: " + str(activity_result))
+        return activity_result  # return true/false
+
+    def save_EMG(self):
+        title = "./recordings/EMG_date_" + self.device.startTime.strftime("%d_%m_%Y") + "_time_" + str(
+            self.device.startTime.strftime("%H_%M_%S") + ".csv")
+
+        Data = {
+            'EMG': self.emg_record,
+            'Classification': self.emg_record_result
+        }
+        df = DataFrame(Data, columns=['EMG', 'Classification'])
+        df.to_csv(title, index=None,
+                  header=True)  # Don't forget to add '.csv' at the end of the path
+        print("Saving is done " + title)
+
+    def count_reaction_time(self):
+        # TODO
+        print("dodedej")
+        reaction_time = []
+        return reaction_time
