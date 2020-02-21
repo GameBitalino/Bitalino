@@ -7,7 +7,6 @@ from .star import *
 from random import gauss
 from .menu import *
 from .traffic_lights_static import *
-import need_py_speed_game.Game.variables_for_reaction_time as react_time_variables
 from measured_data_bitalino_global import OnlineProcessing
 import need_py_speed_game.Game.method as chosen_method
 
@@ -59,7 +58,7 @@ def start_measure_calm_emg():
 
 
 def end_measure_emg():
-    global device
+    global device, reaction_time
     device.save_EMG()
     reaction_time = device.count_reaction_time()
     return reaction_time
@@ -99,7 +98,7 @@ def game():
     record = 0
     counter_cycles = 0
     if root_menu():  # main menu
-        global pom_time, time_change, score, background
+        global pom_time, time_change, score, background, device
         pygame.mixer.music.load(
             './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
         # screen = pygame.display.set_mode((1024, 768))
@@ -150,9 +149,6 @@ def game():
         texto_gasolina = font_fuel.render("FUEL", True, BLACK)
         font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
 
-        # lights for start game
-        # set initialize start_time - reaction time
-        react_time_variables.initialize()
         # start bitalino
         # calm EMG
         # TODO add measure
@@ -167,7 +163,7 @@ def game():
             pom_time = timer.time() - start_time_for_change_lights
 
             # according to EMG
-            global device
+            # global device
             result_emg = device.process_data()
             if result_emg and traffic_lights_static.color == "red":
                 song_pause.play(0)
@@ -208,7 +204,7 @@ def game():
             # ambulance or enemy car
             is_ambulance, is_first = enemy_car.print_object()
             if is_ambulance and is_first:
-                react_time_variables.set_up_ambulance.append(datetime.now())
+                device.add_stimulus_time(datetime.now())
 
             if show_fuel:
                 fuel.print_fuel(screen)
@@ -225,7 +221,8 @@ def game():
 
             traffic_lights_static.print_object()
             if counter_cycles == 1:
-                react_time_variables.set_up_times_red_color.append(datetime.now())
+               device.add_stimulus_time(datetime.now())
+
             # Score
             score = cont_score * 10
             texto_valor_score = font_score.render("%d" % score, True, BLACK)
@@ -330,9 +327,3 @@ def game():
 
             i += 1
             cont_score += 0.1
-            """
-            print('set_up_green: ', react_time_variables.set_up_times_green_color)
-            print('set_up_red: ', react_time_variables.set_up_times_red_color)
-            print('react_time_green: ', react_time_variables.react_time_green)
-            print('react_time_red: ', react_time_variables.react_time_red)
-            """

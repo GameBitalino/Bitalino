@@ -2,7 +2,7 @@
 from datetime import datetime
 import pickle
 from pygame import *
-
+import numpy as np
 import need_py_speed_game.Game.game as game
 from .sounds_effects import *
 from .traffic_lights_static import *
@@ -262,7 +262,7 @@ def menu_leave_game(red_for_sec=5, first=False):
     condition_emg = True
     condition_time = False
 
-    #while condition_emg or not condition_time:
+    # while condition_emg or not condition_time:
     while True:
         counter_cycles = 0
         condition_time = time.time() - start_time > red_for_sec
@@ -317,11 +317,10 @@ def OK_button_results(screen):
 
 # Game Over
 def game_over(score, police=False):
-    # TODO
     score = int(score)
     print_record = False
-    green_score, red_score = game.end_measure_emg()
-    policeMan = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'police.png')
+    reaction_times = game.end_measure_emg()
+    police_man = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'police.png')
     # load records
     with open('./need_py_speed_game/Game/salve_recordes' + os.sep + 'save_record.dat', 'rb') as f:
         record = pickle.load(f)
@@ -346,7 +345,7 @@ def game_over(score, police=False):
         screen.blit(s, (0, 380))  # draw
         screen.blit(texto_fim, [(1024 / 2) - (texto_fim.get_size()[0] / 2), 420])
         if police:
-            screen.blit(policeMan, (700, 250))
+            screen.blit(police_man, (700, 250))
 
         if print_record:
             screen.blit(texto_record, [(1024 / 2) - (texto_record.get_size()[0] / 2), 100])
@@ -355,7 +354,8 @@ def game_over(score, police=False):
         pg.display.update()
         pg.time.delay(3000)
         # reaction time results - display it
-        print_results(screen)
+        # print_results(screen) - space (not emg)
+        print_emg_results(screen, best=np.min(reaction_times), mean=np.mean(reaction_times))
         results = False
         while not results:
             results = OK_button_results(screen)
@@ -364,7 +364,7 @@ def game_over(score, police=False):
         return True
 
 
-# Menu Principal
+# main menu
 def root_menu():
     # Load fonts
     fonte_menu = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 60)
@@ -443,7 +443,7 @@ def root_menu():
 
 # Configuration screen
 size = largura_tela, altura_leta = (1024, 768)
-screen = pg.display.set_mode(size, 0,0)
+screen = pg.display.set_mode(size, 0, 0)
 pg.display.set_caption('EMG game')
 
 # Load cores
