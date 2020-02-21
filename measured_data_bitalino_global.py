@@ -3,8 +3,8 @@ from datetime import datetime
 from pandas import DataFrame
 
 from BITalino import BITalino
-from numpy import sum, max, concatenate
-import need_py_speed_game.Game.variables_for_reaction_time as reaction_times
+import numpy as np
+import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
 
 
 class OnlineProcessing:
@@ -16,6 +16,7 @@ class OnlineProcessing:
         self.current_emg_result = []
         self.emg_record_result = []
         self.max_value_emg = 650
+        self.stimulus_times = []
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -41,7 +42,7 @@ class OnlineProcessing:
         self.emg_record = self.device.emg_full_record
 
     def count_max_of_signal(self):
-        self.max_value_emg = max(self.emg_record)
+        self.max_value_emg = np.max(self.emg_record)
 
     def process_data(self):
         self.read_data()
@@ -61,8 +62,8 @@ class OnlineProcessing:
                 self.current_emg_result = self.model_tkeo.predict_data(emg=self.emg_current_record)
         else:
             raise ValueError('Wrong method.')
-        self.emg_record_result = concatenate([self.emg_record_result, self.current_emg_result])
-        activity_result = sum(self.current_emg_result[:-50]) > 40
+        self.emg_record_result = np.concatenate([self.emg_record_result, self.current_emg_result])
+        activity_result = np.sum(self.current_emg_result[:-50]) > 40
         print("activity: " + str(activity_result))
         return activity_result  # return true/false
 
@@ -79,8 +80,36 @@ class OnlineProcessing:
                   header=True)  # Don't forget to add '.csv' at the end of the path
         print("Saving is done " + title)
 
+    def validation(self):
+        # emg must be length more than 25 milliseconds (25 samples)
+        d = np.diff(self.emg_record_result)
+        count_of_samples = 25000 / self.device.fvz  # 25 samples if fvz = 1000
+        change_to_activity = np.where(d == 1)
+        self.emg_record_result = np.array(self.emg_record_result)
+        for it in change_to_activity[0]:
+            interval = self.emg_record_result[(it + 1):(it + count_of_samples + 1)]
+            if np.sum(interval) < count_of_samples:
+                replace = 0
+            else:
+                replace = 1
+            self.emg_record_result[(it + 1):(it + count_of_samples + 1)] = replace
+
     def count_reaction_time(self):
-        # TODO
-        print("dodedej")
+        self.validation()
+        delta_time = []
+        samples = []
+        for stimulus in delta_time:
+            seconds = (stimulus - self.startTime).total_seconds()
+            delta_time.append(seconds)
+            samples.append(int(seconds) * self.device.fvz)
+
         reaction_time = []
+        for sample in samples:
+            part_emg = np.array(self.emg_record_result[sample:])
+            react_time = np.where(part_emg == 1)[0][0] / self.device.fvz
+            reaction_time.append(react_time)
+
         return reaction_time
+
+    def add_stimulus_time(self, new_time):
+        self.stimulus_times.append(new_time)

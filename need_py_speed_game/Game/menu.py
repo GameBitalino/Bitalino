@@ -317,10 +317,7 @@ def OK_button_results(screen):
 
 # Game Over
 def game_over(score, police=False):
-    # TODO 
-    green_score, red_score = reaction_time_variables.count_reaction_time()
-    print('reaction time on red traffic lights: ', red_score)
-    print('reaction time on green traffic lights: ', green_score)
+    # TODO
     score = int(score)
     print_record = False
     green_score, red_score = game.end_measure_emg()

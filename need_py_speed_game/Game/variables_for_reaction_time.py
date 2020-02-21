@@ -3,16 +3,26 @@ import math
 
 
 def initialize():
-    global set_up_times_green_color
+    global general_stimulus
+    general_stimulus = []
+    global set_up_times_green_color, set_up_times_red_color, set_up_ambulance
+    global react_time_red, react_time_green, react_time_ambulance
     set_up_times_green_color = []
-    global set_up_times_red_color
     set_up_times_red_color = []
-    global react_time_red
     react_time_red = []
-    global react_time_green
     react_time_green = []
-    global set_up_ambulance
     set_up_ambulance = []
+    react_time_ambulance = []
+
+
+def get_stimulus_times():
+    global general_stimulus
+    return general_stimulus
+
+
+def get_stimulus_times_variable():
+    global set_up_times_green_color, set_up_times_red_color, set_up_ambulance
+    return set_up_times_green_color, set_up_times_red_color, set_up_ambulance
 
 
 def count_reaction_time():
