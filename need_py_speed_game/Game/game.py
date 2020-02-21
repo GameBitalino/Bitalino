@@ -7,7 +7,7 @@ from .star import *
 from random import gauss
 from .menu import *
 from .traffic_lights_static import *
-from measured_data_bitalino_global import OnlineProcessing
+from measured_data_bitalino_global import OnlineProcessing, reaction_times_init, reaction_times_add_time
 import need_py_speed_game.Game.method as chosen_method
 
 pygame.init()
@@ -151,7 +151,7 @@ def game():
 
         # start bitalino
         # calm EMG
-        # TODO add measure
+        reaction_times_init()  # initialize variables for reaction time
         menu_leave_game(first=True)
         start_time_for_change_lights = timer.time()
 
@@ -203,8 +203,6 @@ def game():
                 left_trees[j].print_tree(screen)
             # ambulance or enemy car
             is_ambulance, is_first = enemy_car.print_object()
-            if is_ambulance and is_first:
-                device.add_stimulus_time(datetime.now())
 
             if show_fuel:
                 fuel.print_fuel(screen)
@@ -220,8 +218,6 @@ def game():
                 counter_cycles += 1
 
             traffic_lights_static.print_object()
-            if counter_cycles == 1:
-               device.add_stimulus_time(datetime.now())
 
             # Score
             score = cont_score * 10
@@ -278,6 +274,10 @@ def game():
                     game()
 
             pygame.display.update()
+            if counter_cycles == 1:  # change to red
+                reaction_times_add_time(datetime.now())
+            if is_ambulance and is_first:
+                reaction_times_add_time(datetime.now())
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)

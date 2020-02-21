@@ -16,7 +16,7 @@ class OnlineProcessing:
         self.current_emg_result = []
         self.emg_record_result = []
         self.max_value_emg = 650
-        self.stimulus_times = []
+        self.reaction_time = []
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -96,20 +96,31 @@ class OnlineProcessing:
 
     def count_reaction_time(self):
         self.validation()
-        delta_time = []
+        delta_time = get_reaction_times()
         samples = []
         for stimulus in delta_time:
             seconds = (stimulus - self.startTime).total_seconds()
             delta_time.append(seconds)
             samples.append(int(seconds) * self.device.fvz)
 
-        reaction_time = []
         for sample in samples:
             part_emg = np.array(self.emg_record_result[sample:])
             react_time = np.where(part_emg == 1)[0][0] / self.device.fvz
-            reaction_time.append(react_time)
+            self.reaction_time.append(react_time)
 
-        return reaction_time
+        return self.reaction_time
 
-    def add_stimulus_time(self, new_time):
-        self.stimulus_times.append(new_time)
+
+def reaction_times_init():
+    global reaction_times
+    reaction_times = []
+
+
+def reaction_times_add_time(new_time):
+    global reaction_times
+    reaction_times.append(new_time)
+
+
+def get_reaction_times():
+    global reaction_times
+    return reaction_times

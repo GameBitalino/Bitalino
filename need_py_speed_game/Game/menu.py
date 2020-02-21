@@ -6,7 +6,7 @@ import numpy as np
 import need_py_speed_game.Game.game as game
 from .sounds_effects import *
 from .traffic_lights_static import *
-import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
+from measured_data_bitalino_global import reaction_times_add_time
 from .display_results import *
 from .checkbox import Checkbox
 import need_py_speed_game.Game.method as chosen_method
@@ -259,10 +259,7 @@ def menu_leave_game(red_for_sec=5, first=False):
     s.fill((255, 255, 255))  # this fills the entire surface
     screen.blit(s, (0, 380))  # draw
     text_waiting = font_text.render("Počkej na zelenou", True, BLACK)
-    condition_emg = True
-    condition_time = False
 
-    # while condition_emg or not condition_time:
     while True:
         counter_cycles = 0
         condition_time = time.time() - start_time > red_for_sec
@@ -276,28 +273,12 @@ def menu_leave_game(red_for_sec=5, first=False):
             text_waiting = font_text.render("Pokračuj v jízdě", True, BLACK)
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         traffic_lights.print_object()
-        if counter_cycles == 1:
-            reaction_time_variables.set_up_times_green_color.append(datetime.now())
-        # add to vector of time when changed_to_green
-        """
-        for event in pg.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif pygame.key.get_pressed()[K_SPACE] and traffic_lights.color == "green":
-                print('after press SPACE on green')
-                reaction_time_variables.react_time_green.append(datetime.now())  # change after add signal
-                return False
-            elif pygame.key.get_pressed()[K_ESCAPE]:
-                song_come_back.play(0)
-                return True
-            elif escape > 1000000:
-                return True
-        """
         condition_emg = game.change_lights(traffic_lights, from_pause=True)
         if not condition_emg:
             break
-        print(condition_emg)
         pg.display.update()
+        if counter_cycles == 1:
+            reaction_times_add_time(datetime.now())
         escape += 1
 
 
