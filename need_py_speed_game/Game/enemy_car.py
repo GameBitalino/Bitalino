@@ -34,7 +34,7 @@ class EnemyCar(pygame.sprite.Sprite):
         elif self.position == [480, 350]:
             self.position_object_x -= 0.24 * (self.size_object_x / 10)
         if self.is_ambulance:
-            self.position_object_y += speed/2 * (self.size_object_y / 8)
+            self.position_object_y += speed / 2 * (self.size_object_y / 8)
         else:
             self.position_object_y += speed * (self.size_object_y / 8)
         self.size_object_x += 1
@@ -65,14 +65,14 @@ class EnemyCar(pygame.sprite.Sprite):
                 self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
             self.first = True
 
-
             self.rect_objeto = self.object_print.get_rect()
             self.rect_objeto.x, self.rect_objeto.y = (self.position_object_x, self.position_object_y)
         else:
             self.first = False
 
-    def print_object(self):
-        #self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
-        self.screen.blit(self.object_print, (self.position_object_x, self.position_object_y))
+    def print_object(self, print_car=True):
+        # self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
+        if print_car:
+            self.screen.blit(self.object_print, (self.position_object_x, self.position_object_y))
         return self.is_ambulance, self.first
         # self.rect_objeto.normalize()

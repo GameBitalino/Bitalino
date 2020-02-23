@@ -64,10 +64,14 @@ def end_measure_emg():
     return reaction_time
 
 
-def change_lights(traffic_lights_static, from_pause=False):
-    global device, pom_time, score, time_change
+def change_lights(traffic_lights_static, ambulance_valuing=False, from_pause=False):
+    global device, pom_time, score, time_change, display_car
     result_emg = device.process_data()
     if not from_pause:
+        if result_emg and ambulance_valuing:
+            display_car = False
+        elif ambulance_valuing:
+            display_car = True
         if result_emg and traffic_lights_static.color == "red":
             song_pause.play(0)
             result = menu_leave_game()  # pause game
@@ -98,7 +102,7 @@ def game():
     record = 0
     counter_cycles = 0
     if root_menu():  # main menu
-        global pom_time, time_change, score, background, device
+        global pom_time, time_change, score, background, device, display_car
         pygame.mixer.music.load(
             './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
         # screen = pygame.display.set_mode((1024, 768))
@@ -161,26 +165,10 @@ def game():
                 print_fuel = True
                 show_fuel = True
             pom_time = timer.time() - start_time_for_change_lights
-
             # according to EMG
-            # global device
-            result_emg = device.process_data()
-            if result_emg and traffic_lights_static.color == "red":
-                song_pause.play(0)
-                result = menu_leave_game()  # pause game
-                if result:
-                    game()  # go to menu
-                else:
-                    counter_cycles = 0
-                    traffic_lights_static.change_to_green()
-                    start_time_for_change_lights = time.time()
-                    time_change = random_time()
-                    pom_time = timer.time() - start_time_for_change_lights
-            elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
-                game_over(score, police=True)
-                if game_over(score, police=True):
-                    game()
-
+            if enemy_car.first:
+                display_car = True
+            change_lights(traffic_lights_static, from_pause=False, ambulance_valuing=enemy_car.is_ambulance)
             # right left movement
             for event in pygame.event.get():
                 print(event)
@@ -201,8 +189,8 @@ def game():
                 stripes[j].print_stripes(screen)
                 right_trees[j].print_tree(screen)
                 left_trees[j].print_tree(screen)
-            # ambulance or enemy car
-            is_ambulance, is_first = enemy_car.print_object()
+
+            enemy_car.print_object(print_car=display_car)
 
             if show_fuel:
                 fuel.print_fuel(screen)
@@ -276,7 +264,7 @@ def game():
             pygame.display.update()
             if counter_cycles == 1:  # change to red
                 reaction_times_add_time(datetime.now())
-            if is_ambulance and is_first:
+            if enemy_car.is_ambulance and enemy_car.first:
                 reaction_times_add_time(datetime.now())
 
             car_rect = car.rect_car.inflate(-50, -50)

@@ -17,6 +17,7 @@ class OnlineProcessing:
         self.emg_record_result = []
         self.max_value_emg = 650
         self.reaction_time = []
+        self.title_save_file = []
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -68,17 +69,17 @@ class OnlineProcessing:
         return activity_result  # return true/false
 
     def save_EMG(self):
-        title = "./recordings/EMG_date_" + self.device.startTime.strftime("%d_%m_%Y") + "_time_" + str(
-            self.device.startTime.strftime("%H_%M_%S") + ".csv")
+        self.title = "./recordings/game_EMG_date_" + self.device.startTime.strftime("%d_%m_%Y") + "_time_" + str(
+            self.device.startTime.strftime("%H_%M_%S"))
 
-        Data = {
+        data = {
             'EMG': self.emg_record,
             'Classification': self.emg_record_result
         }
-        df = DataFrame(Data, columns=['EMG', 'Classification'])
-        df.to_csv(title, index=None,
-                  header=True)  # Don't forget to add '.csv' at the end of the path
-        print("Saving is done " + title)
+        df = DataFrame(data, columns=['EMG', 'Classification'])
+        df.to_csv(self.title + ".csv", index=None,
+                  header=True)
+        print("Saving is done " + self.title + ".csv")
 
     def validation(self):
         # emg must be length more than 25 milliseconds (25 samples)
@@ -105,8 +106,17 @@ class OnlineProcessing:
 
         for sample in samples:
             part_emg = np.array(self.emg_record_result[sample:])
-            react_time = np.where(part_emg == 1)[0][0] / self.device.fvz
-            self.reaction_time.append(react_time)
+            react_time = np.where(part_emg == 1)[0]
+            if len(react_time) > 0:
+                react_time = react_time[0] / self.device.fvz
+                self.reaction_time.append(react_time)
+        # save reaction times
+        data = {
+            'Reaction times': self.reaction_time
+        }
+        df = DataFrame(data, columns=['Reaction times'])
+        df.to_csv(self.title + "reaction_times.csv", index=None,
+                  header=True)
 
         return self.reaction_time
 
