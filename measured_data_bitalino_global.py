@@ -4,7 +4,7 @@ from pandas import DataFrame
 
 from BITalino import BITalino
 import numpy as np
-import need_py_speed_game.Game.variables_for_reaction_time as reaction_time_variables
+import matplotlib.pyplot as plt
 
 
 class OnlineProcessing:
@@ -69,9 +69,13 @@ class OnlineProcessing:
         return activity_result  # return true/false
 
     def save_EMG(self):
+        self.validation()
         self.title = "./recordings/game_EMG_date_" + self.device.startTime.strftime("%d_%m_%Y") + "_time_" + str(
             self.device.startTime.strftime("%H_%M_%S"))
-
+        if len(self.emg_record) != len(self.emg_record_result):
+            self.emg_record_result = self.emg_record_result[:len(self.emg_record)]
+        print(len(self.emg_record))
+        print(len(self.emg_record_result))
         data = {
             'EMG': self.emg_record,
             'Classification': self.emg_record_result
@@ -80,14 +84,24 @@ class OnlineProcessing:
         df.to_csv(self.title + ".csv", index=None,
                   header=True)
         print("Saving is done " + self.title + ".csv")
+        import pandas as pd
+        pom = pd.Series(self.emg_record)
+        pom_result = pd.Series(self.emg_record_result)
+        print(pom_result)
+        plt.plot(pom)
+        plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color='red')
+        # plt.plot(pom_result * 100 + 500)
+        plt.show()
 
     def validation(self):
         # emg must be length more than 25 milliseconds (25 samples)
         d = np.diff(self.emg_record_result)
-        count_of_samples = 25000 / self.device.fvz  # 25 samples if fvz = 1000
+        count_of_samples = int(25000 / self.device.fvz)  # 25 samples if fvz = 1000
         change_to_activity = np.where(d == 1)
         self.emg_record_result = np.array(self.emg_record_result)
         for it in change_to_activity[0]:
+            if it + count_of_samples >= len(self.emg_record_result):
+                self.emg_record_result = np.array(list(self.emg_record_result) + list(np.zeros(25)))
             interval = self.emg_record_result[(it + 1):(it + count_of_samples + 1)]
             if np.sum(interval) < count_of_samples:
                 replace = 0
@@ -97,10 +111,11 @@ class OnlineProcessing:
 
     def count_reaction_time(self):
         self.validation()
-        delta_time = get_reaction_times()
+        stimulus = get_reaction_times()
+        delta_time = []
         samples = []
-        for stimulus in delta_time:
-            seconds = (stimulus - self.startTime).total_seconds()
+        for item in stimulus:
+            seconds = (item - self.startTime).total_seconds()
             delta_time.append(seconds)
             samples.append(int(seconds) * self.device.fvz)
 

@@ -21,7 +21,7 @@ class LoadData:
                            decimal=".")  # načtení naměřených dat
 
         self.time = data.iloc[:, 0]  # výběr sloupce obsahující hodnoty času
-        self.emg = data.iloc[:, 1]  # výběr sloupce obsahující naměřené hodnoty
+        self.emg = data.iloc[:, 1] + 507  # výběr sloupce obsahující naměřené hodnoty
         return self.time, self.emg
 
     def load_record(self, path):
