@@ -39,7 +39,8 @@ def start_measure_calm_emg():
     device = OnlineProcessing(chosen_method.chosen_method())
     start_time = time.time()
     while (time.time() - start_time) < 5:
-        pygame.event.get()
+        # pygame.event.get()
+        pygame.event.pump()
         screen.blit(background, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
@@ -49,7 +50,8 @@ def start_measure_calm_emg():
     text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
     start_time = time.time()
     while (time.time() - start_time) < 5:
-        pygame.event.get()
+        # pygame.event.get()
+        pygame.event.pump()
         screen.blit(background, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
@@ -168,6 +170,7 @@ def game():
             # global device
             result_emg = device.process_data()
             if result_emg and enemy_car.is_ambulance:
+                enemy_car.ambulance_music.stop()
                 display_car = False
             elif not enemy_car.is_ambulance:
                 display_car = True
@@ -283,7 +286,9 @@ def game():
             if counter_cycles == 1:  # change to red
                 reaction_times_add_time(datetime.now())
             if enemy_car.is_ambulance and enemy_car.first:
+                enemy_car.ambulance_music.play()
                 reaction_times_add_time(datetime.now())
+
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)

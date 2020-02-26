@@ -318,6 +318,7 @@ def game_over(score, police=False):
             texto_score = fonte_record.render("%d" % record, True, ORANGE_2)
 
     while True:
+        pygame.event.pump()
         fonte_fim = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'JUSTFIST2.ttf', 70)
         texto_fim = fonte_fim.render("GAME OVER", True, RED)
         s = pygame.Surface((1024, 150))  # size

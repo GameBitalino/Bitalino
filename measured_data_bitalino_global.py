@@ -126,6 +126,7 @@ class OnlineProcessing:
                 react_time = react_time[0] / self.device.fvz
                 self.reaction_time.append(react_time)
         # save reaction times
+        print(self.reaction_time)
         data = {
             'Reaction times': self.reaction_time
         }
