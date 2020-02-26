@@ -287,7 +287,7 @@ def game():
                 reaction_times_add_time(datetime.now())
             if enemy_car.is_ambulance and enemy_car.first:
                 enemy_car.ambulance_music.play()
-                reaction_times_add_time(datetime.now())
+                reaction_times_add_time(datetime.now(), ambulance=True)
 
 
             car_rect = car.rect_car.inflate(-50, -50)

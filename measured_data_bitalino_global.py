@@ -111,7 +111,7 @@ class OnlineProcessing:
 
     def count_reaction_time(self):
         self.validation()
-        stimulus = get_reaction_times()
+        stimulus, ambulance = get_reaction_times()
         delta_time = []
         samples = []
         for item in stimulus:
@@ -128,9 +128,10 @@ class OnlineProcessing:
         # save reaction times
         print(self.reaction_time)
         data = {
-            'Reaction times': self.reaction_time
+            'Reaction times': self.reaction_time,
+            'Ambulance' : ambulance
         }
-        df = DataFrame(data, columns=['Reaction times'])
+        df = DataFrame(data, columns=['Reaction times', 'Ambulance'])
         df.to_csv(self.title + "reaction_times.csv", index=None,
                   header=True)
 
@@ -138,15 +139,17 @@ class OnlineProcessing:
 
 
 def reaction_times_init():
-    global reaction_times
+    global reaction_times, ambulance_boolean
     reaction_times = []
+    ambulance_boolean = []
 
 
-def reaction_times_add_time(new_time):
-    global reaction_times
+def reaction_times_add_time(new_time, ambulance=False):
+    global reaction_times, ambulance_boolean
     reaction_times.append(new_time)
+    ambulance_boolean.append(ambulance)
 
 
 def get_reaction_times():
-    global reaction_times
-    return reaction_times
+    global reaction_times, ambulance_boolean
+    return reaction_times, ambulance_boolean
