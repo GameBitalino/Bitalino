@@ -222,7 +222,7 @@ def game():
 
             car.print_car(screen)
             # change the color
-            if pom_time > time_change and traffic_lights_static.color == "green":
+            if pom_time > time_change and traffic_lights_static.color == "green" and not enemy_car.is_ambulance:
                 traffic_lights_static.change_to_red()
             if traffic_lights_static.color == "red":
                 counter_cycles += 1
