@@ -91,6 +91,9 @@ class OnlineProcessing:
         plt.plot(pom)
         plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color='red')
         # plt.plot(pom_result * 100 + 500)
+        plt.title("EMG signál")
+        plt.xlabel("Vzorky [-]")
+        plt.ylabel("Napětí [μV]")
         plt.show()
 
     def validation(self):

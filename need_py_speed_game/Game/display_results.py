@@ -75,7 +75,7 @@ def print_emg_results(screen, best, mean):
     score_text_mean = font_text.render(
         "Tvůj průměrný reakční čas: " + str(round(mean, 2)) + " sekund", True, BLACK)
     score_text_best = font_text.render(
-        "Tvůj nejlepší reakční čas" + str(round(best, 2)) + " sekund", True, BLACK)
+        "Tvůj nejlepší reakční čas: " + str(round(best, 2)) + " sekund", True, BLACK)
     title_text = "Reakční časy"
     title_text = font_text_title.render(title_text, True, BLACK)
     screen.blit(title_text, [250, 20])

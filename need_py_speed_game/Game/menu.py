@@ -25,6 +25,7 @@ def game_introduction():
     pg.mixer.pre_init(44100, -16, 2, 2048)
     pg.mixer.music.load('./need_py_speed_game/Game/musicas' + os.sep + 'Tema_PS2.mp3')
     pg.mixer.music.play(1)
+    pg.mixer.music.set_volume(0.3)
 
     # Load image
     vut = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'vut.png').convert()
@@ -261,6 +262,7 @@ def menu_leave_game(red_for_sec=5, first=False):
     text_waiting = font_text.render("Počkej na zelenou", True, BLACK)
 
     while True:
+        pygame.event.pump()
         counter_cycles = 0
         condition_time = time.time() - start_time > red_for_sec
         if condition_time and traffic_lights.color == "red":

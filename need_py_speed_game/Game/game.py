@@ -79,12 +79,11 @@ def change_lights(traffic_lights_static, from_pause=False):
             if result:
                 game()  # go to menu
             else:
-                change = True
                 traffic_lights_static.change_to_green()
                 start_time_for_change_lights = time.time()
                 time_change = random_time()
                 pom_time = timer.time() - start_time_for_change_lights
-        elif pom_time > time_change + 5:  # 3 sec for reaction possibility, after game over
+        elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
             game_over(score, police=True)
             if game_over(score, police=True):
                 game()
@@ -140,7 +139,7 @@ def game():
 
         # Music
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(1)
 
         # fonts
         font_score = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 55)
@@ -172,6 +171,10 @@ def game():
             if result_emg and enemy_car.is_ambulance:
                 enemy_car.ambulance_music.stop()
                 display_car = False
+            elif enemy_car.is_ambulance and traffic_lights_static.color == "red":
+                display_car = False
+                enemy_car.is_ambulance= False
+                enemy_car.witch_object = 2
             elif not enemy_car.is_ambulance:
                 display_car = True
             if result_emg and traffic_lights_static.color == "red":
@@ -288,7 +291,6 @@ def game():
             if enemy_car.is_ambulance and enemy_car.first:
                 enemy_car.ambulance_music.play()
                 reaction_times_add_time(datetime.now(), ambulance=True)
-
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)

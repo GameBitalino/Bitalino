@@ -15,7 +15,8 @@ class EnemyCar(pygame.sprite.Sprite):
                         pygame.image.load(path + 'adv_car4.png'),
                         pygame.image.load(path + 'ambulance.png')]
         self.witch_object = random.choice(range(4))  # first one is not ambulance
-        self.ambulance_music = pygame.mixer.Sound('./need_py_speed_game/Game/musicas/ambulance/ambulance-sound.mp3')
+        self.ambulance_music = pygame.mixer.Sound('./need_py_speed_game/Game/musicas/ambulance/ambulance-sound.wav')
+        self.ambulance_music.set_volume(1.3)
         self.object = self.objects[self.witch_object]
         self.is_ambulance = False
         self.size_object_x = 80
