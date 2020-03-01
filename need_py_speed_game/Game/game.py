@@ -309,6 +309,10 @@ def game():
                 if game_over(score):
                     game()
 
+            if enemy_car.game_over:
+                print("No reaction on ambulance car...")
+                game_over(score, police=True)
+
             # Collision with fuel
             if fuel_rect.colliderect(car.rect_car):
                 song_bonus1.play(0)

@@ -1,4 +1,4 @@
-import pygame, sys, os, random
+import pygame, random
 
 
 class EnemyCar(pygame.sprite.Sprite):
@@ -19,6 +19,8 @@ class EnemyCar(pygame.sprite.Sprite):
         self.ambulance_music.set_volume(1.3)
         self.object = self.objects[self.witch_object]
         self.is_ambulance = False
+        self.display_car = True
+        self.game_over = False
         self.size_object_x = 80
         self.size_object_y = 80
         self.position_object_x = self.position[0]
@@ -26,7 +28,6 @@ class EnemyCar(pygame.sprite.Sprite):
         self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
         self.rect_objeto = self.object_print.get_rect()
         self.rect_objeto.x, self.rect_objeto.y = self.position
-        # self.mask = pygame.mask.from_surface(self.object)
         self.first = True
 
     def move_object(self, speed=0.08):
@@ -47,6 +48,9 @@ class EnemyCar(pygame.sprite.Sprite):
         self.rect_objeto.x, self.rect_objeto.y = (self.position_object_x, self.position_object_y)
         if self.position_object_y > 1200 or self.position_object_x > 2000 or self.position_object_x < -500:
             # self.witch_object = random.choice(self.objects)
+            # if the ambulance was displayed (no reaction on it)
+            if self.is_ambulance and self.display_car:
+                self.game_over = True
             self.witch_object = random.choice(range(5))
             # self.object = pygame.image.load('./need_py_speed_game/Game/imagens' + os.sep + self.witch_object)
             self.is_ambulance = self.witch_object == 4
@@ -74,6 +78,7 @@ class EnemyCar(pygame.sprite.Sprite):
 
     def print_object(self, print_car=True):
         # self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
+        self.display_car = print_car
         if print_car:
             self.screen.blit(self.object_print, (self.position_object_x, self.position_object_y))
         return self.is_ambulance, self.first
