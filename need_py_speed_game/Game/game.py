@@ -21,6 +21,7 @@ def random_time():
 
 def start_measure_calm_emg():
     global background
+    pygame.event.pump()
     background = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
     font_text = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_BdIt.ttf', 85)
     # semi transparent
@@ -173,7 +174,7 @@ def game():
                 display_car = False
             elif enemy_car.is_ambulance and traffic_lights_static.color == "red":
                 display_car = False
-                enemy_car.is_ambulance= False
+                enemy_car.is_ambulance = False
                 enemy_car.witch_object = 2
             elif not enemy_car.is_ambulance:
                 display_car = True
@@ -189,6 +190,9 @@ def game():
                     time_change = random_time()
                     pom_time = timer.time() - start_time_for_change_lights
             elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+                print(pom_time)
+                print(time_change)
+                print(start_time_for_change_lights)
                 game_over(score, police=True)
                 if game_over(score, police=True):
                     game()

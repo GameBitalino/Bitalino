@@ -367,7 +367,7 @@ def root_menu():
     pg.mixer.pre_init(44100, -16, 2, 2048)
     pg.mixer.music.load('./need_py_speed_game/Game/musicas' + os.sep + random.choice(listas_musicas_menu))
     pg.mixer.music.play(-1)
-    pg.mixer.music.set_volume(1)
+    pg.mixer.music.set_volume(0.1)
 
     menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu.jpg')
     while True:

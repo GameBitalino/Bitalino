@@ -1,6 +1,6 @@
 def initialize_method():
     global choose_method
-    choose_method = "SVM"
+    choose_method = "TKEO"
 
 
 def change_method_to(method):

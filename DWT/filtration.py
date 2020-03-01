@@ -108,7 +108,7 @@ def DWT(emg, wave='coif6', level=6):
                 y[k][i] = 0
 
     emg_filter = pywt.waverec(y, wave)
-    emg_filter = emg_filter ** 2
+    emg_filter = emg_filter
     cas = timer.time() - start
     print("Time of filtration (WT): ", cas)
 

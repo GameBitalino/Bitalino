@@ -1,7 +1,4 @@
-from datetime import datetime
-
 from pandas import DataFrame
-
 from BITalino import BITalino
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,11 +58,13 @@ class OnlineProcessing:
                                                                        mean_value=self.model_tkeo.mean_deviation_value)
             else:
                 self.current_emg_result = self.model_tkeo.predict_data(emg=self.emg_current_record)
+                if len(self.emg_record) > 500 and len(self.emg_record) < 1000:
+                    self.mean_value_calm_emg = self.model_tkeo.mean_deviation_value
         else:
             raise ValueError('Wrong method.')
         self.emg_record_result = np.concatenate([self.emg_record_result, self.current_emg_result])
         activity_result = np.sum(self.current_emg_result[:-50]) > 40
-        print("activity: " + str(activity_result))
+        # print("activity: " + str(activity_result))
         return activity_result  # return true/false
 
     def save_EMG(self):
@@ -74,8 +73,9 @@ class OnlineProcessing:
             self.device.startTime.strftime("%H_%M_%S"))
         if len(self.emg_record) != len(self.emg_record_result):
             self.emg_record_result = self.emg_record_result[:len(self.emg_record)]
-        print(len(self.emg_record))
-        print(len(self.emg_record_result))
+            self.emg_record = self.emg_record[:len(self.emg_record_result)]
+        # print(len(self.emg_record))
+        # print(len(self.emg_record_result))
         data = {
             'EMG': self.emg_record,
             'Classification': self.emg_record_result
@@ -87,7 +87,6 @@ class OnlineProcessing:
         import pandas as pd
         pom = pd.Series(self.emg_record)
         pom_result = pd.Series(self.emg_record_result)
-        print(pom_result)
         plt.plot(pom)
         plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color='red')
         # plt.plot(pom_result * 100 + 500)
@@ -132,7 +131,7 @@ class OnlineProcessing:
         print(self.reaction_time)
         data = {
             'Reaction times': self.reaction_time,
-            'Ambulance' : ambulance
+            'Ambulance': ambulance
         }
         df = DataFrame(data, columns=['Reaction times', 'Ambulance'])
         df.to_csv(self.title + "reaction_times.csv", index=None,
