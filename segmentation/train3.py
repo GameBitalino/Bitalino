@@ -7,6 +7,7 @@ from torch.optim import Adam, SGD
 from segmentation.loaderEMG import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
+writer = SummaryWriter()
 
 LEARNING_RATE = 0.001
 NUMBER_OF_EPOCH = 60

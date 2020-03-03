@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from saveData import saveEMG
 import torch
 
-model = torch.load(r"D:\5. ročník\DP\Bitalino\models\rel_good_model_epoch_20_crossEntropyLoss_Adam_optimizer_1024.pth")
+model = torch.load(r".\models\rel_good_model_epoch_20_crossEntropyLoss_Adam_optimizer_1024.pth")
 model.eval()
 
 # set parameters
