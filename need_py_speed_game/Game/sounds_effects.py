@@ -2,6 +2,7 @@
 
 from .enemy_car import *
 from .fuel import *
+import os
 
 pygame.init()
         
