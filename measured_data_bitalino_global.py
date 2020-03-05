@@ -68,6 +68,7 @@ class OnlineProcessing:
         return activity_result  # return true/false
 
     def save_EMG(self):
+        self.device.stop_recording()
         self.validation()
         self.title = "./recordings/game_EMG_date_" + self.device.startTime.strftime("%d_%m_%Y") + "_time_" + str(
             self.device.startTime.strftime("%H_%M_%S"))
@@ -148,6 +149,7 @@ def reaction_times_init():
 
 def reaction_times_add_time(new_time, ambulance=False):
     global reaction_times, ambulance_boolean
+    print("added reaction time")
     reaction_times.append(new_time)
     ambulance_boolean.append(ambulance)
 

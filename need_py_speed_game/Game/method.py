@@ -1,6 +1,6 @@
 def initialize_method():
     global choose_method
-    choose_method = "TKEO"
+    choose_method = "UNET"
 
 
 def change_method_to(method):

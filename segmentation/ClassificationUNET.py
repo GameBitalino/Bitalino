@@ -3,28 +3,32 @@ import numpy as np
 
 
 class ClassificationUNET:
-    def __init__(self,
-                 path=r"D:\5. ročník\DP\Bitalino\models\rel_good_model_epoch_20_crossEntropyLoss_Adam_optimizer_1024.pth"):
+    def __init__(self, frame_lenght=100,
+                 path=r"D:\5. ročník\DP\Bitalino\models\model_epoch_50CrossEntropyLoss_Adam_optimizer_1024_05_03_2020.pth"):
         self.model = torch.load(path)
         self.model.eval()
         self.output = []
+        self.signal_length = 1024
+        self.EMG_record = []
+        self.calm_record = []  # 414 samples
+        self.EMG_for_NN = []
+        self.middle_length = frame_lenght
 
     def predict_data(self, emg):
-        self.output = self.model(torch.from_numpy(emg).unsqueeze(dim=0).unsqueeze(dim=1).float().cuda())
-        self.output = torch.argmax(self.output, dim=1)
-        self.output = self.output.detach().cpu().numpy()
-        return np.array(self.output)
+        emg = emg - 507
+        if len(self.EMG_record) < self.signal_length:
+            self.output = np.zeros(self.middle_length)
+            self.EMG_record = np.concatenate([self.EMG_record, emg])
+            if len(self.EMG_record) > 424:
+                self.calm_record = self.EMG_record[:424]
+        else:
+            self.EMG_for_NN = np.concatenate([self.EMG_record[-500:], emg, self.calm_record])
+            self.EMG_for_NN = torch.from_numpy(self.EMG_for_NN).unsqueeze(dim=0)
 
-    """
-    def loadModel(path=r"D:\5. ročník\DP\Bitalino\models\rel_good_model_epoch_20_crossEntropyLoss_Adam_optimizer_1024.pth"):
-        global model
-        model = torch.load(path)
-        model.eval()
-    
-    
-    def predict(EMG):
-        output = model(torch.from_numpy(EMG).unsqueeze(dim=0).float().unsqueeze(dim=1).float().cuda())
-        output = torch.argmax(output, dim=1)
-        output = output.detach().cpu().numpy().squeeze().tolist()
-        return output
-    """
+            output = self.model(self.EMG_for_NN.unsqueeze(dim=1).float().cuda())
+            output = output[0, 1, :].detach().cpu().numpy()
+            output = output[500:600]
+            tresh = np.where(output * 1.2 > -0.2)
+            self.output = np.zeros(self.middle_length)
+            self.output[tresh] = 1
+        return self.output

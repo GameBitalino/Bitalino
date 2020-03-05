@@ -189,10 +189,9 @@ def game():
                     start_time_for_change_lights = time.time()
                     time_change = random_time()
                     pom_time = timer.time() - start_time_for_change_lights
-            elif pom_time > time_change + 3:  # 3 sec for reaction possibility, after game over
+            elif traffic_lights_static.color == "red" and timer.time() > time_change + 3:  # 3 sec for reaction possibility, after game over
                 print(pom_time)
                 print(time_change)
-                print(start_time_for_change_lights)
                 game_over(score, police=True)
                 if game_over(score, police=True):
                     game()
@@ -231,6 +230,7 @@ def game():
             # change the color
             if pom_time > time_change and traffic_lights_static.color == "green" and not enemy_car.is_ambulance:
                 traffic_lights_static.change_to_red()
+                time_change = timer.time()
             if traffic_lights_static.color == "red":
                 counter_cycles += 1
             traffic_lights_static.print_object()
