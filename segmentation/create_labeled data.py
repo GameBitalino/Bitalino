@@ -5,7 +5,7 @@ import numpy as np
 import saveData
 
 loader = LoadData()
-path = r"D:\5. ročník\DP\Bitalino\recordings\EMG_date_25_12_2019_time_20_57_23"
+path = r"D:\5. ročník\DP\recordings\EMG_date_25_12_2019_time_20_57_23"
 time, emg = loader.load_record(path + ".csv")
 
 plt.plot(emg)
