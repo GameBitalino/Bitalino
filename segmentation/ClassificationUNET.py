@@ -28,7 +28,7 @@ class ClassificationUNET:
             output = self.model(self.EMG_for_NN.unsqueeze(dim=1).float().cuda())
             output = output[0, 1, :].detach().cpu().numpy()
             output = output[500:600]
-            tresh = np.where(output * 1.2 > -0.2)
+            tresh = np.where(output * 1.2 > -5)
             self.output = np.zeros(self.middle_length)
             self.output[tresh] = 1
         return self.output

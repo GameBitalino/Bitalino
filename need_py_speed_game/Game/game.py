@@ -38,29 +38,32 @@ def start_measure_calm_emg():
     global device, result
     # connect and start bitalino, initialize method
     device = OnlineProcessing(chosen_method.chosen_method())
+    result = False
     start_time = time.time()
-    while (time.time() - start_time) < 5:
-        # pygame.event.get()
-        pygame.event.pump()
-        screen.blit(background, (0, 0))
-        screen.blit(s, (0, 380))  # draw
-        screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
-        device.process_data()
-        pg.display.update()
-
-    text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
-    start_time = time.time()
-    while (time.time() - start_time) < 5:
+    while (time.time() - start_time) < 3 and not result:
         # pygame.event.get()
         pygame.event.pump()
         screen.blit(background, (0, 0))
         screen.blit(s, (0, 380))  # draw
         screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
         result = device.process_data()
-        if result:
-            device.count_max_of_signal()  # edit maximum of signal
-            return False
         pg.display.update()
+    if chosen_method.chosen_method() == "UNET":
+        pass
+    else:
+        text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
+        start_time = time.time()
+        while (time.time() - start_time) < 5:
+            # pygame.event.get()
+            pygame.event.pump()
+            screen.blit(background, (0, 0))
+            screen.blit(s, (0, 380))  # draw
+            screen.blit(text_waiting, [(512 - text_waiting.get_size()[0] / 2), 400])
+            result = device.process_data()
+            if result:
+                device.count_max_of_signal()  # edit maximum of signal
+                return False
+            pg.display.update()
 
 
 def end_measure_emg():
