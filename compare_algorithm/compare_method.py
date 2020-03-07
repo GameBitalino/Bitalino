@@ -1,6 +1,5 @@
 import numpy as np
-import pandas as pd
-import torch
+from compare_algorithm.count_parameters import Count
 from compare_algorithm.online_detection_without_bitalino import OnlineProcessing
 from classification.LoadData import LoadData
 import matplotlib.pyplot as plt
@@ -54,7 +53,6 @@ for i in range(count_iter):
     tkeo = proc_TKEO.process_data(part)
     svm = proc_SVM.process_data(part)
 
-before_valid_UNET = proc_UNET.emg_record_result
 proc_UNET.validation()
 proc_SVM.validation()
 proc_TKEO.validation()
@@ -63,135 +61,14 @@ unet = proc_UNET.emg_record_result
 tkeo = proc_TKEO.emg_record_result
 svm = proc_SVM.emg_record_result
 
-#### plot TKEO
-clas = tkeo  # choose method
+count_UNET = Count(emg=emg, method_output=unet, labels=labels, name_of_method="UNET")
+count_TKEO = Count(emg=emg, method_output=tkeo, labels=labels, name_of_method="TKEO")
+count_SVM = Count(emg=emg, method_output=svm, labels=labels, name_of_method="SVM")
 
-# pom = pd.Series(np.array(emg[:20000]))
-pom = emg
-pom_result = clas
-# pom_result = pd.Series(clas[:20000])
-plt.plot(pom, label="Původní signál", color=[0.2, 0.2, 0.2])
-plt.grid(True, which='major', alpha=0.2, ls='-.', lw=0.15)
-plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
-         label="Detekovaná aktivita")
-# plt.plot(pom_result * 100 + 500)
-plt.title("EMG signál s detekcí metodou TKEO")
-plt.xlabel("Vzorky [-]")
-plt.ylabel("Napětí [μV]")
-# Show the major grid lines with dark grey lines
-plt.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.5)
-plt.legend()
-# Show the minor grid lines with very faint and almost transparent grey lines
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.3)
-plt.show()
+count_UNET.plot_detected_signal(len(unet))
+count_TKEO.plot_detected_signal(len(tkeo))
+count_SVM.plot_detected_signal(len(svm))
 
-#### plot SVM
-clas = svm  # choose method
-
-# pom = pd.Series(np.array(emg[:20000]))
-pom = emg
-pom_result = clas
-# pom_result = pd.Series(clas[:20000])
-plt.plot(pom, label="Původní signál", color=[0.2, 0.2, 0.2])
-plt.grid(True, which='major', alpha=0.2, ls='-.', lw=0.15)
-plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
-         label="Detekovaná aktivita")
-# plt.plot(pom_result * 100 + 500)
-plt.title("EMG signál s detekcí metodou SVM")
-plt.xlabel("Vzorky [-]")
-plt.ylabel("Napětí [μV]")
-# Show the major grid lines with dark grey lines
-plt.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.5)
-plt.legend()
-# Show the minor grid lines with very faint and almost transparent grey lines
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.3)
-plt.show()
-
-#### plot UNET
-clas = unet  # choose method
-
-# pom = emg
-# pom_result = clas
-pom = pd.Series(np.array(emg[:20000]))
-pom_result = pd.Series(clas[:20000])
-plt.plot(pom, label="Původní signál", color=[0.2, 0.2, 0.2])
-plt.grid(True, which='major', alpha=0.2, ls='-.', lw=0.15)
-plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
-         label="Detekovaná aktivita")
-# plt.plot(pom_result * 100 + 500)
-plt.title("EMG signál s detekcí metodou UNET")
-plt.xlabel("Vzorky [-]")
-plt.ylabel("Napětí [μV]")
-# Show the major grid lines with dark grey lines
-plt.grid(b=True, which='major', color='#666666', linestyle='-', alpha=0.5)
-plt.legend()
-# Show the minor grid lines with very faint and almost transparent grey lines
-plt.minorticks_on()
-plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.3)
-plt.show()
-
-
-def perf_measure(y_actual, y_pred):
-    TP = 0
-    FP = 0
-    TN = 0
-    FN = 0
-
-    for i in range(len(y_pred)):
-        if y_actual[i] == y_pred[i] == 1:
-            TP += 1
-        if y_pred[i] == 1 and y_actual[i] != y_pred[i]:
-            FP += 1
-        if y_actual[i] == y_pred[i] == 0:
-            TN += 1
-        if y_pred[i] == 0 and y_actual[i] != y_pred[i]:
-            FN += 1
-
-    return (TP, FP, TN, FN)
-
-
-method = unet
-TP, FP, TN, FN = perf_measure(method, labels)
-sensitive = TP / (TP + FN)
-specifity = TN / (TN + FP)
-poz_prediction = TP / (TP + FP)
-neg_predection = TN / (TN + FN)
-accuracy = sum(1 for x, y in zip(method, labels) if x == y) / len(method)
-print("METODA: UNET")
-print("senzitivita: ", sensitive)
-print("specifita: ", specifity)
-print(("pozitivní predikce: "), poz_prediction)
-print("negativní predikce: ", neg_predection)
-print("přesnost: ", accuracy)
-
-method = tkeo
-### senzitivita
-TP, FP, TN, FN = perf_measure(method, labels)
-sensitive = TP / (TP + FN)
-specifity = TN / (TN + FP)
-poz_prediction = TP / (TP + FP)
-neg_predection = TN / (TN + FN)
-accuracy = sum(1 for x, y in zip(method, labels) if x == y) / len(method)
-print("METODA: TKEO")
-print("senzitivita: ", sensitive)
-print("specifita: ", specifity)
-print(("pozitivní predikce: "), poz_prediction)
-print("negativní predikce: ", neg_predection)
-print("přesnost: ", accuracy)
-
-method = svm
-### senzitivita
-TP, FP, TN, FN = perf_measure(method, labels)
-sensitive = TP / (TP + FN)
-specifity = TN / (TN + FP)
-poz_prediction = TP / (TP + FP)
-neg_predection = TN / (TN + FN)
-accuracy = sum(1 for x, y in zip(method, labels) if x == y) / len(method)
-print("METODA: SVM")
-print("senzitivita: ", sensitive)
-print("specifita: ", specifity)
-print(("pozitivní predikce: "), poz_prediction)
-print("negativní predikce: ", neg_predection)
-print("přesnost: ", accuracy)
+count_UNET.count_accuracy_parameters()
+count_TKEO.count_accuracy_parameters()
+count_SVM.count_accuracy_parameters()
