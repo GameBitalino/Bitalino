@@ -9,22 +9,30 @@ class Count:
         self.labels = labels
         self.emg = emg
         self.name_of_method = name_of_method
+        self.sensitive = []
+        self.specificity = []
+        self.accuracy = []
+        self.poz_prediction = []
+        self.neg_prediction = []
 
     def count_accuracy_parameters(self):
         TP, FP, TN, FN = self.perf_measure(self.method_output, self.labels)
-        sensitive = TP / (TP + FN)
-        specifity = TN / (TN + FP)
-        poz_prediction = TP / (TP + FP)
-        neg_predection = TN / (TN + FN)
-        accuracy = sum(1 for x, y in zip(self.method_output, self.labels) if x == y) / len(self.method_output)
-        print("METODA: UNET")
-        print("senzitivita: ", sensitive)
-        print("specifita: ", specifity)
-        print(("pozitivní predikce: "), poz_prediction)
-        print("negativní predikce: ", neg_predection)
-        print("přesnost: ", accuracy)
+        self.sensitive = TP / (TP + FN)
+        self.specificity = TN / (TN + FP)
+        self.poz_prediction = TP / (TP + FP)
+        self.neg_prediction = TN / (TN + FN)
+        self.accuracy = sum(1 for x, y in zip(self.method_output, self.labels) if x == y) / len(self.method_output)
+        print("METODA: " + self.name_of_method)
+        print("senzitivita: ", self.sensitive)
+        print("specifita: ", self.specificity)
+        print(("pozitivní predikce: "), self.poz_prediction)
+        print("negativní predikce: ", self.neg_prediction)
+        print("přesnost: ", self.accuracy)
 
     def perf_measure(self, y_actual, y_pred):
+        if len(y_actual) != len(y_pred):
+            y_actual = y_actual[:len(y_pred)]
+            y_pred = y_pred[:len(y_actual)]
         TP = 0
         FP = 0
         TN = 0
@@ -39,13 +47,12 @@ class Count:
                 TN += 1
             if y_pred[i] == 0 and y_actual[i] != y_pred[i]:
                 FN += 1
-
         return (TP, FP, TN, FN)
 
-    def plot_detected_signal(self, length):
+    def plot_detected_signal(self, length, from_sample=0, labels=True):
         clas = self.method_output  # choose method
-        pom = pd.Series(np.array(self.emg[:length]))
-        pom_result = pd.Series(clas[:length])
+        pom = pd.Series(np.array(self.emg[from_sample:length]))
+        pom_result = pd.Series(clas[from_sample:length])
         plt.plot(pom, label="Původní signál", color=[0.2, 0.2, 0.2])
         plt.grid(True, which='major', alpha=0.2, ls='-.', lw=0.15)
         plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
@@ -59,5 +66,7 @@ class Count:
         plt.legend()
         # Show the minor grid lines with very faint and almost transparent grey lines
         plt.minorticks_on()
+        if labels:
+            plt.plot(self.labels[from_sample:length]*100 + 507)
         plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.3)
         plt.show()

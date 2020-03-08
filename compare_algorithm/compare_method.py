@@ -15,6 +15,7 @@ plt.show()
 emg = emg[:59000]
 emg = emg + 507
 labels = np.zeros((len(emg)))
+# EMG_date_24_01_2020_time_17_04_13
 labels[1890:2775] = 1
 labels[4800:5710] = 1
 labels[9120:9785] = 1

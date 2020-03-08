@@ -10,7 +10,7 @@ from torch.utils.tensorboard import SummaryWriter
 writer = SummaryWriter()
 
 LEARNING_RATE = 0.001
-NUMBER_OF_EPOCH = 60
+NUMBER_OF_EPOCH = 1
 LOSS_FUNCTION = CrossEntropyLoss()
 SIGNAL_LENGTH = 1024
 

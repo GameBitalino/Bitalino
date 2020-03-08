@@ -2,6 +2,7 @@ from pandas import DataFrame
 from BITalino import BITalino
 import numpy as np
 import matplotlib.pyplot as plt
+from time import time
 
 
 class OnlineProcessing:
@@ -15,6 +16,7 @@ class OnlineProcessing:
         self.max_value_emg = max_value_emg
         self.reaction_time = []
         self.title_save_file = []
+        self.duration = []
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -34,6 +36,7 @@ class OnlineProcessing:
     def process_data(self, emg_current_record):
         self.emg_current_record = emg_current_record
         self.emg_record = np.concatenate([self.emg_record, emg_current_record])
+        start = time()
         if self.method == "UNET":
             self.current_emg_result = self.model_unet.predict_data(emg=self.emg_current_record)
 
@@ -47,6 +50,8 @@ class OnlineProcessing:
                 emg=self.emg_current_record, mean_value=self.mean_value_calm_emg)
         else:
             raise ValueError('Wrong method.')
+        dur = time() - start
+        self.duration.append(dur)
         self.emg_record_result = np.concatenate([self.emg_record_result, self.current_emg_result])
         activity_result = np.sum(self.current_emg_result[:-50]) > 40
         # print("activity: " + str(activity_result))
