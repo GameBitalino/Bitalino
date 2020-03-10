@@ -49,7 +49,7 @@ class Count:
                 FN += 1
         return (TP, FP, TN, FN)
 
-    def plot_detected_signal(self, length, from_sample=0, labels=True):
+    def plot_detected_signal(self, length, from_sample=0, labels=True, title=""):
         clas = self.method_output  # choose method
         pom = pd.Series(np.array(self.emg[from_sample:length]))
         pom_result = pd.Series(clas[from_sample:length])
@@ -58,7 +58,7 @@ class Count:
         plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
                  label="Detekovaná aktivita")
         # plt.plot(pom_result * 100 + 500)
-        plt.title("EMG signál s detekcí metodou " + self.name_of_method)
+        plt.title("EMG signál s detekcí metodou " + self.name_of_method + " " + title)
         plt.xlabel("Vzorky [-]")
         plt.ylabel("Napětí [μV]")
         # Show the major grid lines with dark grey lines

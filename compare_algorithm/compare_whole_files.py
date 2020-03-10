@@ -351,9 +351,9 @@ for signal in entries:
     count_TKEO = Count(emg=emg, method_output=tkeo, labels=labels, name_of_method="TKEO")
     count_SVM = Count(emg=emg, method_output=svm, labels=labels, name_of_method="SVM")
 
-    # count_UNET.plot_detected_signal(len(unet))
+    count_UNET.plot_detected_signal(len(unet), title=file)
     # count_TKEO.plot_detected_signal(len(tkeo))
-    count_SVM.plot_detected_signal(len(svm))
+    # count_SVM.plot_detected_signal(len(svm))
 
     count_UNET.count_accuracy_parameters()
     count_TKEO.count_accuracy_parameters()
