@@ -6,8 +6,8 @@ import saveData
 import os
 
 loader = LoadData()
-file = "EMG_date_25_12_2019_time_21_16_16"
-path = r"D:\5. ročník\DP\recordings\for_SVM" + os.sep + file
+file = "EMG_date_24_01_2020_time_16_13_44"
+path = r"D:\5. ročník\DP\recordings" + os.sep + file
 time, emg = loader.load_record(path + ".csv")
 
 """

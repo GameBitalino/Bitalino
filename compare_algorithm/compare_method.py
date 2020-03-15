@@ -73,3 +73,6 @@ count_SVM.plot_detected_signal(len(svm))
 count_UNET.count_accuracy_parameters()
 count_TKEO.count_accuracy_parameters()
 count_SVM.count_accuracy_parameters()
+
+latency_UNET = count_UNET.count_latency()
+

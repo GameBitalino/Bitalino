@@ -1,8 +1,9 @@
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from BITalino import BITalino
 import numpy as np
 import matplotlib.pyplot as plt
-
+import csv
+from itertools import zip_longest
 
 class OnlineProcessing:
     def __init__(self, method, read_frames=100):
@@ -120,14 +121,18 @@ class OnlineProcessing:
         for item in stimulus:
             seconds = (item - self.startTime).total_seconds()
             delta_time.append(seconds)
-            samples.append(int(seconds) * self.device.fvz)
+            samples.append(int(seconds * self.device.fvz))
 
+        self.detected_activity_samples = []
         for sample in samples:
-            part_emg = np.array(self.emg_record_result[sample:])
-            react_time = np.where(part_emg == 1)[0]
+            part_emg = np.array(self.emg_record_result[sample:sample+3000])
+            react_time = np.where(part_emg == 1)[0]  # samples where is activity
             if len(react_time) > 0:
+                self.detected_activity_samples.append(react_time[0] + sample)
                 react_time = react_time[0] / self.device.fvz
                 self.reaction_time.append(react_time)
+            else:
+                self.reaction_time.append(0)
         # save reaction times
         print(self.reaction_time)
         data = {
@@ -135,9 +140,20 @@ class OnlineProcessing:
             'Ambulance': ambulance
         }
         df = DataFrame(data, columns=['Reaction times', 'Ambulance'])
-        df.to_csv(self.title + "reaction_times.csv", index=None,
+        df.to_csv(self.title + "_reaction_times.csv", index=None,
                   header=True)
-
+        data = {
+            'Start stimulus (sample)': samples,
+        }
+        df= DataFrame(data, columns=['Start stimulus (sample)'])
+        df.to_csv(self.title + "_samples.csv", index=None,
+                   header=True)
+        whole_data = [self.reaction_time, ambulance, samples, self.detected_activity_samples]
+        with open(self.title + "_whole_data.csv", "w", newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(["Reaction time", "Ambulance", "Start stimulus (sample)", "Detected activity (sample)"])
+            for values in zip_longest(*whole_data):
+                writer.writerow(values)
         return self.reaction_time
 
 

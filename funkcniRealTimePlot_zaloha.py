@@ -9,7 +9,7 @@ from saveData import saveEMG
 fvz = 1000
 nframes = 100
 threshold = 5
-minutes = 1 # how long you want to measure
+minutes = 0.7 # how long you want to measure
 num_frames_plot = 10  # every e.g.. tenth sample will be draw in real time graph
 
 # connect Bitalino

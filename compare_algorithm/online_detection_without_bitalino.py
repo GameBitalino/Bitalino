@@ -17,6 +17,7 @@ class OnlineProcessing:
         self.reaction_time = []
         self.title_save_file = []
         self.duration = []
+        self.start_pos = []
 
         if self.method == "UNET":
             from segmentation.ClassificationUNET import ClassificationUNET
@@ -72,3 +73,10 @@ class OnlineProcessing:
             else:
                 replace = 1
             self.emg_record_result[(it + 1):(it + count_of_samples + 1)] = replace
+        """
+        if self.method == "UNET": # it makes sense only in this method
+            for i in range(len(self.emg_record_result)):
+                if self.emg_record_result[i] == 0 and np.sum(self.emg_record_result[i - 100:i]) > 30:
+                    if np.sum(self.emg_record_result[i:i + 100]) > 30 or np.sum(self.emg_record_result[i+100:i+200]) > 30:
+                        self.emg_record_result[i] = 1
+        """

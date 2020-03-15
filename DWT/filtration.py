@@ -7,6 +7,9 @@ from matplotlib import pyplot as plt
 from scipy import signal
 from classification.LoadData import LoadData
 
+color_black = [0.2, 0.2, 0.2]
+color_red = [215 / 255, 60 / 255, 45 / 255]
+
 data = LoadData()
 time, emg = data.load_record(r"D:\5. ročník\DP\recordings\EMG_date_25_12_2019_time_21_04_45.csv")
 # data.plot_data()
@@ -14,6 +17,15 @@ time, emg = data.load_record(r"D:\5. ročník\DP\recordings\EMG_date_25_12_2019_
 emg = emg[:10000]
 time = time[:10000]
 emg[8400:8600] = emg[9100:9300]
+emg = emg + 507
+
+plt.figure()
+plt.style.use("ggplot")
+plt.plot(emg, color=color_black)
+plt.title('Původní EMG signál')
+plt.xlabel(xlabel="Vzorky[-]")
+plt.ylabel(ylabel='Napětí [[μV]]')
+plt.show()
 
 
 def standard_deviation_offline_signal(emg_filter, std_tresh=2, window_half_length=2):
@@ -26,19 +38,20 @@ def standard_deviation_offline_signal(emg_filter, std_tresh=2, window_half_lengt
     emg_filter = pd.Series(emg_filter)
     positions = np.array(np.where(deviation > (calm_deviation * std_tresh))[0])
     plt.figure()
-    plt.plot(draw, 'b')
-    plt.plot(emg_filter[positions], color='red')
+    plt.plot(draw, color=color_black)
+    plt.plot(emg_filter[positions], color=color_red)
+    plt.style.use("ggplot")
     plt.title('Detekovaná aktivita EMG')
     plt.legend(['klid', 'aktivita'])
     plt.xlabel(xlabel="Vzorky[-]")
     plt.ylabel(ylabel='TKEO')
     plt.show()
-
     """
     fig4 = plt.figure()
+    plt.style.use("ggplot")
     figures = 200  # 2
     ax1 = fig4.add_subplot(figures + 11)
-    ax1.plot(emg_filter)
+    ax1.plot(emg_filter, color = color_black)
     ax2 = fig4.add_subplot(figures + 12)
     ax2.plot(deviation)
     ax1.title.set_text('signál EMG')
@@ -46,7 +59,7 @@ def standard_deviation_offline_signal(emg_filter, std_tresh=2, window_half_lengt
     ax1.set(xlabel="Vzorky[-]", ylabel="Napětí")
     ax2.set(xlabel="Vzorky[-]", ylabel="Odchylka")
     plt.show()
-    """
+"""
     return deviation, positions, emg_filter[positions]
 
 
@@ -60,6 +73,7 @@ def TKEO(EMG_for_TKEO):
     print('Time for TKEO: ', timer.time() - start)
     """
     fig4 = plt.figure()
+    plt.style.use("ggplot")
     figures = 200  # 2
     ax1 = fig4.add_subplot(figures + 11)
     ax1.plot(EMG_for_TKEO)
@@ -240,7 +254,8 @@ for d in range(len(difference) - count_of_samples):
             if origin_position - start_positions[-1] > 700:
                 start_positions.append(origin_position)
 
-plt.plot(emg)
-plt.plot(emg_detected2)
+plt.style.use("ggplot")
+plt.plot(emg, color=color_black)
+plt.plot(emg_detected2, color=[0.5, 0.5, 0.5])
 plt.stem(start_positions, emg_detected2[start_positions])
 plt.show()

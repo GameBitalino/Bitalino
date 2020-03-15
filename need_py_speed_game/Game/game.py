@@ -53,7 +53,7 @@ def start_measure_calm_emg():
     else:
         text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
         start_time = time.time()
-        while (time.time() - start_time) < 5:
+        while (time.time() - start_time) <1:
             # pygame.event.get()
             pygame.event.pump()
             screen.blit(background, (0, 0))
@@ -298,6 +298,8 @@ def game():
             if enemy_car.is_ambulance and enemy_car.first:
                 enemy_car.ambulance_music.play()
                 reaction_times_add_time(datetime.now(), ambulance=True)
+            elif not enemy_car.is_ambulance or not display_car:
+                enemy_car.ambulance_music.stop()
 
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)

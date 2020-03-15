@@ -14,6 +14,7 @@ class Count:
         self.accuracy = []
         self.poz_prediction = []
         self.neg_prediction = []
+        self.latency = []
 
     def count_accuracy_parameters(self):
         TP, FP, TN, FN = self.perf_measure(self.method_output, self.labels)
@@ -53,11 +54,12 @@ class Count:
         clas = self.method_output  # choose method
         pom = pd.Series(np.array(self.emg[from_sample:length]))
         pom_result = pd.Series(clas[from_sample:length])
+        # plt.style.use("ggplot")
         plt.plot(pom, label="Původní signál", color=[0.2, 0.2, 0.2])
         plt.grid(True, which='major', alpha=0.2, ls='-.', lw=0.15)
         plt.plot(pom[np.array(np.where(pom_result == 1))[0]], color=[215 / 255, 60 / 255, 45 / 255],
                  label="Detekovaná aktivita")
-        # plt.plot(pom_result * 100 + 500)
+        #plt.plot(pom_result * 100 + 500)
         plt.title("EMG signál s detekcí metodou " + self.name_of_method + " " + title)
         plt.xlabel("Vzorky [-]")
         plt.ylabel("Napětí [μV]")
@@ -67,6 +69,18 @@ class Count:
         # Show the minor grid lines with very faint and almost transparent grey lines
         plt.minorticks_on()
         if labels:
-            plt.plot(self.labels[from_sample:length]*100 + 507)
+            plt.plot(self.labels[from_sample:length] * 100 + 507, color = 'b')
         plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.3)
         plt.show()
+
+    def count_latency(self):
+        l = np.diff(self.labels) > 0
+        l = np.where(l)[0]
+        for index in l:
+            part = self.method_output[index-100:]
+            part = np.where(np.diff(part) > 0)[0]
+            if len(part) > 1:
+                part = part[0]
+            if part < 350:
+                self.latency.append((part-100) / 1000)
+
