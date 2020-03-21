@@ -75,4 +75,9 @@ count_TKEO.count_accuracy_parameters()
 count_SVM.count_accuracy_parameters()
 
 latency_UNET = count_UNET.count_latency()
+latency_SVM = count_SVM.count_latency()
+latency_TKEO = count_TKEO.count_latency()
 
+print("UNET: ", np.mean(latency_UNET))
+print("SVM: ", np.mean(latency_SVM))
+print("TKEO: ", np.mean(latency_TKEO))

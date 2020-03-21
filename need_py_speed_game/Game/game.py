@@ -134,12 +134,12 @@ def game():
         count_stars = 0
 
         cont_fuel = 1
-        car_speed = 40
+        car_speed = 45
         game_speed = car_speed / 200
         cont_score = 0
         cont_view = 20
         car_crash = False  # car crash
-        pst_speed = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+        pst_speed = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1]
 
         # Music
         pygame.mixer.music.play(-1)

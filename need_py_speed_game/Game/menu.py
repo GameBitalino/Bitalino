@@ -338,7 +338,9 @@ def game_over(score, police=False):
         pg.display.update()
         pg.time.delay(3000)
         # reaction time results - display it
-        # print_results(screen) - space (not emg)
+        # remove zeros from reaction times
+        reaction_times = np.array(reaction_times)
+        reaction_times = reaction_times[np.where(reaction_times > 0)]
         print_emg_results(screen, best=np.min(reaction_times), mean=np.mean(reaction_times))
         results = False
         while not results:

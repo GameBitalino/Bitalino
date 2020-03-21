@@ -32,12 +32,23 @@ proc_UNET = []
 proc_TKEO = []
 proc_SVM = []
 
+latency_UNET = []
+latency_SVM = []
+latency_TKEO = []
+
+variance_TKEO = []
+variance_SVM = []
+variance_UNET = []
+
 for signal in entries:
     time, emg = loader.load_record(path + os.sep + signal)
-
-    labels = np.zeros((len(emg)))
-    file = signal[:-4]
     emg = emg + 507
+    labels = np.zeros((len(emg)))
+    # emg, clas = loader.load_record(path + os.sep + signal)
+    # labels = clas
+    file = signal[:-4]
+    print(file)
+
     if file == "EMG_date_24_01_2020_time_17_04_13":
         # EMG_date_24_01_2020_time_17_04_13
         emg = emg[:59000]
@@ -300,7 +311,7 @@ for signal in entries:
         # EMG_date_25_12_2019_time_21_12_26
         labels = np.zeros((len(emg)))
         labels[1807:2110] = 1
-        labels[4763:5230] = 1
+        labels[4763:5300] = 1
         labels[7600:8130] = 1
         labels[14804:15250] = 1
         labels[17466:17800] = 1
@@ -325,7 +336,7 @@ for signal in entries:
         labels[29680:29905] = 1
 
     signal_max = np.max(emg)
-    calm_mean = np.mean(emg[:1000])
+    calm_mean = np.mean(emg[:1500])
     proc_UNET = OnlineProcessing("UNET", signal_max, calm_mean)
     proc_TKEO = OnlineProcessing("TKEO", signal_max, calm_mean)
     proc_SVM = OnlineProcessing("SVM", signal_max, calm_mean)
@@ -351,7 +362,9 @@ for signal in entries:
     count_TKEO = Count(emg=emg, method_output=tkeo, labels=labels, name_of_method="TKEO")
     count_SVM = Count(emg=emg, method_output=svm, labels=labels, name_of_method="SVM")
 
-    count_UNET.plot_detected_signal(len(unet), title=file)
+    # count_UNET.plot_detected_signal(len(unet))
+    # plt.plot(proc_UNET.model_unet.NN_output_debug*1.2)
+    # plt.show()
     # count_TKEO.plot_detected_signal(len(tkeo))
     # count_SVM.plot_detected_signal(len(svm))
 
@@ -376,6 +389,14 @@ for signal in entries:
     accuracy_UNET.append(count_UNET.accuracy)
     poz_prediction_UNET.append(count_UNET.poz_prediction)
     neg_prediction_UNET.append(count_UNET.neg_prediction)
+
+    latency_UNET.append(np.mean(count_UNET.count_latency()))
+    latency_SVM.append(np.mean(count_SVM.count_latency()))
+    latency_TKEO.append(np.mean(count_TKEO.count_latency()))
+
+    variance_UNET.append(np.mean(count_UNET.variance))
+    variance_SVM.append(np.mean(count_SVM.variance))
+    variance_TKEO.append(np.mean(count_TKEO.variance))
 
 print("SPECIFITA")
 print(np.mean(specificity_UNET))
@@ -403,6 +424,16 @@ print(np.mean(neg_prediction_SVM))
 print(np.mean(neg_prediction_TKEO))
 
 print("TIME")
-print(np.mean(proc_UNET.duration)*1000)
-print(np.mean(proc_SVM.duration)*1000)
-print(np.mean(proc_TKEO.duration)*1000)
+print(np.mean(proc_UNET.duration) * 1000)
+print(np.mean(proc_SVM.duration) * 1000)
+print(np.mean(proc_TKEO.duration) * 1000)
+
+print("LATENCY")
+print(np.mean(latency_UNET))
+print(np.mean(latency_SVM))
+print(np.mean(latency_TKEO))
+
+print("LATENCY varience")
+print(np.mean(variance_UNET))
+print(np.mean(variance_SVM))
+print(np.mean(variance_TKEO))
