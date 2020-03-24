@@ -4,10 +4,10 @@ from pandas import DataFrame as df
 import os, csv
 from itertools import zip_longest
 
-path = "Bětka"
+path = "Vojta"
 
-sex = "F"  # F/M
-gamer = False
+sex = "M"  # F/M
+gamer = True
 
 entries = os.listdir(path)
 
@@ -27,8 +27,11 @@ def load_concrete_reaction_times(path):
                     decimal=".")
     sem = data.loc[data['Ambulance'] == False]
     change_to_green = sem[::2]
+    change_to_green = change_to_green.loc[change_to_green["Reaction time"] > 0.15]
     change_to_red = sem[1::2]
+    change_to_red = change_to_red[change_to_red["Reaction time"] > 0.15]
     display_ambulance = data.loc[data['Ambulance'] == True]
+    display_ambulance = display_ambulance.loc[display_ambulance["Reaction time"] > 0.15]
     return change_to_green, change_to_red, display_ambulance
 
 
@@ -50,7 +53,8 @@ for signal in entries:
         reaction_time, ambulance, start_stimulus, detected_activity = load_information(path_signal)
         change_to_green, change_to_red, display_ambulance = load_concrete_reaction_times(path_signal)
 
-        mean_each_game.append(np.mean(reaction_time[np.array(np.where(reaction_time > 0))[0]]))
+        mean_each_game.append(
+            np.mean(reaction_time[np.array(np.where(reaction_time > 0.15))[0]]))  # under 0.15 is not physical
 
         # green
         if change_to_green.shape[0] > 0:
@@ -66,9 +70,9 @@ for signal in entries:
         mean_changed_red.append(red)
         # ambulance
         if display_ambulance.shape[0] > 0:
-            display_ambulance.append(np.mean(display_ambulance.iloc[:, 0]))
+            mean_displayed_ambulance.append(np.mean(display_ambulance.iloc[:, 0]))
         else:
-            display_ambulance.append(None)
+            mean_displayed_ambulance.append(None)
 
 # save data
 game = [1, 2, 3, 4, 5]
@@ -84,7 +88,7 @@ with open(path + os.sep + "results.csv", "w", newline='') as f:
 mean_all_games = np.mean(mean_each_game)
 mean_all_games = round(mean_all_games, 2)
 mean_green = np.mean(mean_changed_green)
-mean_green = round(mean_green,2)
+mean_green = round(mean_green, 2)
 
 mean_changed_red = [i for i in mean_changed_red if i]
 if len(mean_changed_red):
@@ -101,14 +105,14 @@ else:
     mean_ambulance = np.nan
 
 # add user to table
-user_data = [path, sex, gamer, mean_all_games, mean_each_game[0], mean_each_game[1], mean_each_game[2],
-             mean_each_game[3], mean_each_game[4], mean_green, mean_red, mean_ambulance]
+user_data = [path, sex, gamer, mean_all_games, round(mean_each_game[0], 2), round(mean_each_game[1], 2), round(mean_each_game[2], 2),
+             round(mean_each_game[3], 2), round(mean_each_game[4], 2), mean_green, mean_red, mean_ambulance]
 
 title = "vysledky.csv"
 if not os.path.isfile(title):
     with open(title, "w", newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(["Woman", "Gamer", "Mean", "First game", "Second game", "Third game",
+        writer.writerow(["Name","Sex", "Gamer", "Mean", "First game", "Second game", "Third game",
                          "Fourth game", "Fifth game", "On green", "On red", "On ambulance"])
         writer.writerow(user_data)
 else:

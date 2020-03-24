@@ -9,13 +9,11 @@ import os
 # path:  name of proband
 from results.reaction_time_statistics import load_information
 
-path = "Bětka"
+path = "Verča Rem"
 entries = os.listdir(path)
 
 SIGNAL_LENGTH = 1024
 loader = LoadData()
-
-# emg, clas = loader.load_record(path + os.sep + "game_EMG_date_17_03_2020_time_16_07_18.csv")
 
 
 def count_reaction_time(start_samples, emg_detected, ambulance, title):
@@ -66,13 +64,22 @@ for signal in entries:
         unet = proc_UNET.emg_record_result
         count_UNET = Count(emg=emg, method_output=unet, labels=clas, name_of_method="UNET")
         count_UNET.plot_detected_signal(len(unet), labels=False)
+        save_data = input("Chceš uložit data? ")
+        if save_data == "ano":
+            # load information
+            title = path + os.sep + file + "_whole_data"
+            reaction_time, ambulance, start_stimulus, detected_activity = load_information(title + ".csv")
+            reaction_time_new = count_reaction_time(start_stimulus, unet, ambulance, title)
+            print(reaction_time_new)
+            reaction_time = np.array(reaction_time)
+            reaction_time = reaction_time[np.where(reaction_time > 0)]
+            print("prumerny reakcni cas: ", np.mean(reaction_time_new))
+            print("prumerny reackci cas old: ", np.mean(reaction_time))
 
-        # load information
-        title = path + os.sep + file + "_whole_data"
-        reaction_time, ambulance, start_stimulus, detected_activity = load_information(title + ".csv")
-        reaction_time_new = count_reaction_time(start_stimulus, unet, ambulance, title)
-        print(reaction_time_new)
-        reaction_time = np.array(reaction_time)
-        reaction_time = reaction_time[np.where(reaction_time > 0)]
-        print("prumerny reakcni cas: ", np.mean(reaction_time_new))
-        print("prumerny reackci cas old: ", np.mean(reaction_time))
+            data = [emg, unet]
+            with open(path + os.sep + file + "_.csv", "w", newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(["EMG", "Classification"])
+                for values in zip_longest(*data):
+                    writer.writerow(values)
+            print("Saving is done ")
