@@ -4,7 +4,7 @@ from pandas import DataFrame as df
 import os, csv
 from itertools import zip_longest
 
-path = "Vojta"
+path = "Janči"
 
 sex = "M"  # F/M
 gamer = True

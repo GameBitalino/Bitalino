@@ -246,10 +246,21 @@ def menu_help():
 
 
 # after pause game
-def menu_leave_game(red_for_sec=5, first=False):
+def menu_leave_game(red_for_sec=5, first=False, bonus=False):
     if first:
         bottom = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'road.png')
         screen.blit(bottom, (0, 0))
+    elif bonus:
+        song_bonus2.play(0)
+        cont_view = 0
+        bonus = 2
+        cor_font = RED
+        while cont_view < 20:
+            font_bonus = pygame.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'nextwaveboldital.ttf', 75)
+            texto_good = font_bonus.render("+ %d0 BONUS" % bonus, True, cor_font)
+            screen.blit(texto_good, [320, 280])
+            cont_view += 1
+
     escape = 0
     traffic_lights = TrafficLightStatic(screen, "red")
     start_time = time.time()

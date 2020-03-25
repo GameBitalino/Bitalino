@@ -53,7 +53,7 @@ def start_measure_calm_emg():
     else:
         text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
         start_time = time.time()
-        while (time.time() - start_time) <1:
+        while (time.time() - start_time) < 1:
             # pygame.event.get()
             pygame.event.pump()
             screen.blit(background, (0, 0))
@@ -101,11 +101,12 @@ def change_lights(traffic_lights_static, from_pause=False):
 
 # Menu
 def game():
-    record = 0
     counter_cycles = 0
-    global pom_time, time_change, score, background, device, display_car, traffic_lights_static
     pygame.mixer.music.load(
         './need_py_speed_game/Game/musicas' + os.sep + 'theme_song' + os.sep + random.choice(lista_musicas))
+    global pom_time, time_change, score, background, device, display_car, traffic_lights_static, bonus_react_time_display, ambulance_display_time
+    bonus_react_time_display = False
+    ambulance_display_time = 0
     if root_menu():  # main menu
         # screen = pygame.display.set_mode((1024, 768))
         screen = pygame.display.get_surface()
@@ -117,7 +118,7 @@ def game():
         enemy_car = EnemyCar(screen)
         # traffic_lights = TrafficLights(screen)
         traffic_lights_static = TrafficLightStatic(screen)
-        time_change = random_time() + 3  # after some seconds change the lights (for first time more)
+        change_color_display_time = random_time() + 3  # after some seconds change the lights (for first time more)
         right_trees = [Trees(screen, 'direita')]  # right trees
         left_trees = [Trees(screen, 'esquerda')]  # left trees
         pygame.key.set_repeat()
@@ -164,17 +165,18 @@ def game():
         while True:
             clock.tick(20)
             pygame.event.get()
+            bonus_react_time_display = False
             if i % 200 == 0 and i != 0:
                 print_fuel = True
                 show_fuel = True
             pom_time = timer.time() - start_time_for_change_lights
-            # change_lights(traffic_lights_static, from_pause=False, ambulance_valuing=enemy_car.is_ambulance)
-            # according to EMG
-            # global device
             result_emg = device.process_data()
+            current_time = timer.time()
             if result_emg and enemy_car.is_ambulance:
                 enemy_car.ambulance_music.stop()
                 display_car = False
+                if ambulance_display_time + 0.25 < current_time:
+                    bonus_react_time_display = True
             elif enemy_car.is_ambulance and traffic_lights_static.color == "red":
                 display_car = False
                 enemy_car.is_ambulance = False
@@ -182,19 +184,22 @@ def game():
             elif not enemy_car.is_ambulance:
                 display_car = True
             if result_emg and traffic_lights_static.color == "red":
+                if current_time < change_color_display_time + 0.5:
+                    bonus_react_time_detect = True
+                    cont_score += 2
+                else:
+                    bonus_react_time_detect = False
                 song_pause.play(0)
-                result = menu_leave_game()  # pause game
+                result = menu_leave_game(bonus=bonus_react_time_detect)  # pause game
                 if result:
-                    game()  # go to menu
+                    game()
                 else:
                     counter_cycles = 0
                     traffic_lights_static.change_to_green()
                     start_time_for_change_lights = time.time()
-                    time_change = random_time()
+                    change_color_display_time = random_time()
                     pom_time = timer.time() - start_time_for_change_lights
-            elif traffic_lights_static.color == "red" and timer.time() > time_change + 3:  # 3 sec for reaction possibility, after game over
-                print(pom_time)
-                print(time_change)
+            elif traffic_lights_static.color == "red" and current_time > change_color_display_time + 1.5:  # 3 sec for reaction possibility, after game over
                 game_over(score, police=True)
                 if game_over(score, police=True):
                     game()
@@ -231,9 +236,8 @@ def game():
 
             car.print_car(screen)
             # change the color
-            if pom_time > time_change and traffic_lights_static.color == "green" and not enemy_car.is_ambulance:
+            if pom_time > change_color_display_time and traffic_lights_static.color == "green" and not enemy_car.is_ambulance:
                 traffic_lights_static.change_to_red()
-                time_change = timer.time()
             if traffic_lights_static.color == "red":
                 counter_cycles += 1
             traffic_lights_static.print_object()
@@ -244,30 +248,8 @@ def game():
             screen.blit(texto_score, [750, 15])
             screen.blit(texto_valor_score, [920, 15])
 
-            # Bonus extra
-            if int(score) % 5000 == 0 and score > 0:
-                cont_view = 0
-                cont_score += 5.0
-                bonus = 10
-                car_crash = False
-                bonus_extra = True
-
-            if cont_view < 20 and bonus_extra:
-                score = cont_score * 15
-                screen.blit(font_bonus, [512 - texto_bonus.get_size()[0] / 2, 350])
-            else:
-                bonus_extra = False
-
             # Bonus
-            if int(score) % 600 == 0 and score > 0:
-                song_bonus1.play(0)
-                cont_score += 2.0
-                cont_view = 0
-                bonus = 2
-                cor_font = ORANGE
-                car_crash = False
-
-            if int(score) % 1000 == 0 and int(score) % 5000 != 0 and score > 0:
+            if bonus_react_time_display:
                 song_bonus2.play(0)
                 cont_score += 5.0
                 cont_view = 0
@@ -295,9 +277,11 @@ def game():
             pygame.display.update()
             if counter_cycles == 1:  # change to red
                 reaction_times_add_time(datetime.now())
+                change_color_display_time = timer.time()
             if enemy_car.is_ambulance and enemy_car.first:
                 enemy_car.ambulance_music.play()
                 reaction_times_add_time(datetime.now(), ambulance=True)
+                ambulance_display_time = timer.time()
             elif not enemy_car.is_ambulance or not display_car:
                 enemy_car.ambulance_music.stop()
 
