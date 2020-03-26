@@ -1,0 +1,10 @@
+Reaction time,Ambulance,Start stimulus (sample),Detected activity (sample)
+0.346,False,13254,13600
+0.33,False,23871,24201
+0.28,False,29545,29825
+0.382,False,39073,39455
+0.352,False,44850,45202
+0.79,False,55265,56055
+0.256,False,61444,61700
+0.557,False,69981,70538
+0.329,True,75841,76170

@@ -274,17 +274,11 @@ def game():
                 if game_over(score):
                     game()
 
-            pygame.display.update()
+
             if counter_cycles == 1:  # change to red
                 reaction_times_add_time(datetime.now())
                 change_color_display_time = timer.time()
-            if enemy_car.is_ambulance and enemy_car.first:
-                enemy_car.ambulance_music.play()
-                reaction_times_add_time(datetime.now(), ambulance=True)
-                ambulance_display_time = timer.time()
-            elif not enemy_car.is_ambulance or not display_car:
-                enemy_car.ambulance_music.stop()
-
+            pygame.display.update()
             car_rect = car.rect_car.inflate(-50, -50)
             enemy_car_rect = enemy_car.rect_objeto.inflate(-30, -30)
             #  pygame.draw.rect(screen, (50, 55, 55), enemy_car_rect)
@@ -330,6 +324,14 @@ def game():
                 left_trees[j].move_tree('esquerda', game_speed)
                 stripes[j].move_stripes(car_speed / 25)
                 enemy_car.move_object(game_speed)
+                if enemy_car.is_ambulance and enemy_car.first:
+                    if enemy_car.is_ambulance and enemy_car.first:
+                        enemy_car.ambulance_music.play()
+                        reaction_times_add_time(datetime.now(), ambulance=True)
+                        print("add reaction time - ambulance")
+                        ambulance_display_time = timer.time()
+                    elif not enemy_car.is_ambulance or not display_car:
+                        enemy_car.ambulance_music.stop()
                 if print_fuel:
                     print_fuel = fuel.move_fuel(print_fuel, game_speed)
                 if print_star:

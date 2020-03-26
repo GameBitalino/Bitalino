@@ -14,15 +14,15 @@ class EnemyCar(pygame.sprite.Sprite):
                         pygame.image.load(path + 'adv_car3.png'),
                         pygame.image.load(path + 'adv_car4.png'),
                         pygame.image.load(path + 'ambulance.png')]
-        self.witch_object = random.choice(range(4))  # first one is not ambulance
+        self.witch_object = random.choice(range(4))
         self.ambulance_music = pygame.mixer.Sound('./need_py_speed_game/Game/musicas/ambulance/ambulance-sound.wav')
         self.ambulance_music.set_volume(1.3)
         self.object = self.objects[self.witch_object]
         self.is_ambulance = False
         self.display_car = True
         self.game_over = False
-        self.size_object_x = 80
-        self.size_object_y = 80
+        self.size_object_x = 90
+        self.size_object_y = 90
         self.position_object_x = self.position[0]
         self.position_object_y = self.position[1]
         self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
@@ -59,6 +59,7 @@ class EnemyCar(pygame.sprite.Sprite):
             self.size_object_x = 20
             self.size_object_y = 20
             if self.is_ambulance:
+                print("change now")
                 self.position = self.position_ambulance
                 self.size_object_x = 30
                 self.size_object_y = 30
@@ -70,7 +71,6 @@ class EnemyCar(pygame.sprite.Sprite):
                 self.position_object_x = self.position[0]
                 self.object_print = pygame.transform.scale(self.object, (self.size_object_x, self.size_object_y))
             self.first = True
-
             self.rect_objeto = self.object_print.get_rect()
             self.rect_objeto.x, self.rect_objeto.y = (self.position_object_x, self.position_object_y)
         else:

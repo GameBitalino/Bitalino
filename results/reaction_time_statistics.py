@@ -4,10 +4,10 @@ from pandas import DataFrame as df
 import os, csv
 from itertools import zip_longest
 
-path = "Janči"
+path = "Miska"
 
-sex = "M"  # F/M
-gamer = True
+sex = "F"  # F/M
+gamer = False
 
 entries = os.listdir(path)
 

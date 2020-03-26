@@ -9,7 +9,7 @@ import os
 # path:  name of proband
 from results.reaction_time_statistics import load_information
 
-path = "Janči"
+path = "Miska"
 entries = os.listdir(path)
 
 SIGNAL_LENGTH = 1024
@@ -48,7 +48,6 @@ for signal in entries:
         emg, clas = loader.load_record(path + os.sep + signal)
         labels = clas
         print(file)
-
         # processing
         signal_max = np.max(emg)
         calm_mean = np.mean(emg[:1000])
