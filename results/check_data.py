@@ -9,7 +9,7 @@ import os
 # path:  name of proband
 from results.reaction_time_statistics import load_information
 
-path = "Miska"
+path = "Peter"
 entries = os.listdir(path)
 
 SIGNAL_LENGTH = 1024

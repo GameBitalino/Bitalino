@@ -3,10 +3,13 @@ from compare_algorithm.count_parameters import Count
 from compare_algorithm.online_detection_without_bitalino import OnlineProcessing
 from classification.LoadData import LoadData
 import matplotlib.pyplot as plt
+import os
 
 SIGNAL_LENGTH = 1024
 loader = LoadData()
-path = r"D:\5. ročník\DP\recordings\EMG_date_24_01_2020_time_17_04_13"
+dir = os.path.dirname(os.getcwd())
+path = dir + os.sep +r"recordings\EMG_date_24_01_2020_time_17_04_13"
+
 
 time, emg = loader.load_record(path + ".csv")
 plt.plot(emg)

@@ -1,7 +1,7 @@
 from segmentation.UNet import UNetModel
 from matplotlib import pyplot as plt
 import numpy as np
-import torch
+import torch, os
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam, SGD
 import pandas as pd
@@ -15,11 +15,14 @@ NUMBER_OF_EPOCH = 60
 LOSS_FUNCTION = CrossEntropyLoss()
 SIGNAL_LENGTH = 1024
 
-loaderTrain = DataLoader('EMG_train_data', SIGNAL_LENGTH)
+dir = os.path.dirname(os.getcwd())
+path_to_data = dir + os.sep + "recordings"
+path_saved_data = dir + os.sep + "models"
+loaderTrain = DataLoader('EMG_train_data', SIGNAL_LENGTH, path_to_data=path_to_data)
 trainLoader = torch.utils.data.DataLoader(loaderTrain, batch_size=1, num_workers=0, shuffle=True,
                                           drop_last=True)
 
-loaderTest = DataLoader('EMG_test_data', SIGNAL_LENGTH)
+loaderTest = DataLoader('EMG_test_data', SIGNAL_LENGTH, path_to_data=path_to_data)
 testLoader = torch.utils.data.DataLoader(loaderTest, batch_size=1, num_workers=0, shuffle=True, drop_last=True)
 
 net = UNetModel().cuda()
@@ -52,7 +55,7 @@ for epoch in range(NUMBER_OF_EPOCH):
         OPTIMIZER.step()
         prediction = torch.argmax(output, dim=1)
         tresh = output[0, 1, :].detach().cpu().numpy()
-        tresh1 = np.where(tresh * 1.2 > -5)
+        tresh1 = np.where(tresh * 1.2 > -2)
         novy = np.zeros(SIGNAL_LENGTH)
         novy[tresh1] = 1
         quality = np.sum(novy == (test_lbl[0, :].detach().cpu().numpy()))
@@ -66,7 +69,7 @@ for epoch in range(NUMBER_OF_EPOCH):
             writer.add_scalar("quality", quality, it)
             data_emg = test_data[0, :, :].detach().cpu().numpy().squeeze()
             vystup_site = output[0, 1, :].detach().cpu().numpy()
-
+            """
             fig = plt.figure(1)
             plt.style.use("ggplot")
             plt.plot(prediction[0, :].detach().cpu().numpy(), color="b", label="prediction")
@@ -80,7 +83,7 @@ for epoch in range(NUMBER_OF_EPOCH):
 
             fig2 = plt.figure(2)
             plt.style.use("ggplot")
-            plt.plot(vystup_site, color = 'black')
+            plt.plot(vystup_site, color='black')
             plt.title("Výstup sítě U-Net")
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Výstup sítě [-]")
@@ -90,7 +93,7 @@ for epoch in range(NUMBER_OF_EPOCH):
             plt.style.use("ggplot")
             plt.title("Zvýrazněný výstup sítě U-Net s prahem")
             plt.plot(x, y, color='r')
-            plt.plot(vystup_site*1.2, color = 'black')
+            plt.plot(vystup_site * 1.2, color='black')
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Výstup sítě [-]")
             writer.add_figure("Zvýrazněný výstup sítě U-Net s prahem", fig4, it)
@@ -99,7 +102,7 @@ for epoch in range(NUMBER_OF_EPOCH):
             plt.style.use("ggplot")
             pom = pd.Series(np.array(data_emg))
             plt.title("Detekovaná EMG aktivita")
-            plt.plot(pom + 507, color = 'black')
+            plt.plot(pom + 507, color='black')
             plt.plot(pom[np.array(tresh1)[0]] + 507, color=[215 / 255, 60 / 255, 45 / 255], label="Detekovaná aktivita")
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Výstup sítě [-]")
@@ -107,7 +110,7 @@ for epoch in range(NUMBER_OF_EPOCH):
 
             fig3 = plt.figure(3)
             plt.style.use("ggplot")
-            plt.plot(data_emg + 507, color = 'black')
+            plt.plot(data_emg + 507, color='black')
             plt.title("Původní EMG signál")
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Napětí [μV]")
@@ -115,23 +118,23 @@ for epoch in range(NUMBER_OF_EPOCH):
 
             fig6 = plt.figure(6)
             plt.style.use("ggplot")
-            plt.plot(x, y+3, color='r')
-            plt.plot(vystup_site*1.2, color = 'black')
+            plt.plot(x, y + 3, color='r')
+            plt.plot(vystup_site * 1.2, color='black')
             plt.title("Zvýrazněný výstup sítě U-Net s prahem")
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Výstup sítě [-]")
             writer.add_figure("Zvýrazněný výstup sítě U-Net s prahem", fig6, it)
 
-            fig7= plt.figure(7)
+            fig7 = plt.figure(7)
             plt.style.use("ggplot")
             plt.title("Detekovaná EMG aktivita")
             plt.plot(data_emg + 507, 'black')
             tr = np.where(tresh * 1.2 > -2)
-            plt.plot(data_emg[tr] +507, color = 'r')
+            plt.plot(data_emg[tr] + 507, color='r')
             plt.xlabel("Vzorky [-]")
             plt.ylabel("Výstup sítě [-]")
             writer.add_figure("Detekovaná EMG aktivita", fig7, it)
-
+            """
     if epoch % 10 == 0:
         for kk, (test_data, test_lbl, test_name) in enumerate(testLoader):
             test_data = test_data.cuda()
@@ -169,8 +172,7 @@ for epoch in range(NUMBER_OF_EPOCH):
         test_loss_tmp = []
 
         current_epoch = str(epoch)
-        torch.save(net,
-                   r"D:\5. ročník\DP\Bitalino\models\model_epoch_" + current_epoch + "CrossEntropyLoss_Adam_optimizer_1024_05_03_2020.pth")
+        torch.save(net, path_saved_data + os.sep + "model_epoch_" + current_epoch + ".pth")
         """
         plt.plot(position, train_loss)
         plt.plot(position, test_loss)

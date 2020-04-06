@@ -5,7 +5,7 @@ from compare_algorithm.online_detection_without_bitalino import OnlineProcessing
 from classification.LoadData import LoadData
 import matplotlib.pyplot as plt
 
-path = r"D:\5. ročník\DP\recordings\test_accuracy_algorithm"
+path = os.path.dirname(os.path.dirname(os.getcwd())) + os.sep + r"recordings\test_accuracy_algorithm"
 entries = os.listdir(path)
 
 SIGNAL_LENGTH = 1024
@@ -338,8 +338,8 @@ for signal in entries:
     signal_max = np.max(emg)
     calm_mean = np.mean(emg[:1500])
     proc_UNET = OnlineProcessing("UNET", signal_max, calm_mean)
-    proc_TKEO = OnlineProcessing("TKEO", signal_max, calm_mean)
-    proc_SVM = OnlineProcessing("SVM", signal_max, calm_mean)
+    # proc_TKEO = OnlineProcessing("TKEO", signal_max, calm_mean)
+    # proc_SVM = OnlineProcessing("SVM", signal_max, calm_mean)
 
     count_iter = int(len(emg) / 100)
 
@@ -347,20 +347,20 @@ for signal in entries:
         part = emg[(i * 100):(i + 1) * 100]
         part = np.array(part)
         unet = proc_UNET.process_data(part)
-        tkeo = proc_TKEO.process_data(part)
-        svm = proc_SVM.process_data(part)
+        # tkeo = proc_TKEO.process_data(part)
+        # svm = proc_SVM.process_data(part)
 
     proc_UNET.validation()
-    proc_SVM.validation()
-    proc_TKEO.validation()
+    # proc_SVM.validation()
+    # proc_TKEO.validation()
 
     unet = proc_UNET.emg_record_result
-    tkeo = proc_TKEO.emg_record_result
-    svm = proc_SVM.emg_record_result
+    # tkeo = proc_TKEO.emg_record_result
+    # svm = proc_SVM.emg_record_result
 
     count_UNET = Count(emg=emg, method_output=unet, labels=labels, name_of_method="UNET")
-    count_TKEO = Count(emg=emg, method_output=tkeo, labels=labels, name_of_method="TKEO")
-    count_SVM = Count(emg=emg, method_output=svm, labels=labels, name_of_method="SVM")
+    # count_TKEO = Count(emg=emg, method_output=tkeo, labels=labels, name_of_method="TKEO")
+    # count_SVM = Count(emg=emg, method_output=svm, labels=labels, name_of_method="SVM")
 
     # count_UNET.plot_detected_signal(len(unet))
     # plt.plot(proc_UNET.model_unet.NN_output_debug*1.2)
@@ -369,9 +369,10 @@ for signal in entries:
     # count_SVM.plot_detected_signal(len(svm))
 
     count_UNET.count_accuracy_parameters()
-    count_TKEO.count_accuracy_parameters()
-    count_SVM.count_accuracy_parameters()
+    # count_TKEO.count_accuracy_parameters()
+    # count_SVM.count_accuracy_parameters()
 
+    """
     specificity_SVM.append(count_SVM.specificity)
     sensitivity_SVM.append(count_SVM.sensitive)
     accuracy_SVM.append(count_SVM.accuracy)
@@ -383,13 +384,14 @@ for signal in entries:
     accuracy_TKEO.append(count_TKEO.accuracy)
     poz_prediction_TKEO.append(count_TKEO.poz_prediction)
     neg_prediction_TKEO.append(count_TKEO.neg_prediction)
-
+    """
     specificity_UNET.append(count_UNET.specificity)
     sensitivity_UNET.append(count_UNET.sensitive)
     accuracy_UNET.append(count_UNET.accuracy)
     poz_prediction_UNET.append(count_UNET.poz_prediction)
     neg_prediction_UNET.append(count_UNET.neg_prediction)
 
+    """
     latency_UNET.append(np.mean(count_UNET.count_latency()))
     latency_SVM.append(np.mean(count_SVM.count_latency()))
     latency_TKEO.append(np.mean(count_TKEO.count_latency()))
@@ -397,7 +399,7 @@ for signal in entries:
     variance_UNET.append(np.mean(count_UNET.variance))
     variance_SVM.append(np.mean(count_SVM.variance))
     variance_TKEO.append(np.mean(count_TKEO.variance))
-
+    """
 print("SPECIFITA")
 print(np.mean(specificity_UNET))
 print(np.mean(specificity_SVM))
@@ -413,6 +415,7 @@ print(np.mean(accuracy_UNET))
 print(np.mean(accuracy_SVM))
 print(np.mean(accuracy_TKEO))
 
+"""
 print("POZITIVNÍ PREDIKCE")
 print(np.mean(poz_prediction_UNET))
 print(np.mean(poz_prediction_SVM))
@@ -437,3 +440,4 @@ print("LATENCY varience")
 print(np.mean(variance_UNET))
 print(np.mean(variance_SVM))
 print(np.mean(variance_TKEO))
+"""

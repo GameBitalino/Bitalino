@@ -28,7 +28,7 @@ def start_measure_calm_emg():
     s = pygame.Surface((1024, 150))  # size
     s.set_alpha(150)
     s.fill((255, 255, 255))  # this fills the entire surface
-    text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
+    text_waiting = font_text.render("Připojování zařízení...", True, BLACK)
     # visible for user
     screen.blit(background, (0, 0))
     screen.blit(s, (0, 380))  # draw
@@ -40,7 +40,8 @@ def start_measure_calm_emg():
     device = OnlineProcessing(chosen_method.chosen_method())
     result = False
     start_time = time.time()
-    while (time.time() - start_time) < 3 and not result:
+    while (time.time() - start_time) < 1:
+        text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
         # pygame.event.get()
         pygame.event.pump()
         screen.blit(background, (0, 0))
@@ -53,7 +54,7 @@ def start_measure_calm_emg():
     else:
         text_waiting = font_text.render("Zatni sval maximální silou", True, BLACK)
         start_time = time.time()
-        while (time.time() - start_time) < 1:
+        while (time.time() - start_time) < 3 and not result:
             # pygame.event.get()
             pygame.event.pump()
             screen.blit(background, (0, 0))
@@ -179,6 +180,7 @@ def game():
                     bonus_react_time_display = True
             elif enemy_car.is_ambulance and traffic_lights_static.color == "red":
                 display_car = False
+                enemy_car.ambulance_music.stop()
                 enemy_car.is_ambulance = False
                 enemy_car.witch_object = 2
             elif not enemy_car.is_ambulance:
@@ -330,8 +332,8 @@ def game():
                         reaction_times_add_time(datetime.now(), ambulance=True)
                         print("add reaction time - ambulance")
                         ambulance_display_time = timer.time()
-                    elif not enemy_car.is_ambulance or not display_car:
-                        enemy_car.ambulance_music.stop()
+                elif not enemy_car.is_ambulance or not display_car:
+                    enemy_car.ambulance_music.stop()
                 if print_fuel:
                     print_fuel = fuel.move_fuel(print_fuel, game_speed)
                 if print_star:

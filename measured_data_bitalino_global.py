@@ -134,22 +134,7 @@ class OnlineProcessing:
             else:
                 self.reaction_time.append(0)
         # save reaction times
-        print(self.reaction_time)
-        """
-        data = {
-            'Reaction times': self.reaction_time,
-            'Ambulance': ambulance
-        }
-        df = DataFrame(data, columns=['Reaction times', 'Ambulance'])
-        df.to_csv(self.title + "_reaction_times.csv", index=None,
-                  header=True)
-        data = {
-            'Start stimulus (sample)': samples,
-        }
-        df= DataFrame(data, columns=['Start stimulus (sample)'])
-        df.to_csv(self.title + "_samples.csv", index=None,
-                   header=True)
-        """
+        # print(self.reaction_time)
         whole_data = [self.reaction_time, ambulance, samples, self.detected_activity_samples]
         with open(self.title + "_whole_data.csv", "w", newline='') as f:
             writer = csv.writer(f)

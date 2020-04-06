@@ -4,12 +4,12 @@ from classification.LoadData import LoadData
 import numpy as np
 import time as timer
 
+"""
 data = LoadData()
 time, emg = data.load_record(r"D:\5. ročník\DP\recordings\EMG_date_10_15_2019_time_18_01_51.csv")
 # data.plot_data()
-
 wavelets = pywt.wavedec(emg, 'coif6', level=6)[-1]  # last
-
+"""
 
 def RMS(signal):  # root mean square
     return np.sqrt(sum(signal ** 2) / len(signal))

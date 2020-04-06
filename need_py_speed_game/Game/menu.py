@@ -351,7 +351,7 @@ def game_over(score, police=False):
         # reaction time results - display it
         # remove zeros from reaction times
         reaction_times = np.array(reaction_times)
-        reaction_times = reaction_times[np.where(reaction_times > 0)]
+        reaction_times = reaction_times[np.where(reaction_times > 0.15)]
         print_emg_results(screen, best=np.min(reaction_times), mean=np.mean(reaction_times))
         results = False
         while not results:

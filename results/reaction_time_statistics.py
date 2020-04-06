@@ -3,11 +3,12 @@ import numpy as np
 from pandas import DataFrame as df
 import os, csv
 from itertools import zip_longest
+import matplotlib.pyplot as plt
 
-path = "Miska"
+path = "Peter"
 
-sex = "F"  # F/M
-gamer = False
+sex = "M"  # F/M
+gamer = True
 
 entries = os.listdir(path)
 
@@ -27,15 +28,16 @@ def load_concrete_reaction_times(path):
                     decimal=".")
     sem = data.loc[data['Ambulance'] == False]
     change_to_green = sem[::2]
-    change_to_green = change_to_green.loc[change_to_green["Reaction time"] > 0.15]
+    change_to_green = change_to_green.loc[change_to_green["Reaction time"] > 0.18]
     change_to_red = sem[1::2]
-    change_to_red = change_to_red[change_to_red["Reaction time"] > 0.15]
+    change_to_red = change_to_red[change_to_red["Reaction time"] > 0.18]
     display_ambulance = data.loc[data['Ambulance'] == True]
-    display_ambulance = display_ambulance.loc[display_ambulance["Reaction time"] > 0.15]
+    display_ambulance = display_ambulance.loc[display_ambulance["Reaction time"] > 0.18]
     return change_to_green, change_to_red, display_ambulance
 
 
 mean_each_game = []
+every_reaction_times = []
 
 mean_changed_green = []
 mean_changed_red = []
@@ -54,8 +56,10 @@ for signal in entries:
         change_to_green, change_to_red, display_ambulance = load_concrete_reaction_times(path_signal)
 
         mean_each_game.append(
-            np.mean(reaction_time[np.array(np.where(reaction_time > 0.15))[0]]))  # under 0.15 is not physical
-
+            np.mean(reaction_time[np.array(np.where(reaction_time > 0.18))[0]]))  # under 0.18 is not physical
+        gr = change_to_green.iloc[:, 0]
+        every_reaction_times = np.concatenate(
+            [every_reaction_times, gr])
         # green
         if change_to_green.shape[0] > 0:
             gr = np.mean(change_to_green.iloc[:, 0])  # reaction times
@@ -73,6 +77,9 @@ for signal in entries:
             mean_displayed_ambulance.append(np.mean(display_ambulance.iloc[:, 0]))
         else:
             mean_displayed_ambulance.append(None)
+plt.plot(every_reaction_times)
+plt.show()
+
 
 # save data
 game = [1, 2, 3, 4, 5]
@@ -105,14 +112,15 @@ else:
     mean_ambulance = np.nan
 
 # add user to table
-user_data = [path, sex, gamer, mean_all_games, round(mean_each_game[0], 2), round(mean_each_game[1], 2), round(mean_each_game[2], 2),
+user_data = [path, sex, gamer, mean_all_games, round(mean_each_game[0], 2), round(mean_each_game[1], 2),
+             round(mean_each_game[2], 2),
              round(mean_each_game[3], 2), round(mean_each_game[4], 2), mean_green, mean_red, mean_ambulance]
 
 title = "vysledky.csv"
 if not os.path.isfile(title):
     with open(title, "w", newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(["Name","Sex", "Gamer", "Mean", "First game", "Second game", "Third game",
+        writer.writerow(["Name", "Sex", "Gamer", "Mean", "First game", "Second game", "Third game",
                          "Fourth game", "Fifth game", "On green", "On red", "On ambulance"])
         writer.writerow(user_data)
 else:
