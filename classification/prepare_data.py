@@ -1,4 +1,4 @@
-from classification.LoadData import load_parsed_record
+from classification.load_data import load_parsed_record
 from classification.extracted_features import features
 import numpy as np
 import matplotlib.pyplot as plt

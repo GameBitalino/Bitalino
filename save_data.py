@@ -1,6 +1,5 @@
 from pandas import DataFrame
 from datetime import datetime
-import csv
 import numpy as np
 
 now = datetime.now()

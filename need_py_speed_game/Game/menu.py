@@ -6,7 +6,7 @@ import numpy as np
 import need_py_speed_game.Game.game as game
 from .sounds_effects import *
 from .traffic_lights_static import *
-from measured_data_bitalino_global import reaction_times_add_time
+from measured_data_in_game_bitalino_global import reaction_times_add_time
 from .display_results import *
 from .checkbox import Checkbox
 import need_py_speed_game.Game.method as chosen_method

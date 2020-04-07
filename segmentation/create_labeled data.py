@@ -1,8 +1,8 @@
-from DWT.LoadData import LoadData
+from tkeo_algorithm.LoadData import LoadData
 from matplotlib import pyplot as plt
-# from DWT.filtration import *
+# from tkeo_algorithm.filtration import *
 import numpy as np
-import saveData
+import save_data
 import os
 
 loader = LoadData()
@@ -16,7 +16,7 @@ plt.title("Záznam EMG")
 plt.ylabel("Napětí [μV]")
 plt.show()
 
-filtered_DWT = DWT(emg)
+filtered_DWT = tkeo_algorithm(emg)
 deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
 
 filtered_TKEO = TKEO(emg)
@@ -35,7 +35,7 @@ plt.show()
 plt.figure()
 plt.plot(emg, 'b')
 plt.plot(emg_detected[positions], color='red')
-plt.title('Detekovaná aktivita EMG - DWT')
+plt.title('Detekovaná aktivita EMG - tkeo_algorithm')
 plt.legend(['klid', 'aktivita'])
 plt.xlabel(xlabel="Vzorky[-]")
 plt.ylabel(ylabel='Napětí []')
@@ -92,7 +92,7 @@ elif file == "EMG_date_24_01_2020_time_16_17_46":
     labels[3248:4000] = 1
     labels[5475:6190] = 1
     labels[8115:8860] = 1
-    labels[10468:11230] = 1  # according to DWT
+    labels[10468:11230] = 1  # according to tkeo_algorithm
     labels[13800:14647] = 1
     labels[16650:17475] = 1
     labels[18960:19820] = 1
@@ -351,4 +351,4 @@ plt.plot(emg)
 plt.plot(labels * 100)
 plt.show()
 
-saveData.saveLabeledData(emg, labels, path, 1024)
+save_data.saveLabeledData(emg, labels, path, 1024)

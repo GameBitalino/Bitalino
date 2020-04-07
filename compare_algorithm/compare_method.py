@@ -1,7 +1,7 @@
 import numpy as np
 from compare_algorithm.count_parameters import Count
 from compare_algorithm.online_detection_without_bitalino import OnlineProcessing
-from classification.LoadData import LoadData
+from classification.load_data import LoadData
 import matplotlib.pyplot as plt
 import os
 

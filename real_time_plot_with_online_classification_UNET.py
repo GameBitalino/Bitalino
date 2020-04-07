@@ -3,8 +3,8 @@ import bitalino
 import numpy as np
 import pyqtgraph as pg
 from matplotlib import pyplot as plt
-from saveData import saveEMG
-from segmentation.ClassificationUNET import ClassificationUNET
+from save_data import saveEMG
+from segmentation.classification_UNET import ClassificationUNET
 
 
 # set parameters

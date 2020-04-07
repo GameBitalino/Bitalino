@@ -18,15 +18,15 @@ class OnlineProcessing:
         self.title_save_file = []
 
         if self.method == "UNET":
-            from segmentation.ClassificationUNET import ClassificationUNET
+            from segmentation.classification_UNET import ClassificationUNET
             self.model_unet = ClassificationUNET()  # return ndarray
 
         elif self.method == "SVM":
-            from classification.ClassificationSVM import ClassificationSVM
+            from classification.classification_SVM import ClassificationSVM
             self.model_svm = ClassificationSVM(nFrames=10)  # return ndarray
 
         elif self.method == "TKEO":
-            from DWT.ClassificationTKEO import ClassificationTKEO
+            from tkeo_algorithm.classification_TKEO import ClassificationTKEO
             self.model_tkeo = ClassificationTKEO()  # return ndarray - true/false
 
         else:

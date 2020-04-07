@@ -2,7 +2,7 @@ import os
 import numpy as np
 from compare_algorithm.count_parameters import Count
 from compare_algorithm.online_detection_without_bitalino import OnlineProcessing
-from classification.LoadData import LoadData
+from classification.load_data import LoadData
 import matplotlib.pyplot as plt
 
 path = os.path.dirname(os.path.dirname(os.getcwd())) + os.sep + r"recordings\test_accuracy_algorithm"
@@ -97,7 +97,7 @@ for signal in entries:
         labels[3248:4000] = 1
         labels[5475:6190] = 1
         labels[8115:8860] = 1
-        labels[10468:11230] = 1  # according to DWT
+        labels[10468:11230] = 1  # according to tkeo_algorithm
         labels[13800:14647] = 1
         labels[16650:17475] = 1
         labels[18960:19820] = 1

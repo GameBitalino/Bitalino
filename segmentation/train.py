@@ -5,7 +5,7 @@ import torch, os
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam, SGD
 import pandas as pd
-from segmentation.loaderEMG import DataLoader
+from segmentation.loader_EMG import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 writer = SummaryWriter()

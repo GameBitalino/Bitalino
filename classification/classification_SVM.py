@@ -1,6 +1,6 @@
 import numpy as np
 from classification.SVM_clasifficator import countAll
-from classification.prepareData import rectification, normalization
+from classification.prepare_data import rectification, normalization
 import os.path
 
 
@@ -10,7 +10,7 @@ class ClassificationSVM:
         self.nFrames = nFrames
         from joblib import load
         my_path = os.path.abspath(os.path.dirname(__file__))
-        path = os.path.join(my_path, "SVM_toe_model.joblib")
+        path = os.path.join(my_path, "svm_model.joblib")
         self.svm_model = load(path)  # SVM_heel_model_2 have best results
 
     def predict_data(self, emg, maximum=None):

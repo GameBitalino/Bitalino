@@ -7,7 +7,7 @@ from .star import *
 from random import gauss
 from .menu import *
 from .traffic_lights_static import *
-from measured_data_bitalino_global import OnlineProcessing, reaction_times_init, reaction_times_add_time
+from measured_data_in_game_bitalino_global import OnlineProcessing, reaction_times_init, reaction_times_add_time
 import need_py_speed_game.Game.method as chosen_method
 from datetime import datetime
 

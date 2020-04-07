@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
-from classification.prepareData import *
+from classification.prepare_data import *
 from classification.extracted_features import features
-from classification.prepareData import rectification, normalization
+from classification.prepare_data import rectification, normalization
 from joblib import dump, load
 
 
