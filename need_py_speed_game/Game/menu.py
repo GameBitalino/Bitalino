@@ -196,17 +196,17 @@ def menu_help():
     menu = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'fundo_menu2.jpg')
     tecla1 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Left.png')
     tecla2 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Arrow_Right.png')
-    tecla3 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'computer_key_Esc.png')
+    tecla3 = pg.image.load('./need_py_speed_game/Game/imagens' + os.sep + 'pedal.jpg')
     fonte_menu3 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Lt.ttf', 55)
-    fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Lt.ttf', 40)
+    fonte_menu4 = pg.font.Font('./need_py_speed_game/Game/fontes' + os.sep + 'Aller_Lt.ttf', 30)
 
-    texto1 = fonte_menu3.render('Nápověda', True, WHITE)
+    texto1 = fonte_menu3.render('Ovládání hry', True, WHITE)
 
-    texto2 = fonte_menu4.render('Ovládání hry', True, WHITE)
-    texto3 = fonte_menu4.render('Vyhýbejte se protijedoucím vozidlům,', True, WHITE)
-    texto4 = fonte_menu4.render('Zastavte co nejrychleji na červenou', True, WHITE)
-    texto5 = fonte_menu4.render('Na zelenou se co nejrychleji rozjeďte.', True, WHITE)
-    texto6 = fonte_menu4.render('Nikdy nesmí dojít palivo - doplníte sebráním benzínu', True, WHITE)
+    texto2 = fonte_menu4.render('Vyhýbejte se protijedoucím vozidlům.', True, WHITE)
+    texto3 = fonte_menu4.render('Při změně barvy semaforu reagujte co nejrychleji sešlápnutím pedálu.', True, WHITE)
+    texto4 = fonte_menu4.render('Stejně reagujte pokud uvidíte vůz záchranné služby.', True, WHITE)
+    texto5 = fonte_menu4.render('Palivo doplníte sebráním benzínu.', True, WHITE)
+    texto6 = fonte_menu4.render('Sebráním hvězdičky získáte bonusové body.', True, WHITE)
 
     texto7 = fonte_menu4.render('Jaké klávesy použít?', True, WHITE)
     texto8 = fonte_menu4.render('Řízení auta: vlevo/vpravo', True, WHITE)
@@ -217,13 +217,13 @@ def menu_help():
         screen.blit(menu, [0, 0])
         screen.blit(pg.transform.scale(tecla1, [50, 50]), [20, 480])
         screen.blit(pg.transform.scale(tecla2, [50, 50]), [80, 480])
-        screen.blit(pg.transform.scale(tecla3, [50, 50]), [20, 550])
+        screen.blit(pg.transform.scale(tecla3, [100, 50]), [30, 550])
         screen.blit(texto1, [(largura_tela / 2) - (texto1.get_size()[0] / 2), 10])
         screen.blit(texto2, [20, 100])
-        screen.blit(texto3, [40, 170])
-        screen.blit(texto4, [40, 220])
-        screen.blit(texto5, [40, 270])
-        screen.blit(texto6, [40, 320])
+        screen.blit(texto3, [20, 170])
+        screen.blit(texto4, [20, 220])
+        screen.blit(texto5, [20, 270])
+        screen.blit(texto6, [20, 320])
 
         screen.blit(texto7, [20, 390])
         screen.blit(texto8, [150, 480])
@@ -432,7 +432,8 @@ def root_menu():
                     continue
             elif pg.mouse.get_pressed()[0] and source_position(exit_text, [40, 650]):
                 sys.exit()
-            elif event.type == pg.QUIT:
+            elif event.type == pg.QUIT or pg.key.get_pressed()[
+                K_ESCAPE]:
                 sys.exit()
 
         pg.display.update()

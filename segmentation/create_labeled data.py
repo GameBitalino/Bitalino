@@ -1,4 +1,4 @@
-from tkeo_algorithm.LoadData import LoadData
+from classification.load_data import LoadData
 from matplotlib import pyplot as plt
 # from tkeo_algorithm.filtration import *
 import numpy as np
@@ -6,7 +6,7 @@ import save_data
 import os
 
 loader = LoadData()
-file = "EMG_date_24_01_2020_time_16_13_44"
+file = "EMG_date_24_01_2020_time_17_08_26"
 path = r"D:\5. ročník\DP\recordings" + os.sep + file
 time, emg = loader.load_record(path + ".csv")
 
@@ -351,4 +351,6 @@ plt.plot(emg)
 plt.plot(labels * 100)
 plt.show()
 
+"""
 save_data.saveLabeledData(emg, labels, path, 1024)
+"""

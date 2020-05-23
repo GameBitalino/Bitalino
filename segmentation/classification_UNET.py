@@ -1,7 +1,7 @@
 import torch, os
 import numpy as np
 
-dir = "./segmentation/unet_model.pth"
+dir = os.path.dirname(os.getcwd()) + os.sep + "segmentation/unet_model.pth"
 
 class ClassificationUNET:
     def __init__(self, frame_lenght=100,

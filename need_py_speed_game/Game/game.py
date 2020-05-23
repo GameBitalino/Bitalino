@@ -40,7 +40,7 @@ def start_measure_calm_emg():
     device = OnlineProcessing(chosen_method.chosen_method())
     result = False
     start_time = time.time()
-    while (time.time() - start_time) < 1:
+    while (time.time() - start_time) < 3:
         text_waiting = font_text.render("Měření klidového signálu", True, BLACK)
         # pygame.event.get()
         pygame.event.pump()
