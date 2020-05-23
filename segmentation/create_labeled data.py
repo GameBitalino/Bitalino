@@ -10,38 +10,6 @@ file = "EMG_date_24_01_2020_time_17_08_26"
 path = r"D:\5. ročník\DP\recordings" + os.sep + file
 time, emg = loader.load_record(path + ".csv")
 
-"""
-plt.plot(emg)
-plt.title("Záznam EMG")
-plt.ylabel("Napětí [μV]")
-plt.show()
-
-filtered_DWT = tkeo_algorithm(emg)
-deviation, positions1, emg_detected = standard_deviation(filtered_DWT, 6)
-
-filtered_TKEO = TKEO(emg)
-deviation2, positions2, emg_detected2 = standard_deviation(filtered_TKEO, 2)
-
-plt.figure()
-plt.plot(emg, 'b')
-plt.plot(emg_detected2[positions2], color='red')
-plt.title('Detekovaná aktivita EMG - TKEO')
-plt.legend(['klid', 'aktivita'])
-plt.xlabel(xlabel="Vzorky[-]")
-plt.ylabel(ylabel='Napětí []')
-plt.show()
-
-
-plt.figure()
-plt.plot(emg, 'b')
-plt.plot(emg_detected[positions], color='red')
-plt.title('Detekovaná aktivita EMG - tkeo_algorithm')
-plt.legend(['klid', 'aktivita'])
-plt.xlabel(xlabel="Vzorky[-]")
-plt.ylabel(ylabel='Napětí []')
-plt.show()
-"""
-
 labels = np.zeros((len(emg)))
 # activity => 1
 if file == "EMG_date_24_01_2020_time_17_04_13":

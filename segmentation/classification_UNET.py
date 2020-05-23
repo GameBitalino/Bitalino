@@ -1,11 +1,11 @@
 import torch, os
 import numpy as np
 
-dir = os.path.dirname(os.getcwd()) + os.sep + "segmentation/unet_model.pth"
+# dir = os.path.dirname(os.getcwd()) + os.sep + "segmentation/unet_model.pth"
 
 class ClassificationUNET:
     def __init__(self, frame_lenght=100,
-                 path=dir):
+                 path=r"D:\5. ročník\DP\Bitalino\segmentation\unet_model.pth"):
         self.model = torch.load(path)
         self.model.eval()
         self.output = []
