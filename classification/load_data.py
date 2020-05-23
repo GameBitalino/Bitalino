@@ -8,6 +8,7 @@ def load_parsed_record(path):
     emg = data.values
     return emg
 
+
 class LoadData:
 
     def __init__(self, fvz=1000):
@@ -16,17 +17,9 @@ class LoadData:
         self.fvz = fvz
         self.labels = []
 
-    def load_some_record(self):
-        data = pd.read_csv(r"D:\5. ročník\DP\recordings\EMG_date_24_01_2020_time_16_10_18.csv", delimiter=',',
-                           decimal=".")  # načtení naměřených dat
-
-        self.time = data.iloc[:, 0]  # výběr sloupce obsahující hodnoty času
-        self.emg = data.iloc[:, 1] + 507  # výběr sloupce obsahující naměřené hodnoty
-        return self.time, self.emg
-
     def load_record(self, path):
         data = pd.read_csv(path, delimiter=',',
-                           decimal=".")  # načtení naměřených dat
+                           decimal=".")
 
         self.time = data.iloc[:, 0]  # výběr sloupce obsahující hodnoty času
         self.emg = data.iloc[:, 1]  # výběr sloupce obsahující naměřené hodnoty

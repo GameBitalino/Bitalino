@@ -74,12 +74,7 @@ finally:
     print("STOP")
     device.stop()
     device.close()
-    """
-    # subtract mean value
-    meanValue = np.mean(EMG_record)
-    for i in range(len(EMG_record)):
-        EMG_record[i] = EMG_record[i] - meanValue
-    """
+
     # save current data
     time = np.linspace(0, int(running_time), len(EMG_record))
     saveEMG(time, EMG_record)

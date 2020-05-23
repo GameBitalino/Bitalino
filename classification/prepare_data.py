@@ -22,13 +22,13 @@ def createDataset():
     # prepare dataset
     # contractions = load_parsed_record("contractions_parts.csv")
     # 10 frames for detection
-    contractions = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\activity_toe_12_32_08_parsed.csv")
+    contractions = load_parsed_record(r"D:\5. ročník\DP\Bitalino\classification\contractions_parts.csv")
     contractions = rectification(contractions)
     max_contr = np.max(contractions)
     contractions = normalization(contractions)
 
     # calm = load_parsed_record("calm.csv")
-    calm = load_parsed_record(r"D:\5. ročník\DP\Bitalino\recordings\calm_EMG_12_15_38_parsed.csv")
+    calm = load_parsed_record(r"D:\5. ročník\DP\Bitalino\classification\calm.csv")
     calm = rectification(calm)
     calm = normalization(calm, max=max_contr)
     # calm = normalization(calm)
@@ -51,5 +51,5 @@ def createDataset():
     all = np.zeros((rows_contractions + rows_calm - 1, count_features))
     all[0:rows_contractions, :] = features_movement
     all[rows_contractions - 1:, :] = features_calm
-    print("SVC model was created")
+    print("SVM model was created")
     return all
