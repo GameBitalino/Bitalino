@@ -18,7 +18,14 @@ Parametry:
 MAC adresa zařízení
 Vzorkovací frekvence
 Velikost okna, ve kterém jsou načítány signály z BITalina
-Před spuětaním je také potřebné nastavení cest
+
+
+Před spuštěním:
+- nastavení cest
+- instalace knihoven 
+- úprava v knihovně "bitalino": je nutné přidat atribut do kontuktoru 
+	- self.startTime = None
+	- ve funkci "send" následně přidat za time.sleep(): self.startTime = datetime.datetime.now()
 
 Spuštění hry: skript "run.py"
 
