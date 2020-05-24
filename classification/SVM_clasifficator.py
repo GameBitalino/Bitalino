@@ -9,7 +9,7 @@ def drawTwo(first, second):
     data = createDataset()
     #  feature = [RMS(signal), SSC(signal), MNF(signal),  MAV(signal),ZC(signal), WL(signal)]
     y = data[:, -1]  # last column
-    X = data[:, first:second + 1]  # select just 2 features
+    X = data[:, first:second + 1]  
     y[y == 0] = -1  # klid
     ind = np.random.rand(len(y)) > 0.2
 
@@ -19,7 +19,7 @@ def drawTwo(first, second):
     y_test = y[ind == 0]
 
     muj_SVM = SVC(gamma='scale', kernel='poly', C=10,
-                  degree=3)  # C - kolik bodu muze byt spatne - jak vybrat: ve for cyklu hodnoti klasifikaci - cross validace
+                  degree=3)
     muj_SVM.fit(X_train, y_train)
 
     # vykresleni
