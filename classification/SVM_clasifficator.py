@@ -9,7 +9,7 @@ def drawTwo(first, second):
     data = createDataset()
     #  feature = [RMS(signal), SSC(signal), MNF(signal),  MAV(signal),ZC(signal), WL(signal)]
     y = data[:, -1]  # last column
-    X = data[:, first:second + 1]  
+    X = data[:, first:second + 1]
     y[y == 0] = -1  # klid
     ind = np.random.rand(len(y)) > 0.2
 
