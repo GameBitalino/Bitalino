@@ -1,9 +1,8 @@
-from pandas import DataFrame
-from BITalino import BITalino
+
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.signal import medfilt
+from pathlib import Path
 from time import time
+import os
 
 
 class OnlineProcessing:
@@ -22,7 +21,7 @@ class OnlineProcessing:
 
         if self.method == "UNET":
             from segmentation.classification_UNET import ClassificationUNET
-            self.model_unet = ClassificationUNET()  # return ndarray
+            self.model_unet = ClassificationUNET(path=str(Path(os.getcwd()).parent) + os.sep + 'segmentation/unet_model.pth')  # return ndarray
 
         elif self.method == "SVM":
             from classification.classification_SVM import ClassificationSVM

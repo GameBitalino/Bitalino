@@ -3,6 +3,7 @@ from BITalino import BITalino
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import os
 from itertools import zip_longest
 
 class OnlineProcessing:
@@ -19,7 +20,7 @@ class OnlineProcessing:
 
         if self.method == "UNET":
             from segmentation.classification_UNET import ClassificationUNET
-            self.model_unet = ClassificationUNET()  # return ndarray
+            self.model_unet = ClassificationUNET(path=os.getcwd() + os.sep + 'segmentation/unet_model.pth')  # return ndarray
 
         elif self.method == "SVM":
             from classification.classification_SVM import ClassificationSVM
